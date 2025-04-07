@@ -1,25 +1,36 @@
 package com.example.hybridmusicapp.ui.splash
 
+import android.annotation.SuppressLint
 import android.os.Bundle
-import androidx.activity.enableEdgeToEdge
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import com.example.hybridmusicapp.R
 import com.example.hybridmusicapp.databinding.ActivitySplashBinding
 
+@SuppressLint("CustomSplashScreen")
 class SplashActivity : AppCompatActivity() {
     private lateinit var binding: ActivitySplashBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
         binding = ActivitySplashBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
-            insets
+        setupViewpager()
+    }
+
+    private fun setupViewpager() {
+        val pagerAdapter = ViewPagerAdapter(this)
+        val splashPager = binding.splashPager
+        splashPager.adapter = pagerAdapter
+        binding.dotsIndicator.attachTo(splashPager)
+        binding.btnSplash.setOnClickListener {
+            Log.d("TAG", "setupViewpager: ${splashPager.currentItem}")
+            if(splashPager.currentItem == splashPager.adapter?.itemCount?.minus(1)){
+                binding.btnSplash.text = getString(R.string.get_started)
+            }else{
+                splashPager.currentItem += 1
+            }
         }
+        splashPager.isUserInputEnabled = false
     }
 }
