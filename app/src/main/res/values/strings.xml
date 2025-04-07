@@ -1,0 +1,21 @@
+<resources>
+    <string name="app_name">Hybrid Music App</string>
+    <!-- Onboarding Page 1 -->
+    <string name="onboarding_title1">Life is a song, Love is the music</string>
+    <string name="onboarding_des1">Feel the rhythm of your soul and let melodies guide your heart.</string>
+
+    <!-- Onboarding Page 2 -->
+    <string name="onboarding_title2">Music can change the world</string>
+    <string name="onboarding_des2">One beat at a time, music inspires minds and connects hearts globally.</string>
+
+    <!-- Onboarding Page 3 -->
+    <string name="onboarding_title3">Create your own vibe</string>
+    <string name="onboarding_des3">Explore new sounds, discover artists, and craft your unique playlist journey.</string>
+
+    <!-- Common -->
+    <string name="get_started">Get Started</string>
+    <string name="next">Next</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+</resources>
