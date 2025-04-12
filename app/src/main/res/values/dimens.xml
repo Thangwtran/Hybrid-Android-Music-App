@@ -17,10 +17,20 @@
     <dimen name="_56dp">56dp</dimen>
     <dimen name="_64dp">64dp</dimen>
 
-    <!-- Extra large -->
+    <!-- Large -->
     <dimen name="_72dp">72dp</dimen>
     <dimen name="_80dp">80dp</dimen>
+    <dimen name="_88dp">88dp</dimen>
     <dimen name="_96dp">96dp</dimen>
+    <dimen name="_104dp">104dp</dimen>
+    <dimen name="_112dp">112dp</dimen>
+    <dimen name="_120dp">120dp</dimen>
+    <dimen name="_128dp">128dp</dimen>
+    <dimen name="_144dp">144dp</dimen>
+    <dimen name="_160dp">160dp</dimen>
+    <dimen name="_192dp">192dp</dimen>
+    <dimen name="_256dp">256dp</dimen>
+    <dimen name="_320dp">320dp</dimen>
 
     <!-- Text sizes -->
     <dimen name="text_small">12sp</dimen>
@@ -34,5 +44,6 @@
     <dimen name="text_display_medium">40sp</dimen>
     <dimen name="text_display_large">48sp</dimen>
     <dimen name="text_hero">56sp</dimen>
+    <dimen name="_34dp">34dp</dimen>
 
 </resources>

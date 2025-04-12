@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.room)
 }
 
 android {
@@ -15,6 +16,11 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    // schemas
+    room {
+        schemaDirectory("$projectDir/schemas")
     }
 
     buildTypes {
@@ -40,6 +46,21 @@ android {
 
 dependencies {
     implementation("com.tbuonomo:dotsindicator:5.1.0")
+    implementation("com.airbnb.android:lottie:6.6.4")
+    // custom
+    implementation(libs.gson)
+    implementation(libs.glide)
+    implementation(libs.retrofit)
+    implementation(libs.gson.converter)
+    implementation(libs.media3.xoplayer)
+    implementation(libs.media3.common)
+    implementation(libs.media3.media.session)
+    implementation(libs.media3.ui)
+    implementation(libs.room.runtime)
+    implementation(libs.room.paging)
+    implementation(libs.room.ktx)
+    annotationProcessor(libs.room.compiler)
+    //
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)

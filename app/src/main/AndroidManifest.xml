@@ -13,10 +13,19 @@
         android:theme="@style/Theme.HybridMusicApp"
         tools:targetApi="35">
         <activity
-            android:name=".MainActivity"
+            android:name=".ui.home.HomeActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.onboarding.OnBoardingActivity"
             android:exported="false" />
         <activity
             android:name=".ui.splash.SplashActivity"
+            android:exported="false" />
+        <activity
+            android:name=".MainActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.splash.LoadingActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

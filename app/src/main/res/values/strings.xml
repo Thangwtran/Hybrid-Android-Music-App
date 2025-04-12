@@ -3,19 +3,28 @@
     <!-- Onboarding Page 1 -->
     <string name="onboarding_title1">Life is a song, Love is the music</string>
     <string name="onboarding_des1">Feel the rhythm of your soul and let melodies guide your heart.</string>
-
     <!-- Onboarding Page 2 -->
     <string name="onboarding_title2">Music can change the world</string>
     <string name="onboarding_des2">One beat at a time, music inspires minds and connects hearts globally.</string>
-
     <!-- Onboarding Page 3 -->
     <string name="onboarding_title3">Create your own vibe</string>
     <string name="onboarding_des3">Explore new sounds, discover artists, and craft your unique playlist journey.</string>
-
     <!-- Common -->
     <string name="get_started">Get Started</string>
     <string name="next">Next</string>
+    <string name="select_interest">Let\'s select your interests.</string>
+    <string name="select_interest2">Please select one or more interests to proceed</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="dubstep_bass">⚡ Dubstep / Bass</string>
+    <string name="hype_rap_edm_rap">💥 Hype Rap / EDM Rap</string>
+    <string name="chill_vocal">🧠 Chill / Vocal</string>
+    <string name="epic_cinematic">🏰 Epic / Cinematic</string>
+    <string name="future_bass">🌈 Future Bass</string>
+    <string name="dark_pop_alternative">🖤 Dark Pop / Alternative</string>
+    <string name="edm">🎧 EDM</string>
+    <string name="trap">🔥 Trap</string>
+    <string name="uplifting_progressive_house">🌟 Uplifting / Progressive House</string>
+    <string name="other">🎵 Other...</string>
 
 </resources>
