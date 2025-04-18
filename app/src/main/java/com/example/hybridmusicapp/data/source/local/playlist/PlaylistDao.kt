@@ -18,7 +18,7 @@ interface PlaylistDao {
     // TODO: get playlist by playlist_id
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    fun insert(playlist: Playlist)
+    suspend fun insert(playlist: Playlist)
 
     // TODO: insert playlist song cross ref
 
