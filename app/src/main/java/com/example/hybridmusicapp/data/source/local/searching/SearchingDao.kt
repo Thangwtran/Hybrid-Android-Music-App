@@ -18,10 +18,10 @@ interface SearchingDao {
     val allSongs: Flow<List<HistorySearchedSong>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertKey(vararg keys: HistorySearchedKey)
+    suspend fun insertKey(vararg keys: HistorySearchedKey)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertSong(vararg songs: HistorySearchedSong)
+    suspend fun insertSong(vararg songs: HistorySearchedSong)
 
     @Query("""
     SELECT * FROM songs 
@@ -32,8 +32,8 @@ interface SearchingDao {
     fun search(key:String): Flow<List<Song>>
 
     @Query("DELETE FROM history_searched_keys")
-    fun clearSearchKeys()
+    suspend fun clearSearchKeys()
 
     @Query("DELETE FROM history_searched_songs")
-    fun clearSearchSongs()
+    suspend fun clearSearchSongs()
 }
