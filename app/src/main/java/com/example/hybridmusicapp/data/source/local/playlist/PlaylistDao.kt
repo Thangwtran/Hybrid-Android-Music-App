@@ -1,5 +1,6 @@
 package com.example.hybridmusicapp.data.source.local.playlist
 
+import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
@@ -8,6 +9,7 @@ import androidx.room.Update
 import com.example.hybridmusicapp.data.model.playlist.Playlist
 import kotlinx.coroutines.flow.Flow
 
+@Dao
 interface PlaylistDao {
     @get:Query("SELECT * FROM playlists")
     val playlists: Flow<List<Playlist>>

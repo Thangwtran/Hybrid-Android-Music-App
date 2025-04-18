@@ -1,6 +1,8 @@
 package com.example.hybridmusicapp.data.model.playing_song
 
 import androidx.media3.common.MediaItem
+import com.example.hybridmusicapp.data.model.playlist.Playlist
+import com.example.hybridmusicapp.data.model.song.Song
 import java.util.Objects
 
 @Suppress("unused")

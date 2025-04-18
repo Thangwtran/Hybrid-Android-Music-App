@@ -1,5 +1,6 @@
 package com.example.hybridmusicapp.data.source.local.searching
 
+import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
@@ -8,6 +9,7 @@ import com.example.hybridmusicapp.data.model.history.HistorySearchedSong
 import com.example.hybridmusicapp.data.model.song.Song
 import kotlinx.coroutines.flow.Flow
 
+@Dao
 interface SearchingDao {
     @get:Query("SELECT * FROM history_searched_keys ORDER BY created_at DESC LIMIT 50")
     val allKeys: Flow<List<HistorySearchedKey>>

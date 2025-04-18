@@ -1,4 +1,9 @@
 package com.example.hybridmusicapp.data.source.local.artist
 
-class LocalArtistDataSource {
+import com.example.hybridmusicapp.data.ArtistDataSource
+
+class LocalArtistDataSource (
+    private val artistDao: ArtistDao
+): ArtistDataSource.Local{
+
 }

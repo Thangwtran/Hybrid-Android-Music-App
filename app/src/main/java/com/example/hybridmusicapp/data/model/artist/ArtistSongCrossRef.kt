@@ -15,5 +15,5 @@ data class ArtistSongCrossRef(
     var artistId: Int = 0,
 
     @ColumnInfo("song_id")
-    var songI: String = "",
+    var songId: String = "",
 )

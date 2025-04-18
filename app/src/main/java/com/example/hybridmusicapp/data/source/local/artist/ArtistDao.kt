@@ -1,5 +1,6 @@
 package com.example.hybridmusicapp.data.source.local.artist
 
+import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
@@ -8,6 +9,7 @@ import androidx.room.Update
 import com.example.hybridmusicapp.data.model.artist.Artist
 import kotlinx.coroutines.flow.Flow
 
+@Dao
 interface ArtistDao {
     @get:Query("SELECT * FROM artists ORDER BY interested")
     val artists: Flow<List<Artist>>
