@@ -13,7 +13,7 @@ interface SongDao {
         "SELECT song_id, title, album, artist, source, image, duration, " +
                 "favorite, counter, replay FROM songs"
     )
-    fun getSongs(): List<Song>
+    suspend fun getSongs(): List<Song>
 
     @Query(
         "SELECT song_id,title,album,artist,source,image,duration," +
