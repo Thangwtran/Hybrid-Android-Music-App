@@ -8,11 +8,13 @@ import kotlinx.coroutines.flow.Flow
 
 class LocalAlbumDataSource(
     private val albumDao: AlbumDao
-): AlbumDataSource.Local {
+) : AlbumDataSource.Local {
+    // TOP 10
     override suspend fun getTop10Albums(): List<Album> {
         return albumDao.top10Albums
     }
 
+    // GET ALL ALBUMS
     override suspend fun getAlbums(): List<Album> {
         return albumDao.albums
     }
@@ -21,6 +23,7 @@ class LocalAlbumDataSource(
         TODO("Not yet implemented")
     }
 
+    // SAVE ALBUMS
     override suspend fun saveAlbums(vararg album: Album): Boolean {
         val arr = albumDao.saveAlbums(*album)
         return arr.isNotEmpty()
@@ -31,11 +34,11 @@ class LocalAlbumDataSource(
     }
 
     override suspend fun updateAlbum(album: Album) {
-        TODO("Not yet implemented")
+        return albumDao.updateAlbum(album)
     }
 
     override suspend fun deleteAlbum(album: Album) {
-        TODO("Not yet implemented")
+        return albumDao.deleteAlbum(album)
     }
 
 }
