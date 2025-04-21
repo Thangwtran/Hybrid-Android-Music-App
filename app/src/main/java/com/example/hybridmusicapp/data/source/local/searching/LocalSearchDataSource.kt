@@ -1,6 +1,6 @@
 package com.example.hybridmusicapp.data.source.local.searching
 
-import com.example.hybridmusicapp.data.SearchingDataSource
+import com.example.hybridmusicapp.data.source.SearchingDataSource
 import com.example.hybridmusicapp.data.model.history.HistorySearchedKey
 import com.example.hybridmusicapp.data.model.history.HistorySearchedSong
 import com.example.hybridmusicapp.data.model.song.Song
@@ -8,7 +8,7 @@ import kotlinx.coroutines.flow.Flow
 
 class LocalSearchDataSource(
     private val searchingDao: SearchingDao
-):SearchingDataSource{
+): SearchingDataSource {
     override fun getAllHistorySearchKeys(): Flow<List<HistorySearchedKey>> {
         return searchingDao.allKeys
     }

@@ -1,6 +1,6 @@
 package com.example.hybridmusicapp.data.source.local.album
 
-import com.example.hybridmusicapp.data.AlbumDataSource
+import com.example.hybridmusicapp.data.source.AlbumDataSource
 import com.example.hybridmusicapp.data.model.album.Album
 import com.example.hybridmusicapp.data.model.album.AlbumSongCrossRef
 import com.example.hybridmusicapp.data.model.album.AlbumWithSongs

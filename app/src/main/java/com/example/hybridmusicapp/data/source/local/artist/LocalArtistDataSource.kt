@@ -1,6 +1,6 @@
 package com.example.hybridmusicapp.data.source.local.artist
 
-import com.example.hybridmusicapp.data.ArtistDataSource
+import com.example.hybridmusicapp.data.source.ArtistDataSource
 import com.example.hybridmusicapp.data.model.artist.Artist
 import kotlinx.coroutines.flow.Flow
 

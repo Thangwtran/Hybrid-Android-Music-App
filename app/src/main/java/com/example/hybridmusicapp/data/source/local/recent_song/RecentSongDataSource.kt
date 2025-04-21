@@ -1,6 +1,6 @@
 package com.example.hybridmusicapp.data.source.local.recent_song
 
-import com.example.hybridmusicapp.data.RecentDataSource
+import com.example.hybridmusicapp.data.source.RecentDataSource
 import com.example.hybridmusicapp.data.model.recent.RecentSong
 import com.example.hybridmusicapp.data.model.song.Song
 import kotlinx.coroutines.flow.Flow

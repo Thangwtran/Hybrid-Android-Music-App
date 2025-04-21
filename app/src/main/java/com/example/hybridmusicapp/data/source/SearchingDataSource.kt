@@ -1,4 +1,4 @@
-package com.example.hybridmusicapp.data
+package com.example.hybridmusicapp.data.source
 
 import com.example.hybridmusicapp.data.model.history.HistorySearchedKey
 import com.example.hybridmusicapp.data.model.history.HistorySearchedSong

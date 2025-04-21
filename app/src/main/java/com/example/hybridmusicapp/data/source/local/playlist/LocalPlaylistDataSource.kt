@@ -1,12 +1,12 @@
 package com.example.hybridmusicapp.data.source.local.playlist
 
-import com.example.hybridmusicapp.data.PlaylistDataSource
+import com.example.hybridmusicapp.data.source.PlaylistDataSource
 import com.example.hybridmusicapp.data.model.playlist.Playlist
 import kotlinx.coroutines.flow.Flow
 
 class LocalPlaylistDataSource(
     private val playlistDao: PlaylistDao
-): PlaylistDataSource{
+): PlaylistDataSource {
     override fun getAllPlaylist(): Flow<List<Playlist>> {
         return playlistDao.playlists
     }
