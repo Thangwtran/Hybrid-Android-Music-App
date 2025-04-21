@@ -1,5 +1,6 @@
 package com.example.hybridmusicapp.data.source.local.song
 
+import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
@@ -8,6 +9,7 @@ import androidx.room.Update
 import com.example.hybridmusicapp.data.model.song.Song
 import kotlinx.coroutines.flow.Flow
 
+@Dao
 interface SongDao {
     @Query(
         "SELECT song_id, title, album, artist, source, image, duration, " +
