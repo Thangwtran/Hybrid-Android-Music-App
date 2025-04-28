@@ -5,6 +5,7 @@ import com.example.hybridmusicapp.ResultCallback
 import com.example.hybridmusicapp.data.model.song.Song
 import com.example.hybridmusicapp.data.model.song.SongList
 import kotlinx.coroutines.flow.Flow
+import com.example.hybridmusicapp.data.source.remote.Result
 
 interface SongDataSource {
     interface Local {
@@ -19,7 +20,7 @@ interface SongDataSource {
     }
 
     interface Remote {
-        suspend fun getSongList(): Result<SongList>
+        suspend fun getSongList():Result<SongList>
         suspend fun getSongByArtist(artist: String): Result<List<Song>>
         suspend fun getSongByTitle(title: String): Result<List<Song>>
         suspend fun getSongById(songId: String, callback: ResultCallback<Result<Song>>)
