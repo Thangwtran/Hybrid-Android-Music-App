@@ -3,7 +3,9 @@ package com.example.hybridmusicapp.data.source
 
 import com.example.hybridmusicapp.ResultCallback
 import com.example.hybridmusicapp.data.model.artist.Artist
+import com.example.hybridmusicapp.data.model.artist.ArtistList
 import kotlinx.coroutines.flow.Flow
+import com.example.hybridmusicapp.data.source.remote.Result
 
 interface ArtistDataSource {
     interface Local{
@@ -14,6 +16,8 @@ interface ArtistDataSource {
     }
 
     interface Remote{
+        suspend fun loadRemoteArtists(result: Result<ArtistList>)
+        suspend fun addArtistToFireStore(artists: List<Artist>)
         suspend fun getArtists(callback: ResultCallback<Result<List<Artist>>>)
         suspend fun getArtistFirebase(callback: ResultCallback<Result<List<Artist>>>)
     }

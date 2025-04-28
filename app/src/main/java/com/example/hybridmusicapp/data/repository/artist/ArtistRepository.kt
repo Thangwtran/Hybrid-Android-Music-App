@@ -1,6 +1,8 @@
 package com.example.hybridmusicapp.data.repository.artist
 
+import com.example.hybridmusicapp.ResultCallback
 import com.example.hybridmusicapp.data.model.artist.Artist
+import com.example.hybridmusicapp.data.model.artist.ArtistList
 
 interface ArtistRepository {
     interface Local{
@@ -13,6 +15,10 @@ interface ArtistRepository {
     }
 
     interface Remote{
-        // TODO: get request 
+        // TODO: get request
+        suspend fun loadRemoteArtists(result: Result<ArtistList>)
+        suspend fun addArtistToFireStore(artists: List<Artist>)
+        suspend fun getArtists(callback: ResultCallback<Result<List<Artist>>>)
+        suspend fun getArtistFirebase(callback: ResultCallback<Result<List<Artist>>>)
     }
 }

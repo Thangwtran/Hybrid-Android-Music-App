@@ -15,12 +15,13 @@ class LocalPlaylistDataSource(
         return playlistDao.insert(playlist)
     }
 
-    override suspend fun delete(playlist: Playlist) {
-        return playlistDao.delete(playlist)
+    override suspend fun deletePlaylist(playlist: Playlist) {
+        TODO("Not yet implemented")
     }
 
-    override suspend fun update(playlist: Playlist) {
-        return playlistDao.update(playlist)
+    override suspend fun updatePlaylist(playlist: Playlist) {
+        TODO("Not yet implemented")
     }
+
 
 }

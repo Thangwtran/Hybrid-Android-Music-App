@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "541360345383",
+    "project_id": "hybrid-music-app",
+    "storage_bucket": "hybrid-music-app.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:541360345383:android:6aed4596d1ae79e10d5902",
+        "android_client_info": {
+          "package_name": "com.example.hybridmusicapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCUR5JPiqmbQwNQiMuYzURdkQO21tgSCn8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

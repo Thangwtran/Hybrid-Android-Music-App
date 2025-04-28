@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.room)
+    alias(libs.plugins.google.services)
 }
 
 android {
@@ -45,22 +46,29 @@ android {
 }
 
 dependencies {
-    implementation("com.tbuonomo:dotsindicator:5.1.0")
-    implementation("com.airbnb.android:lottie:6.6.4")
-    // custom
+
+    // retrofit
     implementation(libs.gson)
     implementation(libs.glide)
     implementation(libs.retrofit)
     implementation(libs.gson.converter)
+    // firebase
+    implementation(platform(libs.firebase.bom))
+    implementation(libs.firebase.firestore)
+    // media
     implementation(libs.media3.xoplayer)
     implementation(libs.media3.common)
     implementation(libs.media3.media.session)
     implementation(libs.media3.ui)
+    // room
     implementation(libs.room.runtime)
     implementation(libs.room.paging)
     implementation(libs.room.ktx)
     annotationProcessor(libs.room.compiler)
-    //
+    // custom
+    implementation("com.tbuonomo:dotsindicator:5.1.0")
+    implementation("com.airbnb.android:lottie:6.6.4")
+
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
