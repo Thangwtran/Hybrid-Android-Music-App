@@ -1,4 +1,6 @@
 package com.example.hybridmusicapp.data.source.remote
 
-class RemoteSongDataSource {
+import com.example.hybridmusicapp.data.source.SongDataSource
+
+class RemoteSongDataSource : SongDataSource.Remote {
 }

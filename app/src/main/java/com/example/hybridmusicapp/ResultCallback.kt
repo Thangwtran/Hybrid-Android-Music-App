@@ -1,4 +1,5 @@
 package com.example.hybridmusicapp
 
-interface ResultCallback {
+interface ResultCallback<T> {
+    fun onResult(result: T)
 }

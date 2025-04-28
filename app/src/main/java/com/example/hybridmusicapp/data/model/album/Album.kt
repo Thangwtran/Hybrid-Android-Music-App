@@ -9,25 +9,19 @@ import java.util.Objects
 
 @Entity(tableName = "albums")
 data class Album(
-    @SerializedName("id")
-    @PrimaryKey
-    @ColumnInfo(name = "album_id")
+    @SerializedName("id") @PrimaryKey @ColumnInfo(name = "album_id")
     val id: Int = 0,
 
-    @SerializedName("size")
-    @ColumnInfo(name = "size")
+    @SerializedName("size") @ColumnInfo(name = "size")
     val size: Int = 0,
 
-    @SerializedName("name")
-    @ColumnInfo(name = "name")
+    @SerializedName("name") @ColumnInfo(name = "name")
     val name: String = "",
 
-    @SerializedName("artwork")
-    @ColumnInfo(name = "artwork")
+    @SerializedName("artwork") @ColumnInfo(name = "artwork")
     val artwork: String = "",
 ) {
-    @SerializedName("songs")
-    @Ignore // ignore this field when converting to JSON
+    @SerializedName("songs") @Ignore // ignore this field when converting to JSON
     private val _songs: MutableList<String> = ArrayList()
 
     var songs: List<String>?

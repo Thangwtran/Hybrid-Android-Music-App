@@ -1,8 +1,10 @@
 package com.example.hybridmusicapp.data.source
 
+import com.example.hybridmusicapp.ResultCallback
 import com.example.hybridmusicapp.data.model.album.Album
 import com.example.hybridmusicapp.data.model.album.AlbumSongCrossRef
 import com.example.hybridmusicapp.data.model.album.AlbumWithSongs
+import com.example.hybridmusicapp.data.source.remote.Result
 import kotlinx.coroutines.flow.Flow
 
 interface AlbumDataSource {
@@ -17,7 +19,7 @@ interface AlbumDataSource {
     }
 
     interface Remote{
-        // suspend fun getTop10Albums(callback)
-        // suspend fun getAlbums(callback)
+         suspend fun getTop10Albums(callback:ResultCallback<Result<List<Album>>>)
+         suspend fun getAlbums(callback: ResultCallback<Result<List<Album>>>)
     }
 }

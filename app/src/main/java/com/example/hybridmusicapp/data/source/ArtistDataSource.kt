@@ -1,5 +1,7 @@
 package com.example.hybridmusicapp.data.source
 
+
+import com.example.hybridmusicapp.ResultCallback
 import com.example.hybridmusicapp.data.model.artist.Artist
 import kotlinx.coroutines.flow.Flow
 
@@ -11,6 +13,11 @@ interface ArtistDataSource {
         suspend fun updateArtist(artist: Artist)
     }
 
-    interface Remote{}
+    interface Remote{
+        suspend fun getArtists(callback: ResultCallback<Result<List<Artist>>>)
+        suspend fun getArtistFirebase(callback: ResultCallback<Result<List<Artist>>>)
+    }
+
+
 
 }
