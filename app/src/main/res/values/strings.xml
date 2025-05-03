@@ -27,4 +27,80 @@
     <string name="uplifting_progressive_house">🌟 Uplifting / Progressive House</string>
     <string name="other">🎵 Other...</string>
 
+    <!--    NCS Description-->
+
+    <string name="desc_no_rival">Song: Egzod &amp; Maestro Chives &amp; Alaina Cross - No Rival [NCS Release] Music provided by NoCopyrightSounds Free Download/Stream: NCS.io/NoRival Watch: http://youtu.be/</string>
+    <string name="desc_mortals_remix">Song: Warriyo - Mortals (TOKYO MACHINE &amp; Boom Kitty Remix) Music provided by NoCopyrightSounds Free Download/Stream: http://ncs.io/Mortals_TMBK Watch: http://ncs.lnk.to/Mortals_TMBKAT/youtube</string>
+    <string name="desc_why_we_lose">Song: Cartoon, Jéja - Why We Lose (feat. Coleman Trapp) [NCS Release] Music provided by NoCopyrightSounds Free Download/Stream: http://ncs.io/whywelose Watch: http://youtu.be/zyXmsVwZqX4</string>
+    <string name="desc_blank_remix">Song: Disfigure - Blank (HYLO Remix) [NCS Release] Music provided by NoCopyrightSounds Free Download/Stream: http://ncs.io/BlankRemix Watch: http://youtu.be/g04nYW6Y7wE</string>
+    <string name="desc_delta">Song: DJ FKU - DELTA [NCS Release] Music provided by NoCopyrightSounds Free Download/Stream: http://ncs.io/DELTA Watch: http://ncs.lnk.to/DELTAAT/youtube</string>
+    <string name="desc_executioner">Song: DJ FKU - EXECUTIONER [NCS Release] Music provided by NoCopyrightSounds Free Download/Stream: http://ncs.io/EXECUTIONER Watch: http://ncs.lnk.to/EXECUTIONERAT/youtube</string>
+    <string name="desc_royalty_remix">Song: Egzod &amp; Maestro Chives - Royalty (Don Diablo Remix) [NCS Release] Music provided by NoCopyrightSounds Free Download/Stream: http://ncs.io/dd-royalty Watch: http://NCS.lnk.to/dd-royaltyAT/youtube</string>
+    <string name="desc_mortals_royalty_mashup">Track: Mortals x Royalty Mashup Music provided by NoCopyrightSounds. Watch more NCS on YouTube: https://NCS.lnk.to/YouTubeAT</string>
+    <string name="desc_symbolism">Song: Electro-Light - Symbolism [NCS Release] Music provided by NoCopyrightSounds Free Download/Stream: http://ncs.io/symbolism Watch: http://youtu.be/__CRWE-L45k</string>
+    <string name="desc_sky_high_2">Song: Elektronomia - Sky High pt.II [NCS Release] Music provided by NoCopyrightSounds Free Download/Stream: http://NCS.io/SkyHigh2 Watch: http://youtu.be/lG6HVrrXup8</string>
+    <string name="desc_taking_it_slow">Song: JVNA - Taking It Slow [NCS Release] Music provided by NoCopyrightSounds Free Download/Stream: http://ncs.io/TakingItSlow Watch: http://ncs.lnk.to/TakingItSlowAT/youtube</string>
+    <string name="desc_royalty_original">Song: Egzod, Maestro Chives, Neoni - Royalty [NCS Release] Music provided by NoCopyrightSounds Free Download/Stream: http://ncs.io/Royalty Watch: http://ncs.lnk.to/RoyaltyAT/youtube</string>
+    <string name="desc_on_and_on_remix">Song: Cartoon, Jéja - On &amp; On (Feat. Daniel Levi) (nuumi Remix) [NCS Release] Music provided by NoCopyrightSounds Free Download/Stream: http://NCS.io/OnandOnxnuumi Watch: http://youtu.be/</string>
+    <string name="desc_lighthouse">Song: JJD &amp; Azertion - Lighthouse (feat. PhiloSofie) Music provided by NoCopyrightSounds Free Download/Stream: http://ncs.io/Lighthouse Watch: http://ncs.lnk.to/LighthouseAT/youtube</string>
+    <string name="desc_light_it_up">Song: Robin Hustin x TobiMorrow - Light It Up (feat. Jex) [NCS Release] Music provided by NoCopyrightSounds Free Download/Stream: http://ncs.io/LightItUp Watch: http://youtu.be/bdE_SyHad90</string>
+    <string name="desc_heroes_dreams_mashup">Song: Heroes Tonight x Dreams pt. II Mashup Music provided by NoCopyrightSounds Free Download/Stream: Watch:</string>
+    <string name="desc_cradles">Song: Sub Urban - Cradles [NCS Release] Music provided by NoCopyrightSounds Free Download/Stream: http://ncs.io/Cradles Watch: http://youtu.be/Hn4sfC2PbhI</string>
+    <string name="desc_feel_good">Song: Syn Cole - Feel Good [NCS Release] Music provided by NoCopyrightSounds Free Download/Stream: http://ncs.io/feelgood Watch: http://youtu.be/q1ULJ92aldE</string>
+    <string name="desc_live_your_life">Song: Tobu - Live Your Life Music provided by NoCopyrightSounds Free Download/Stream: http://ncs.io/LiveYourLife Watch: http://ncs.lnk.to/LiveYourLifeAT/youtube</string>
+    <string name="desc_desperate">Song: NEFFEX &amp; TOKYO MACHINE - Desperate [NCS Release] Music provided by NoCopyrightSounds Free Download/Stream: http://ncs.io/TM_Desperate Watch: http://ncs.lnk.to/TM_DesperateAT/youtube</string>
+    <string name="desc_fearless_2">Song: TULE - Fearless pt.II (feat. Chris Linton) [NCS Release] Music provided by NoCopyrightSounds Free Download/Stream: http://ncs.io/Fearless2 Watch: http://youtu.be/S19UcWdOA-I</string>
+    <string name="desc_running_wild">Song: Wiguez, Vizzen, Maestro Chives - Running Wild [NCS Release] Music provided by NoCopyrightSounds Free Download/Stream: http://ncs.io/RunningWild Watch: http://youtu.be/</string>
+    <string name="desc_be_the_one">Song: Sam Day - BE THE ONE (WinWel Remix) Music provided by NoCopyrightSounds Free Download/Stream: http://ncs.io/BTO_WW Watch: http://ncs.lnk.to/BTO_WWAT/youtube</string>
+
+    <!-- Song Titles -->
+    <string name="song_no_rival">No Rival</string>
+    <string name="song_mortals_remix">Mortals (TOKYO MACHINE &amp; Boom Kitty Remix)</string>
+    <string name="song_why_we_lose">Why We Lose</string>
+    <string name="song_blank_remix">Blank (HYLO Remix)</string>
+    <string name="song_delta">DELTA</string>
+    <string name="song_executioner">EXECUTIONER</string>
+    <string name="song_royalty_remix">Royalty (Don Diablo Remix)</string>
+    <string name="song_mortals_royalty_mashup">Mortals x Royalty Mashup</string>
+    <string name="song_symbolism">Symbolism</string>
+    <string name="song_sky_high_pt2">Sky High pt.II</string>
+    <string name="song_taking_it_slow">Taking It Slow</string>
+    <string name="song_royalty">Royalty</string>
+    <string name="song_on_and_on_remix">On &amp; On (nuumi Remix)</string>
+    <string name="song_lighthouse">Lighthouse</string>
+    <string name="song_light_it_up">Light It Up</string>
+    <string name="song_heroes_dreams_mashup">Heroes Tonight x Dreams pt. II Mashup</string>
+    <string name="song_cradles">Cradles</string>
+    <string name="song_feel_good">Feel Good</string>
+    <string name="song_live_your_life">Live Your Life</string>
+    <string name="song_desperate">Desperate</string>
+    <string name="song_fearless_pt2">Fearless pt.II</string>
+    <string name="song_running_wild">Running Wild</string>
+    <string name="song_be_the_one_remix">BE THE ONE (WinWel Remix)</string>
+
+    <!-- Artists -->
+    <string name="artist_no_rival">Alaina Cross, Maestro Chives, Egzod</string>
+    <string name="artist_mortals_remix">Boom Kitty, TOKYO MACHINE, Warriyo</string>
+    <string name="artist_why_we_lose">Cartoon, Coleman Trapp, Jéja</string>
+    <string name="artist_blank_remix">Disfigure, HYLO</string>
+    <string name="artist_delta">DJ FKU</string>
+    <string name="artist_executioner">DJ FKU</string>
+    <string name="artist_royalty_remix">Egzod, Maestro Chives, Don Diablo</string>
+    <string name="artist_mortals_royalty_mashup">Egzod, Neoni, Maestro Chives, Warriyo</string>
+    <string name="artist_symbolism">Electro-Light</string>
+    <string name="artist_sky_high_pt2">Elektronomia</string>
+    <string name="artist_taking_it_slow">JVNA</string>
+    <string name="artist_royalty">Maestro Chives, Egzod, Neoni</string>
+    <string name="artist_on_and_on_remix">nuumi, Cartoon, Jéja</string>
+    <string name="artist_lighthouse">PhiloSofie, Azertion, JD</string>
+    <string name="artist_light_it_up">Robin Hustin, Tobimorrow</string>
+    <string name="artist_heroes_dreams_mashup">Sara Skinner, Lost Sky, Johnning, Janji</string>
+    <string name="artist_cradles">Sub Urban</string>
+    <string name="artist_feel_good">Syn Cole</string>
+    <string name="artist_live_your_life">Tobu</string>
+    <string name="artist_desperate">TOKYO MACHINE, NEFFEX</string>
+    <string name="artist_fearless_pt2">TULE, Chris Linton</string>
+    <string name="artist_running_wild">Wiguez, Vizzen, Maestro Chives</string>
+    <string name="artist_be_the_one_remix">WinWel, Sam Day</string>
+
 </resources>
