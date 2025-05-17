@@ -3,6 +3,7 @@ package com.example.hybridmusicapp.data.source.local.ncsong
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
+import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
 import com.example.hybridmusicapp.data.model.song.NCSong
@@ -20,8 +21,8 @@ interface NCSongDao {
     @Query("SELECT * FROM nc_songs WHERE is_favourite = 1")
     fun getFavouriteNCSongs(): Flow<List<NCSong>>
 
-    @Insert
-    suspend fun insert(vararg ncSongs: NCSong): LongArray
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insert( ncSongs: List<NCSong>): LongArray
 
     @Update
     suspend fun update(ncSong: NCSong)

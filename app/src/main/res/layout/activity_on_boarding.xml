@@ -5,19 +5,29 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/main_background"
     tools:context=".ui.onboarding.OnBoardingActivity">
+
+    <ImageView
+        android:id="@+id/imageView3"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:scaleType="centerCrop"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/bg_11" />
 
     <TextView
         android:id="@+id/textView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
+        android:fontFamily="@font/montserrat_semibold"
         android:gravity="center"
         android:text="@string/select_interest"
-        android:textColor="@color/white"
-        android:textSize="@dimen/text_title"
-        android:textStyle="bold"
+        android:textColor="@color/grey_lighter"
+        android:textSize="@dimen/text_headline"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -29,36 +39,39 @@
         android:layout_marginTop="16dp"
         android:gravity="center"
         android:text="@string/select_interest2"
-        android:textColor="@color/gray"
-        android:textSize="@dimen/text_medium"
+        android:textColor="@color/grey_light"
+        android:textSize="@dimen/_18sp"
         app:layout_constraintEnd_toEndOf="@+id/textView"
         app:layout_constraintStart_toStartOf="@+id/textView"
         app:layout_constraintTop_toBottomOf="@+id/textView" />
 
 
-    <Button
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/btn_continue"
+        style="@style/Widget.MaterialComponents.Button"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:backgroundTint="@color/button_next_color"
+        android:layout_marginBottom="24dp"
+        android:backgroundTint="@color/btn_color"
+        android:fontFamily="@font/montserrat_semibold"
+        android:insetTop="@dimen/_0dp"
+        android:insetBottom="@dimen/_0dp"
         android:paddingTop="@dimen/_12dp"
         android:paddingBottom="@dimen/_12dp"
         android:text="Continue"
-        android:textSize="@dimen/text_medium"
+        android:textSize="@dimen/_18sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/chipGroup"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="@+id/chipGroup"
-        app:layout_constraintTop_toBottomOf="@+id/chipGroup" />
+        app:layout_constraintStart_toStartOf="@+id/chipGroup" />
 
     <com.google.android.material.chip.ChipGroup
         android:id="@+id/chipGroup"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginStart="16dp"
+        android:layout_marginStart="32dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
-        app:chipSpacingHorizontal="@dimen/_16dp"
+        app:chipSpacingHorizontal="@dimen/_20dp"
         app:layout_constraintBottom_toTopOf="@+id/guideline3"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
@@ -71,7 +84,7 @@
             style="@style/Widget.Material3.Chip.Filter.Elevated"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="🎤 Vietnamese Pop"
+            android:text="💿 Vietnamese Pop"
             app:chipMinHeight="@dimen/_34dp" />
 
         <com.google.android.material.chip.Chip
@@ -79,17 +92,15 @@
             style="@style/Widget.Material3.Chip.Filter.Elevated"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/dubstep_bass"
-            app:chipMinHeight="@dimen/_34dp"
-            tools:layout_editor_absoluteX="186dp"
-            tools:layout_editor_absoluteY="118dp" />
+            android:text="@string/dubstep"
+            app:chipMinHeight="@dimen/_34dp" />
 
         <com.google.android.material.chip.Chip
             android:id="@+id/chip_rap"
             style="@style/Widget.Material3.Chip.Filter.Elevated"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/hype_rap_edm_rap"
+            android:text="@string/hype_rap"
             app:chipMinHeight="@dimen/_34dp" />
 
         <com.google.android.material.chip.Chip
@@ -97,7 +108,7 @@
             style="@style/Widget.Material3.Chip.Filter.Elevated"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/chill_vocal"
+            android:text="@string/chill"
             app:chipMinHeight="@dimen/_34dp" />
 
         <com.google.android.material.chip.Chip
@@ -105,7 +116,7 @@
             style="@style/Widget.Material3.Chip.Filter.Elevated"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/epic_cinematic"
+            android:text="@string/epic"
             app:chipMinHeight="@dimen/_34dp" />
 
         <com.google.android.material.chip.Chip
@@ -113,7 +124,7 @@
             style="@style/Widget.Material3.Chip.Filter.Elevated"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/future_bass"
+            android:text="@string/cinematic"
             app:chipMinHeight="@dimen/_34dp" />
 
         <com.google.android.material.chip.Chip
@@ -121,7 +132,7 @@
             style="@style/Widget.Material3.Chip.Filter.Elevated"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/dark_pop_alternative"
+            android:text="@string/bass"
             app:chipMinHeight="@dimen/_34dp" />
 
         <com.google.android.material.chip.Chip
@@ -137,7 +148,7 @@
             style="@style/Widget.Material3.Chip.Filter.Elevated"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/trap"
+            android:text="@string/vocal"
             app:chipMinHeight="@dimen/_34dp" />
 
         <com.google.android.material.chip.Chip
@@ -145,7 +156,7 @@
             style="@style/Widget.Material3.Chip.Filter.Elevated"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/uplifting_progressive_house"
+            android:text="@string/edm_rap"
             app:chipMinHeight="@dimen/_34dp" />
 
         <com.google.android.material.chip.Chip

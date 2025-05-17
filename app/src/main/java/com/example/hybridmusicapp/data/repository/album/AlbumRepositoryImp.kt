@@ -1,0 +1,54 @@
+package com.example.hybridmusicapp.data.repository.album
+
+import com.example.hybridmusicapp.ResultCallback
+import com.example.hybridmusicapp.data.model.album.Album
+import com.example.hybridmusicapp.data.model.album.AlbumList
+import com.example.hybridmusicapp.data.source.AlbumDataSource
+import com.example.hybridmusicapp.data.source.remote.RemoteAlbumDataSource
+import com.example.hybridmusicapp.data.source.remote.Result
+import okhttp3.Callback
+
+class AlbumRepositoryImp(
+    private val localAlbumDataSource: AlbumDataSource.Local,
+): AlbumRepository.Local, AlbumRepository.Remote {
+    private val remoteAlbumDataSource: AlbumDataSource.Remote = RemoteAlbumDataSource()
+
+    override suspend fun getTop10Albums(): List<Album> {
+        return localAlbumDataSource.getTop10Albums()
+    }
+
+    override suspend fun getAlbums(): List<Album> {
+        return localAlbumDataSource.getAlbums()
+    }
+
+    override suspend fun saveAlbums(vararg albums: Album): Boolean {
+        return localAlbumDataSource.saveAlbums(*albums)
+    }
+
+    override suspend fun updateAlbum(album: Album) {
+        return localAlbumDataSource.updateAlbum(album)
+    }
+
+    override suspend fun deleteAlbum(album: Album) {
+        return localAlbumDataSource.deleteAlbum(album)
+    }
+
+
+    // REMOTE
+    override suspend fun loadRemoteAlbums(): Result<AlbumList> {
+        return remoteAlbumDataSource.loadRemoteAlbums()
+    }
+
+    override suspend fun addAlbumToFireStore(albums: List<Album>) {
+        remoteAlbumDataSource.addAlbumToFireStore(albums)
+    }
+
+    override suspend fun getTop10AlbumsRequest(callback: ResultCallback<Result<List<Album>>>) {
+        remoteAlbumDataSource.getTop10Albums(callback)
+    }
+
+    override suspend fun getAlbumsRequest(callback: ResultCallback<Result<List<Album>>>) {
+        remoteAlbumDataSource.getAlbums(callback)
+    }
+
+}

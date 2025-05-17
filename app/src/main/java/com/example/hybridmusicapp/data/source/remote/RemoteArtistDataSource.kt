@@ -12,7 +12,7 @@ import kotlinx.coroutines.withContext
 
 class RemoteArtistDataSource : ArtistDataSource.Remote {
 
-    override suspend fun loadRemoteArtists(result: Result<ArtistList>) {
+    override suspend fun loadRemoteArtists(): Result<ArtistList> {
         return withContext(Dispatchers.IO) {
             val response = RetrofitHelper.instance.loadArtist()
             if (response.isSuccessful) {

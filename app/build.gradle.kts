@@ -3,6 +3,7 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.room)
     alias(libs.plugins.google.services)
+    alias(libs.plugins.devtools)
 }
 
 android {
@@ -11,7 +12,7 @@ android {
 
     defaultConfig {
         applicationId = "com.example.hybridmusicapp"
-        minSdk = 33
+        minSdk = 28
         targetSdk = 35
         versionCode = 1
         versionName = "1.0"
@@ -64,7 +65,12 @@ dependencies {
     implementation(libs.room.runtime)
     implementation(libs.room.paging)
     implementation(libs.room.ktx)
-    annotationProcessor(libs.room.compiler)
+   // annotationProcessor(libs.room.compiler)
+    ksp(libs.room.compiler)
+    // navigation
+    implementation(libs.androidx.navigation.runtime)
+    implementation(libs.androidx.navigation.fragment.ktx)
+    implementation(libs.androidx.navigation.ui.ktx)
     // custom
     implementation("com.tbuonomo:dotsindicator:5.1.0")
     implementation("com.airbnb.android:lottie:6.6.4")

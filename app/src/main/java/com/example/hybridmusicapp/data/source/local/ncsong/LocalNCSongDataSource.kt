@@ -19,8 +19,8 @@ class LocalNCSongDataSource (
         TODO("Not yet implemented")
     }
 
-    override suspend fun insert(vararg ncSongs: NCSong): LongArray {
-        TODO("Not yet implemented")
+    override suspend fun insert(ncSongs: List<NCSong>): LongArray {
+        return ncSongDao.insert(ncSongs)
     }
 
     override suspend fun update(ncSong: NCSong) {

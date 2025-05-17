@@ -45,5 +45,7 @@
     <dimen name="text_display_large">48sp</dimen>
     <dimen name="text_hero">56sp</dimen>
     <dimen name="_34dp">34dp</dimen>
+    <dimen name="_0dp">0dp</dimen>
+    <dimen name="_18sp">18sp</dimen>
 
 </resources>

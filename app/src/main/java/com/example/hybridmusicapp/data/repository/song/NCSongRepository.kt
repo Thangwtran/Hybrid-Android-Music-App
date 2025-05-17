@@ -11,6 +11,5 @@ interface NCSongRepository {
         suspend fun insert(vararg ncSongs:NCSong):LongArray
         suspend fun update(ncSong:NCSong)
         suspend fun delete(ncSong:NCSong)
-
     }
 }

@@ -7,7 +7,7 @@ import androidx.room.PrimaryKey
 
 @Entity(tableName = "nc_songs" )
 data class NCSong(
-    @PrimaryKey()
+    @PrimaryKey
     @ColumnInfo(name = "ncs_song_id")
     val id: Int = 0,
 

@@ -1,11 +1,9 @@
 package com.example.hybridmusicapp.data.repository.album
 
+import com.example.hybridmusicapp.ResultCallback
 import com.example.hybridmusicapp.data.model.album.Album
 import com.example.hybridmusicapp.data.model.album.AlbumList
-import com.example.hybridmusicapp.data.model.artist.Artist
-import com.example.hybridmusicapp.data.model.artist.ArtistList
 import com.example.hybridmusicapp.data.source.remote.Result
-import okhttp3.Callback
 
 interface AlbumRepository {
     interface Local{
@@ -13,18 +11,18 @@ interface AlbumRepository {
         suspend fun getAlbums():List<Album>
 
         // TODO: album with song 
-        suspend fun saveAlbums(albums: List<Album>): Boolean
+        suspend fun saveAlbums(vararg album: Album): Boolean
 
         // TODO: album cross ref 
-        suspend fun updateAlbum(album: Album): Boolean
-        suspend fun deleteAlbum(album: Album): Boolean
+        suspend fun updateAlbum(album: Album)
+        suspend fun deleteAlbum(album: Album)
 
     }
 
     interface Remote{
-        suspend fun loadRemoteAlbums(result: Result<AlbumList>)
+        suspend fun loadRemoteAlbums(): Result<AlbumList>
         suspend fun addAlbumToFireStore(albums: List<Album>)
-        suspend fun getTop10AlbumsRequest(callback: Callback)
-        suspend fun getAlbumsRequest(callback: Callback)
+        suspend fun getTop10AlbumsRequest(callback: ResultCallback<Result<List<Album>>>)
+        suspend fun getAlbumsRequest(callback: ResultCallback<Result<List<Album>>>)
     }
 }

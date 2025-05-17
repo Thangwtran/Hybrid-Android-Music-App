@@ -20,7 +20,7 @@ interface AlbumDataSource {
     }
 
     interface Remote {
-        suspend fun loadRemoteAlbums(result: Result<AlbumList>)
+        suspend fun loadRemoteAlbums(): Result<AlbumList>
         suspend fun addAlbumToFireStore(albums: List<Album>)
         suspend fun getTop10Albums(callback: ResultCallback<Result<List<Album>>>)
         suspend fun getAlbums(callback: ResultCallback<Result<List<Album>>>)

@@ -12,7 +12,7 @@ import kotlinx.coroutines.withContext
 
 class RemoteAlbumDataSource: AlbumDataSource.Remote {
 
-    override suspend fun loadRemoteAlbums(result: Result<AlbumList>) {
+    override suspend fun loadRemoteAlbums(): Result<AlbumList> {
         return withContext(Dispatchers.IO) {
             val response = RetrofitHelper.instance.loadPlaylist()
             if (response.isSuccessful) {
