@@ -23,5 +23,6 @@
     <color name="yellow_bright">#FAC000</color>
     <color name="red_bright">#E33D2E</color>
     <color name="btn_color">#FF4433</color>
+    <color name="tomato">#B84030</color>
 
 </resources>

@@ -3,8 +3,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/app_navigation"
-    app:startDestination="@id/homeActivity">
+    app:startDestination="@id/homeFragment">
 
+    <!-- Activity -->
     <activity
         android:id="@+id/homeActivity"
         android:name="com.example.hybridmusicapp.ui.home.HomeActivity"
@@ -20,4 +21,26 @@
         android:name="com.example.hybridmusicapp.ui.splash.LoadingActivity"
         android:label="activity_loading"
         tools:layout="@layout/activity_loading" />
+
+    <!-- Fragment -->
+    <fragment
+        android:id="@+id/homeFragment"
+        android:name="com.example.hybridmusicapp.ui.home.HomeFragment"
+        android:label="fragment_home"
+        tools:layout="@layout/fragment_home" />
+    <fragment
+        android:id="@+id/settingFragment"
+        android:name="com.example.hybridmusicapp.ui.setting.SettingFragment"
+        android:label="fragment_setting"
+        tools:layout="@layout/fragment_setting" />
+    <fragment
+        android:id="@+id/libraryFragment"
+        android:name="com.example.hybridmusicapp.ui.library.LibraryFragment"
+        android:label="fragment_library"
+        tools:layout="@layout/fragment_library" />
+    <fragment
+        android:id="@+id/discoveryFragment"
+        android:name="com.example.hybridmusicapp.ui.discovery.DiscoveryFragment"
+        android:label="fragment_discovery"
+        tools:layout="@layout/fragment_discovery" />
 </navigation>

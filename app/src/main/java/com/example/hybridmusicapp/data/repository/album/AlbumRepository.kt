@@ -22,7 +22,7 @@ interface AlbumRepository {
     interface Remote{
         suspend fun loadRemoteAlbums(): Result<AlbumList>
         suspend fun addAlbumToFireStore(albums: List<Album>)
-        suspend fun getTop10AlbumsRequest(callback: ResultCallback<Result<List<Album>>>)
-        suspend fun getAlbumsRequest(callback: ResultCallback<Result<List<Album>>>)
+        suspend fun getTop10AlbumsFireStore(callback: ResultCallback<Result<List<Album>>>)
+        suspend fun getAlbumsFireStore(callback: ResultCallback<Result<List<Album>>>)
     }
 }

@@ -4,6 +4,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
+import com.example.hybridmusicapp.ResultCallback
 import com.example.hybridmusicapp.data.model.album.Album
 import com.example.hybridmusicapp.data.repository.album.AlbumRepositoryImp
 import com.example.hybridmusicapp.data.source.remote.Result
@@ -30,6 +31,34 @@ class AlbumViewModel(
     fun addAlbumToFireStore(albums: List<Album>) {
         viewModelScope.launch(Dispatchers.IO) {
             albumRepository.addAlbumToFireStore(albums)
+        }
+    }
+
+    fun getTop10AlbumsFireStore() {
+        viewModelScope.launch(Dispatchers.IO) {
+            albumRepository.getTop10AlbumsFireStore(object : ResultCallback<Result<List<Album>>> {
+                override fun onResult(result: Result<List<Album>>) {
+                    if(result is Result.Success){
+                        _albums.postValue(result.data)
+                    }else if(result is Result.Failure){
+                        _albums.postValue(emptyList())
+                    }
+                }
+            })
+        }
+    }
+
+    fun getAlbumsFireStore(){
+        viewModelScope.launch(Dispatchers.IO) {
+            albumRepository.getAlbumsFireStore(object : ResultCallback<Result<List<Album>>>{
+                override fun onResult(result: Result<List<Album>>) {
+                    if(result is Result.Success){
+                        _albums.postValue(result.data)
+                    }else if(result is Result.Failure){
+                        _albums.postValue(emptyList())
+                    }
+                }
+            })
         }
     }
 

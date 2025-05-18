@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/navigation_home"
+        android:icon="@drawable/ic_home"
+        android:title="Home"
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/navigation_library"
+        android:icon="@drawable/ic_library_music"
+        android:title="Library"
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/navigation_discovery"
+        android:icon="@drawable/ic_dashboard_black_24dp"
+        android:title="DIscovery"
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/navigation_setting"
+        android:icon="@drawable/ic_settings"
+        android:title="Settings"
+        app:showAsAction="always" />
+</menu>

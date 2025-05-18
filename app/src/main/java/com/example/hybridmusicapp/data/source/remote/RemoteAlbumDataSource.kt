@@ -1,16 +1,21 @@
 package com.example.hybridmusicapp.data.source.remote
 
 import android.util.Log
+import com.google.firebase.firestore.Query
 import com.example.hybridmusicapp.ResultCallback
 import com.example.hybridmusicapp.data.model.album.Album
 import com.example.hybridmusicapp.data.model.album.AlbumList
 import com.example.hybridmusicapp.data.source.AlbumDataSource
+import com.google.android.gms.tasks.Task
 import com.google.firebase.Firebase
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.QuerySnapshot
 import com.google.firebase.firestore.firestore
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
-class RemoteAlbumDataSource: AlbumDataSource.Remote {
+class RemoteAlbumDataSource : AlbumDataSource.Remote {
+    private val firestore = FirebaseFirestore.getInstance()
 
     override suspend fun loadRemoteAlbums(): Result<AlbumList> {
         return withContext(Dispatchers.IO) {
@@ -21,7 +26,7 @@ class RemoteAlbumDataSource: AlbumDataSource.Remote {
                 } else {
                     Result.Failure(Exception("No albums found"))
                 }
-            }else{
+            } else {
                 Result.Failure(Exception(response.message()))
             }
         }
@@ -42,11 +47,35 @@ class RemoteAlbumDataSource: AlbumDataSource.Remote {
     }
 
     override suspend fun getTop10Albums(callback: ResultCallback<Result<List<Album>>>) {
-        TODO("Not yet implemented")
+        withContext(Dispatchers.IO) {
+            firestore.collection("albums")
+                .orderBy("size", Query.Direction.DESCENDING)
+                .limit(10)
+                .get()
+                .addOnCompleteListener { task: Task<QuerySnapshot> ->
+                    if (task.isSuccessful) {
+                        val albums = task.result.toObjects(Album::class.java)
+                        callback.onResult(Result.Success(albums))
+                    } else {
+                        callback.onResult(Result.Failure(task.exception))
+                    }
+                }
+        }
     }
 
     override suspend fun getAlbums(callback: ResultCallback<Result<List<Album>>>) {
-        TODO("Not yet implemented")
+        withContext(Dispatchers.IO) {
+            firestore.collection("albums")
+                .get()
+                .addOnCompleteListener { task: Task<QuerySnapshot> ->
+                    if(task.isSuccessful){
+                        val albums = task.result.toObjects(Album::class.java)
+                        callback.onResult(Result.Success(albums))
+                    } else {
+                        callback.onResult(Result.Failure(task.exception))
+                    }
+                }
+        }
     }
 
 }

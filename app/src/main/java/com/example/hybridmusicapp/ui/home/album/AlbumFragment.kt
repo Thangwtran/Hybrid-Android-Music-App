@@ -9,6 +9,7 @@ import com.example.hybridmusicapp.databinding.FragmentAlbumBinding
 
 class AlbumFragment : Fragment() {
     private lateinit var binding: FragmentAlbumBinding
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,

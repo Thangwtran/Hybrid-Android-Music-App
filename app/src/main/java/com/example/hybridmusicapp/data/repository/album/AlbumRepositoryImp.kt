@@ -43,11 +43,11 @@ class AlbumRepositoryImp(
         remoteAlbumDataSource.addAlbumToFireStore(albums)
     }
 
-    override suspend fun getTop10AlbumsRequest(callback: ResultCallback<Result<List<Album>>>) {
+    override suspend fun getTop10AlbumsFireStore(callback: ResultCallback<Result<List<Album>>>) {
         remoteAlbumDataSource.getTop10Albums(callback)
     }
 
-    override suspend fun getAlbumsRequest(callback: ResultCallback<Result<List<Album>>>) {
+    override suspend fun getAlbumsFireStore(callback: ResultCallback<Result<List<Album>>>) {
         remoteAlbumDataSource.getAlbums(callback)
     }
 

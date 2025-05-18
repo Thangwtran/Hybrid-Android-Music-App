@@ -6,4 +6,6 @@
     </style>
 
     <style name="Theme.HybridMusicApp" parent="Base.Theme.HybridMusicApp" />
+    
+
 </resources>

@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
@@ -19,35 +20,37 @@ import com.example.hybridmusicapp.ui.home.HomeViewModel
 import com.example.hybridmusicapp.ui.home.album.AlbumViewModel
 import com.example.hybridmusicapp.ui.home.ncs.NcsViewModel
 import com.example.hybridmusicapp.utils.NCSUtils
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class LoadingActivity : AppCompatActivity() {
     // homeViewModel
-    private val homeViewModel by viewModels<HomeViewModel>{
+    private val homeViewModel by viewModels<HomeViewModel> {
         val application = application as MusicApplication
         val songRepository = application.songRepository
         val albumRepository = application.albumRepository
         HomeViewModel.Factory(songRepository, albumRepository)
     }
 
-    private val artistViewModel by viewModels<ArtistViewModel>{
+    private val artistViewModel by viewModels<ArtistViewModel> {
         val application = application as MusicApplication
         val artistRepository = application.artistRepository
         ArtistViewModel.Factory(artistRepository)
     }
 
-    private val albumViewModel by viewModels<AlbumViewModel>{
+    private val albumViewModel by viewModels<AlbumViewModel> {
         val application = application as MusicApplication
         val albumRepository = application.albumRepository
         AlbumViewModel.Factory(albumRepository)
     }
 
-    private val ncsViewModel by viewModels<NcsViewModel>{
+    private val ncsViewModel by viewModels<NcsViewModel> {
         val application = application as MusicApplication
         val ncsRepository = application.ncsRepository
         NcsViewModel.Factory(ncsRepository)
     }
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -98,25 +101,48 @@ class LoadingActivity : AppCompatActivity() {
 //            }
 //        }
 
+        insertNcsSong()
+        initAlbumData()
+
+    }
+
+    private fun insertNcsSong() {
         val ncsSongs = NCSUtils.initData(applicationContext)
         ncsViewModel.insert(ncsSongs)
-        ncsViewModel.ncsSongs.observe(this) {ncsSongs->
-            if(ncsSongs.isNotEmpty()){
-                setFirstLaunchFalse()
-                Toast.makeText(this, "NCS songs loaded successfully", Toast.LENGTH_SHORT).show()
+        ncsViewModel.ncsSongs.observe(this) { ncsSongs ->
+            if (ncsSongs.isNotEmpty()) {
+                Toast.makeText(
+                    this,
+                    "NCS songs loaded successfully",
+                    Toast.LENGTH_SHORT
+                ).show()
+            } else {
+                Toast.makeText(
+                    this,
+                    "Error loading ncs songs",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+        }
+    }
+
+    private fun initAlbumData() {
+        albumViewModel.getTop10AlbumsFireStore()
+        albumViewModel.albums.observe(this) {
+            if (it != null) {
                 Handler(Looper.getMainLooper()).postDelayed({
                     val intent = Intent(this, SplashActivity::class.java)
                     startActivity(intent)
                     finish()
-                }, 4000)
-
-            }else{
-                Toast.makeText(this, "Error loading ncs songs", Toast.LENGTH_SHORT).show()
+                }, 2000)
+            } else {
+                Toast.makeText(this, "Error loading albums", Toast.LENGTH_SHORT)
+                    .show()
             }
         }
-
-
     }
+
+
     private fun isFirstLaunch(): Boolean {
         val prefs = getSharedPreferences("app_prefs", MODE_PRIVATE)
         return prefs.getBoolean("isFirstLaunch", true)
@@ -127,3 +153,4 @@ class LoadingActivity : AppCompatActivity() {
         prefs.edit().putBoolean("isFirstLaunch", false).apply()
     }
 }
+
