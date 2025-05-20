@@ -98,8 +98,12 @@
                 android:textStyle="bold" />
 
             <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_recommended"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/_120dp" />
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                android:orientation="horizontal"
+                android:layout_height="wrap_content"
+                tools:listitem="@layout/item_recommended_song" />
         </LinearLayout>
 
         <LinearLayout
@@ -123,6 +127,7 @@
                 android:textStyle="bold" />
 
             <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_artist"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/_120dp" />
         </LinearLayout>
@@ -146,6 +151,7 @@
                 android:textStyle="bold" />
 
             <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_ncs_tracks"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/_120dp" />
         </LinearLayout>

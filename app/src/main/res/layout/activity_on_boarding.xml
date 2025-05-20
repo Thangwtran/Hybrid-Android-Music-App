@@ -89,7 +89,7 @@
             app:chipMinHeight="@dimen/_34dp" />
 
         <com.google.android.material.chip.Chip
-            android:id="@+id/chip_bass"
+            android:id="@+id/chip_dubstep"
             style="@style/Widget.Material3.Chip.Filter.Elevated"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -121,7 +121,7 @@
             app:chipMinHeight="@dimen/_34dp" />
 
         <com.google.android.material.chip.Chip
-            android:id="@+id/chip_future_bass"
+            android:id="@+id/chip_cinematic"
             style="@style/Widget.Material3.Chip.Filter.Elevated"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -129,7 +129,7 @@
             app:chipMinHeight="@dimen/_34dp" />
 
         <com.google.android.material.chip.Chip
-            android:id="@+id/chip_dark_pop"
+            android:id="@+id/chip_bass"
             style="@style/Widget.Material3.Chip.Filter.Elevated"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -145,7 +145,7 @@
             app:chipMinHeight="@dimen/_34dp" />
 
         <com.google.android.material.chip.Chip
-            android:id="@+id/chip_trap"
+            android:id="@+id/chip_vocal"
             style="@style/Widget.Material3.Chip.Filter.Elevated"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -153,7 +153,7 @@
             app:chipMinHeight="@dimen/_34dp" />
 
         <com.google.android.material.chip.Chip
-            android:id="@+id/chip_uplifting"
+            android:id="@+id/chip_edm_rap"
             style="@style/Widget.Material3.Chip.Filter.Elevated"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

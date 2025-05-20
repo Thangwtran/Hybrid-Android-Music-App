@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
+import com.example.hybridmusicapp.ResultCallback
 import com.example.hybridmusicapp.data.model.song.Song
 import com.example.hybridmusicapp.data.repository.album.AlbumRepository
 import com.example.hybridmusicapp.data.repository.album.AlbumRepositoryImp
@@ -17,28 +18,23 @@ import kotlinx.coroutines.launch
 
 class HomeViewModel(
     private val albumRepository: AlbumRepositoryImp,
-    private val songRepository: SongRepositoryImp
+    private val songRepository: SongRepositoryImp,
 ) : ViewModel() {
     private var dispatcher: CoroutineDispatcher = Dispatchers.IO
 
-    private val _remoteSongs: MutableList<Song> = mutableListOf()
-    val remoteSongs: List<Song>
-        get() = _remoteSongs
+    private val _remoteSongs =  MutableLiveData<List<Song>?>()
+    val remoteSongs = _remoteSongs
 
-    private val _remoteSongLoaded = MutableLiveData<Boolean>()
-    val remoteSongLoaded: LiveData<Boolean>
-        get() = _remoteSongLoaded
+//    private val _remoteSongLoaded = MutableLiveData<Boolean>()
+//    val remoteSongLoaded: LiveData<Boolean>
+//        get() = _remoteSongLoaded
 
-    init {
-        loadRemoteSongs()
-    }
-    private fun loadRemoteSongs() {
+    fun loadRemoteSongs() {
         viewModelScope.launch(dispatcher) {
             val result = songRepository.loadRemoteSongs()
             if (result is Result.Success) {
-                _remoteSongs.clear()
-                _remoteSongs.addAll(result.data.songs)
-                _remoteSongLoaded.postValue(true)
+                _remoteSongs.postValue(result.data.songs)
+//                _remoteSongLoaded.postValue(true)
             } else if (result is Result.Failure) {
                 // TODO: HomeViewModel -> Handle exception
             }
@@ -48,6 +44,23 @@ class HomeViewModel(
     fun addSongToFireStore(songs: List<Song>) {
         viewModelScope.launch(dispatcher) {
             songRepository.addSongToFireStore(songs)
+        }
+    }
+
+    fun getTop10MostHeard(){
+        viewModelScope.launch(dispatcher) {
+            songRepository.getTop10MostHeard(object : ResultCallback<Result<List<Song>>>{
+                override fun onResult(result: Result<List<Song>>) {
+                    if(result is Result.Success){
+//                        _remoteSongs.clear()
+                        _remoteSongs.postValue(result.data)
+//                        _remoteSongLoaded.postValue(true)
+                    }else if(result is Result.Failure){
+//                        _remoteSongLoaded.postValue(false)
+                        _remoteSongs.postValue(emptyList())
+                    }
+                }
+            })
         }
     }
 

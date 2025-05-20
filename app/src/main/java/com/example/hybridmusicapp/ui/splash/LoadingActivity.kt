@@ -56,53 +56,7 @@ class LoadingActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_loading)
         enableEdgeToEdge()
-//        Handler(Looper.getMainLooper()).postDelayed({
-//            val intent = Intent(this, SplashActivity::class.java)
-//            startActivity(intent)
-//            finish()
-//        }, 4000)
-
-//        homeViewModel.remoteSongLoaded.observe(this){isLoaded->
-//            if(isLoaded){
-//                val songs = homeViewModel.remoteSongs
-//                homeViewModel.addSongToFireStore(songs)
-////                val intent = Intent(this, SplashActivity::class.java)
-////                startActivity(intent)
-////                finish()
-//                Toast.makeText(this, "Songs loaded successfully", Toast.LENGTH_SHORT).show()
-//            }else{
-//                Toast.makeText(this, "Error loading songs", Toast.LENGTH_SHORT).show()
-//            }
-//        }
-
-//        artistViewModel.loadRemoteArtist()
-//        artistViewModel.remoteArtist.observe(this){artists->
-//            if(artists != null){
-//                artistViewModel.addArtistsToFireStore(artists)
-//                val intent = Intent(this, SplashActivity::class.java)
-//                startActivity(intent)
-//                finish()
-//                Toast.makeText(this, "Artists loaded successfully", Toast.LENGTH_SHORT).show()
-//            }else{
-//                Toast.makeText(this, "Error loading artists", Toast.LENGTH_SHORT).show()
-//            }
-//        }
-
-//        albumViewModel.loadAlbums()
-//        albumViewModel.albums.observe(this) { albums ->
-//            if(albums != null){
-//                albumViewModel.addAlbumToFireStore(albums)
-//                val intent = Intent(this, SplashActivity::class.java)
-//                startActivity(intent)
-//                finish()
-//                Toast.makeText(this, "Albums loaded successfully", Toast.LENGTH_SHORT).show()
-//            }else{
-//                Toast.makeText(this, "Error loading albums", Toast.LENGTH_SHORT).show()
-//            }
-//        }
-
         insertNcsSong()
-        initAlbumData()
 
     }
 
@@ -111,6 +65,11 @@ class LoadingActivity : AppCompatActivity() {
         ncsViewModel.insert(ncsSongs)
         ncsViewModel.ncsSongs.observe(this) { ncsSongs ->
             if (ncsSongs.isNotEmpty()) {
+                Handler(Looper.getMainLooper()).postDelayed({
+                    val intent = Intent(this, SplashActivity::class.java)
+                    startActivity(intent)
+                    finish()
+                }, 2000)
                 Toast.makeText(
                     this,
                     "NCS songs loaded successfully",
@@ -125,23 +84,6 @@ class LoadingActivity : AppCompatActivity() {
             }
         }
     }
-
-    private fun initAlbumData() {
-        albumViewModel.getTop10AlbumsFireStore()
-        albumViewModel.albums.observe(this) {
-            if (it != null) {
-                Handler(Looper.getMainLooper()).postDelayed({
-                    val intent = Intent(this, SplashActivity::class.java)
-                    startActivity(intent)
-                    finish()
-                }, 2000)
-            } else {
-                Toast.makeText(this, "Error loading albums", Toast.LENGTH_SHORT)
-                    .show()
-            }
-        }
-    }
-
 
     private fun isFirstLaunch(): Boolean {
         val prefs = getSharedPreferences("app_prefs", MODE_PRIVATE)

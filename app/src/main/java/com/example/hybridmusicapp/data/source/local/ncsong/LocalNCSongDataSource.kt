@@ -8,7 +8,7 @@ class LocalNCSongDataSource (
     private val ncSongDao: NCSongDao
 ):NCSongDataSource{
     override suspend fun getNCSongs(): List<NCSong> {
-        TODO("Not yet implemented")
+        return ncSongDao.getNCSongs()
     }
 
     override suspend fun getNCSongById(id: Int): NCSong {

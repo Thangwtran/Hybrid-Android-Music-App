@@ -28,6 +28,17 @@ class NcsViewModel(
         }
     }
 
+    fun getNCSongs() {
+        viewModelScope.launch(Dispatchers.IO) {
+            val result = ncsRepository.getNCSongs()
+            if (result.isNotEmpty()) {
+                _ncsSongs.postValue(result)
+            } else {
+                ncsSongs.postValue(emptyList())
+            }
+        }
+    }
+
 
     class Factory(
         private val ncsRepository: NCSongRepositoryImp

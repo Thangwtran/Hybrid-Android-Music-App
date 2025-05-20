@@ -6,11 +6,14 @@ import com.example.hybridmusicapp.data.model.song.Song
 import com.example.hybridmusicapp.data.model.song.SongList
 import com.example.hybridmusicapp.data.source.SongDataSource
 import com.google.firebase.Firebase
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.firestore
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
 class RemoteSongDataSource : SongDataSource.Remote {
+    private val firestore = FirebaseFirestore.getInstance()
 
     override suspend fun loadRemoteSongs(): Result<SongList> {
         return withContext(Dispatchers.IO) {
@@ -56,12 +59,24 @@ class RemoteSongDataSource : SongDataSource.Remote {
     override suspend fun getSongById(
         songId: String,
         callback: ResultCallback<Result<Song>>
-    ){
+    ) {
         TODO("Not yet implemented")
     }
 
     override suspend fun getTop10MostHeard(callback: ResultCallback<Result<List<Song>>>) {
-        TODO("Not yet implemented")
+        withContext(Dispatchers.IO) {
+            firestore.collection("songs")
+                .orderBy("counter", Query.Direction.DESCENDING)
+                .limit(10)
+                .get()
+                .addOnSuccessListener { queryDocumentSnapshots ->
+                    val songs = queryDocumentSnapshots.toObjects(Song::class.java)
+                    callback.onResult(Result.Success(songs))
+                }
+                .addOnFailureListener { exception ->
+                    callback.onResult(Result.Failure(exception))
+                }
+        }
     }
 
     override suspend fun getTop10Replay(callback: ResultCallback<Result<List<Song>>>) {
