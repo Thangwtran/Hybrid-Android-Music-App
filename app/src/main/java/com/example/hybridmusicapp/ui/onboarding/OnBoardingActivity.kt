@@ -37,6 +37,9 @@ class OnBoardingActivity : AppCompatActivity() {
             if (isCheck) {
                 val genre = chip.text.toString().split(" ").drop(1).joinToString(" ")
                 listGenre.add(genre)
+            }else{
+                val genre = chip.text.toString().split(" ").drop(1).joinToString(" ")
+                listGenre.remove(genre)
             }
         }
         // dubstep
@@ -44,13 +47,20 @@ class OnBoardingActivity : AppCompatActivity() {
             if (isCheck) {
                 val genre = chip.text.toString().split(" ").drop(1).joinToString(" ")
                 listGenre.add(genre)
+            }else{
+                val genre = chip.text.toString().split(" ").drop(1).joinToString(" ")
+                listGenre.remove(genre)
             }
+
         }
         // rap
         binding.chipRap.setOnCheckedChangeListener { chip, isCheck ->
             if (isCheck) {
                 val genre = chip.text.toString().split(" ").drop(1).joinToString(" ")
                 listGenre.add(genre)
+            }else{
+                val genre = chip.text.toString().split(" ").drop(1).joinToString(" ")
+                listGenre.remove(genre)
             }
         }
         // chill
@@ -58,6 +68,9 @@ class OnBoardingActivity : AppCompatActivity() {
             if (isCheck) {
                 val genre = chip.text.toString().split(" ").drop(1).joinToString(" ")
                 listGenre.add(genre)
+            }else{
+                val genre = chip.text.toString().split(" ").drop(1).joinToString(" ")
+                listGenre.remove(genre)
             }
         }
         // epic
@@ -65,6 +78,9 @@ class OnBoardingActivity : AppCompatActivity() {
             if (isCheck) {
                 val genre = chip.text.toString().split(" ").drop(1).joinToString(" ")
                 listGenre.add(genre)
+            }else{
+                val genre = chip.text.toString().split(" ").drop(1).joinToString(" ")
+                listGenre.remove(genre)
             }
         }
         // cinematic
@@ -72,6 +88,9 @@ class OnBoardingActivity : AppCompatActivity() {
             if (isCheck) {
                 val genre = chip.text.toString().split(" ").drop(1).joinToString(" ")
                 listGenre.add(genre)
+            }else{
+                val genre = chip.text.toString().split(" ").drop(1).joinToString(" ")
+                listGenre.remove(genre)
             }
         }
         // bass
@@ -79,6 +98,9 @@ class OnBoardingActivity : AppCompatActivity() {
             if (isCheck) {
                 val genre = chip.text.toString().split(" ").drop(1).joinToString(" ")
                 listGenre.add(genre)
+            }else{
+                val genre = chip.text.toString().split(" ").drop(1).joinToString(" ")
+                listGenre.remove(genre)
             }
         }
         // edm
@@ -86,6 +108,9 @@ class OnBoardingActivity : AppCompatActivity() {
             if (isCheck) {
                 val genre = chip.text.toString().split(" ").drop(1).joinToString(" ")
                 listGenre.add(genre)
+            }else{
+                val genre = chip.text.toString().split(" ").drop(1).joinToString(" ")
+                listGenre.remove(genre)
             }
         }
         // vocal
@@ -93,6 +118,9 @@ class OnBoardingActivity : AppCompatActivity() {
             if (isCheck) {
                 val genre = chip.text.toString().split(" ").drop(1).joinToString(" ")
                 listGenre.add(genre)
+            }else{
+                val genre = chip.text.toString().split(" ").drop(1).joinToString(" ")
+                listGenre.remove(genre)
             }
         }
         // edm rap
@@ -100,6 +128,9 @@ class OnBoardingActivity : AppCompatActivity() {
             if (isCheck) {
                 val genre = chip.text.toString().split(" ").drop(1).joinToString(" ")
                 listGenre.add(genre)
+            }else{
+                val genre = chip.text.toString().split(" ").drop(1).joinToString(" ")
+                listGenre.remove(genre)
             }
         }
 
@@ -108,6 +139,9 @@ class OnBoardingActivity : AppCompatActivity() {
             if (isCheck) {
                 val genre = chip.text.toString().split(" ").drop(1).joinToString(" ")
                 listGenre.add(genre)
+            }else{
+                val genre = chip.text.toString().split(" ").drop(1).joinToString(" ")
+                listGenre.remove(genre)
             }
         }
     }

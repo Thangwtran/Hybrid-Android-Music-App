@@ -17,8 +17,8 @@ import com.example.hybridmusicapp.MusicApplication
 import com.example.hybridmusicapp.R
 import com.example.hybridmusicapp.ui.discovery.artist.ArtistViewModel
 import com.example.hybridmusicapp.ui.home.HomeViewModel
-import com.example.hybridmusicapp.ui.home.album.AlbumViewModel
-import com.example.hybridmusicapp.ui.home.ncs.NcsViewModel
+import com.example.hybridmusicapp.ui.viewmodel.AlbumViewModel
+import com.example.hybridmusicapp.ui.viewmodel.NcsViewModel
 import com.example.hybridmusicapp.utils.NCSUtils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay

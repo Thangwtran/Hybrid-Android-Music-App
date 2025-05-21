@@ -42,8 +42,8 @@ class ArtistRepositoryImp(
         remoteDataSource.addArtistToFireStore(artists)
     }
 
-    override suspend fun getArtists(callback: ResultCallback<Result<List<Artist>>>) {
-        remoteDataSource.getArtists(callback)
+    override suspend fun getTop20ArtistFirebase(callback: ResultCallback<Result<List<Artist>>>) {
+        remoteDataSource.getTop20ArtistFirebase(callback)
     }
 
     override suspend fun getArtistFirebase(callback: ResultCallback<Result<List<Artist>>>) {

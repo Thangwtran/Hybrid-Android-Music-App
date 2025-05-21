@@ -1,4 +1,4 @@
-package com.example.hybridmusicapp.ui.home.album
+package com.example.hybridmusicapp.ui.viewmodel
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -50,7 +50,7 @@ class AlbumViewModel(
 
     fun getAlbumsFireStore(){
         viewModelScope.launch(Dispatchers.IO) {
-            albumRepository.getAlbumsFireStore(object : ResultCallback<Result<List<Album>>>{
+            albumRepository.getAlbumsFireStore(object : ResultCallback<Result<List<Album>>> {
                 override fun onResult(result: Result<List<Album>>) {
                     if(result is Result.Success){
                         _albums.postValue(result.data)

@@ -1,8 +1,12 @@
 package com.example.hybridmusicapp.ui.home
 
+import android.annotation.SuppressLint
 import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
+import android.view.View
+import android.view.Window
+import android.view.WindowManager
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -14,14 +18,22 @@ import com.example.hybridmusicapp.MusicApplication
 import com.example.hybridmusicapp.R
 import com.example.hybridmusicapp.databinding.ActivityHomeBinding
 import com.example.hybridmusicapp.ui.discovery.DiscoveryFragment
-import com.example.hybridmusicapp.ui.home.ncs.NcsViewModel
+import com.example.hybridmusicapp.ui.viewmodel.NcsViewModel
 import com.example.hybridmusicapp.ui.library.LibraryFragment
 import com.example.hybridmusicapp.ui.setting.SettingFragment
+import com.example.hybridmusicapp.ui.viewmodel.AlbumViewModel
+import com.example.hybridmusicapp.ui.viewmodel.ArtistViewModel
 import kotlin.getValue
 
+@Suppress("DEPRECATION")
 class HomeActivity : AppCompatActivity() {
     private val tag = "HomeActivity"
     private lateinit var binding: ActivityHomeBinding
+
+    private val albumViewModel by viewModels<AlbumViewModel> {
+        val application = application as MusicApplication
+        AlbumViewModel.Factory(application.albumRepository)
+    }
     private val homeViewModel by viewModels<HomeViewModel> {
         val application = application as MusicApplication
         val songRepository = application.songRepository
@@ -34,12 +46,30 @@ class HomeActivity : AppCompatActivity() {
         NcsViewModel.Factory(ncsRepository)
     }
 
+    private val artistViewModel by viewModels<ArtistViewModel> {
+        val application = application as MusicApplication
+        val artistRepository = application.artistRepository
+        ArtistViewModel.Factory(artistRepository)
+    }
+
+    @SuppressLint("ResourceType")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
+//        enableEdgeToEdge()
+        requestWindowFeature(Window.FEATURE_NO_TITLE)
+       // window.setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN)
+        window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LAYOUT_STABLE or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+        window.statusBarColor = Color.parseColor("#99000000")
+        supportActionBar?.hide()
         binding = ActivityHomeBinding.inflate(layoutInflater)
         setContentView(binding.root)
         setupBottomNav()
+
+
+//        homeViewModel.loadRemoteSongs()
+        albumViewModel.getTop10AlbumsFireStore()
+        homeViewModel.getTop10MostHeard()
+//        artistViewModel.getTop20Artists()
     }
 
     private fun setupBottomNav() {

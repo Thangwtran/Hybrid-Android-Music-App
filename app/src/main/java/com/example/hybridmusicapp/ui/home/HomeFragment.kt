@@ -18,8 +18,10 @@ import com.example.hybridmusicapp.databinding.FragmentHomeBinding
 import com.example.hybridmusicapp.ui.home.adapter.CarouselAdapter
 import com.example.hybridmusicapp.ui.home.adapter.RecommendedSong
 import com.example.hybridmusicapp.ui.home.adapter.RecommendedSongAdapter
-import com.example.hybridmusicapp.ui.home.album.AlbumViewModel
-import com.example.hybridmusicapp.ui.home.ncs.NcsViewModel
+import com.example.hybridmusicapp.ui.home.adapter.TopArtistAdapter
+import com.example.hybridmusicapp.ui.viewmodel.AlbumViewModel
+import com.example.hybridmusicapp.ui.viewmodel.ArtistViewModel
+import com.example.hybridmusicapp.ui.viewmodel.NcsViewModel
 import com.google.android.material.carousel.CarouselLayoutManager
 import com.google.android.material.carousel.CarouselSnapHelper
 import com.google.android.material.carousel.MultiBrowseCarouselStrategy
@@ -31,10 +33,18 @@ class HomeFragment : Fragment() {
     private lateinit var binding: FragmentHomeBinding
     private lateinit var carouselAdapter: CarouselAdapter
     private lateinit var recommendedSongAdapter: RecommendedSongAdapter
+    private lateinit var topArtistAdapter: TopArtistAdapter
+
     private val albumViewModel by activityViewModels<AlbumViewModel> {
         val application = requireActivity().application as MusicApplication
         AlbumViewModel.Factory(application.albumRepository)
     }
+    private val artistViewModel by activityViewModels<ArtistViewModel> {
+        val application = requireActivity().application as MusicApplication
+        val artistRepository = application.artistRepository
+        ArtistViewModel.Factory(artistRepository)
+    }
+
     private val homeViewModel by activityViewModels<HomeViewModel> {
         val application = requireActivity().application as MusicApplication
         val songRepository = application.songRepository
@@ -67,6 +77,20 @@ class HomeFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         setupCarousel()
         setUpRecommendedSong()
+        setupTopArtist()
+    }
+
+    private fun setupTopArtist() {
+        artistViewModel.getTop20Artists()
+        topArtistAdapter = TopArtistAdapter()
+        artistViewModel.artists.observe(viewLifecycleOwner) {artists->
+            if(artists != null){
+             topArtistAdapter.updateArtists(artists)
+            }else{
+                Toast.makeText(requireContext(),"Load Artist Error", Toast.LENGTH_LONG).show()
+            }
+        }
+        binding.rvArtist.adapter = topArtistAdapter
     }
 
     private fun setUpRecommendedSong() {
@@ -119,7 +143,7 @@ class HomeFragment : Fragment() {
                 }
 
                 //adapter
-                val recommendedSongAdapter = RecommendedSongAdapter()
+                recommendedSongAdapter = RecommendedSongAdapter()
                 recommendedSongAdapter.updateRecommendedSongs(listRecommendedSong)
                 binding.rvRecommended.adapter = recommendedSongAdapter
             }

@@ -1,4 +1,4 @@
-package com.example.hybridmusicapp.ui.home.album
+package com.example.hybridmusicapp.ui.home.detail
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.example.hybridmusicapp.databinding.FragmentAlbumBinding
 
-class AlbumFragment : Fragment() {
+class AlbumDetailFragment : Fragment() {
     private lateinit var binding: FragmentAlbumBinding
 
     override fun onCreateView(

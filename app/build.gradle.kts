@@ -65,7 +65,7 @@ dependencies {
     implementation(libs.room.runtime)
     implementation(libs.room.paging)
     implementation(libs.room.ktx)
-   // annotationProcessor(libs.room.compiler)
+    // annotationProcessor(libs.room.compiler)
     ksp(libs.room.compiler)
     // navigation
     implementation(libs.androidx.navigation.runtime)
@@ -74,6 +74,7 @@ dependencies {
     // custom
     implementation("com.tbuonomo:dotsindicator:5.1.0")
     implementation("com.airbnb.android:lottie:6.6.4")
+    implementation("de.hdodenhof:circleimageview:3.1.0")
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)

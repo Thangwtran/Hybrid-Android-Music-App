@@ -18,7 +18,7 @@ interface ArtistDataSource {
     interface Remote{
         suspend fun loadRemoteArtists(): Result<ArtistList>
         suspend fun addArtistToFireStore(artists: List<Artist>)
-        suspend fun getArtists(callback: ResultCallback<Result<List<Artist>>>)
+        suspend fun getTop20ArtistFirebase(callback: ResultCallback<Result<List<Artist>>>)
         suspend fun getArtistFirebase(callback: ResultCallback<Result<List<Artist>>>)
     }
 
