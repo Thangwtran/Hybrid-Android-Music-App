@@ -47,6 +47,14 @@
         app:layout_constraintStart_toStartOf="parent"
         app:menu="@menu/bottom_nav" />
 
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/fragment_container_mini_player"
+        android:name="com.example.hybridmusicapp.ui.now_playing.MiniPlayerFragment"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toTopOf="@+id/bottom_nav"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
