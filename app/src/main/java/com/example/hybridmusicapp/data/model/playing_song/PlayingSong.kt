@@ -5,7 +5,6 @@ import com.example.hybridmusicapp.data.model.playlist.Playlist
 import com.example.hybridmusicapp.data.model.song.Song
 import java.util.Objects
 
-@Suppress("unused")
 data class PlayingSong(
     private var _song: Song? = null,
     var playlist: Playlist? = null,

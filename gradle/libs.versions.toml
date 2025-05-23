@@ -42,21 +42,83 @@ gson = { group = "com.google.code.gson", name = "gson", version.ref = "gson" }
 glide = { group = "com.github.bumptech.glide", name = "glide", version.ref = "glide" }
 retrofit = { group = "com.squareup.retrofit2", name = "retrofit", version.ref = "retrofit" }
 gson-converter = { group = "com.squareup.retrofit2", name = "converter-gson", version.ref = "retrofit" }
-# media
+####################################################################################################
+# Thư viện Media3: Bộ thư viện Jetpack để phát đa phương tiện (âm thanh và video) trên Android.
+
+# Media core (ExoPlayer):
+# - Đây là thư viện lõi của Media3, cung cấp ExoPlayer để phát các định dạng phương tiện như MP4, MP3, HLS, DASH.
+# - Xử lý logic phát lại (play, pause, seek), hỗ trợ phát trực tuyến và nội dung cục bộ.
+# - Bắt buộc cho mọi ứng dụng sử dụng Media3 để phát phương tiện.
 media3-xoplayer = { group = "androidx.media3", name = "media3-exoplayer", version.ref = "media3" }
+
+# Media session (integrate with media controller):
+# - Cung cấp MediaSession để tích hợp trình phát với hệ thống Android (thông báo, màn hình khóa,
+#   thiết bị ngoại vi như tai nghe Bluetooth, Android Auto).
+# - Hiển thị metadata (tiêu đề, nghệ sĩ) và xử lý lệnh điều khiển từ xa (play, pause, skip).
+# - Sử dụng khi cần tích hợp sâu với các tính năng hệ thống Android.
 media3-media-session = { group = "androidx.media3", name = "media3-session", version.ref = "media3" }
+
+# Media common:
+# - Chứa các thành phần chung (MediaItem, Player, TrackSelection) được sử dụng bởi các module Media3 khác.
+# - Xử lý các tác vụ cơ bản như phân tích định dạng, quản lý metadata, cấu hình phát lại.
+# - Thường được bao gồm tự động khi sử dụng các module như media3-exoplayer hoặc media3-ui.
 media3-common = { group = "androidx.media3", name = "media3-common", version.ref = "media3" }
+
+# Media UI:
+# - Cung cấp các thành phần giao diện người dùng như PlayerView và PlayerControlView
+#   để hiển thị video và điều khiển phát lại (play, pause, seek bar).
+# - Hỗ trợ tùy chỉnh giao diện điều khiển và hiển thị phụ đề.
+# - Sử dụng khi cần giao diện trực quan cho trình phát.
 media3-ui = { group = "androidx.media3", name = "media3-ui", version.ref = "media3" }
-#room
+
+####################################################################################################
+# Room: Thư viện Jetpack để quản lý cơ sở dữ liệu SQLite trong Android.
+
+# Room Runtime:
+# - Lõi của Room, cung cấp các API để tương tác với cơ sở dữ liệu SQLite.
+# - Hỗ trợ tạo, truy vấn, cập nhật và xóa dữ liệu.
+# - Bắt buộc cho mọi ứng dụng sử dụng Room.
 room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "room" }
+
+# Room Compiler:
+# - Bộ xử lý chú thích (Annotation Processor) để tạo code truy cập cơ sở dữ liệu tại thời điểm biên dịch.
+# - Tạo các lớp DAO (Data Access Object) và database từ các chú thích (@Entity, @Dao, @Database).
+# - Chỉ cần trong quá trình biên dịch, không có trong runtime.
 room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room" }
+
+# Room KTX:
+# - Cung cấp các tiện ích Kotlin (Kotlin Extensions) để sử dụng Room với cú pháp ngắn gọn hơn.
+# - Hỗ trợ coroutines (ví dụ: suspend fun trong DAO) và Flow cho truy vấn phản hồi.
+# - Dùng khi lập trình với Kotlin và muốn tích hợp coroutines.
 room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "room" }
+
+# Room Paging:
+# - Tích hợp Room với Paging 3 để tải dữ liệu phân trang (phù hợp với danh sách dài).
+# - Hỗ trợ truy vấn dữ liệu theo từng trang, giảm tải bộ nhớ.
+# - Dùng khi cần hiển thị dữ liệu lớn trong RecyclerView với PagingData.
 room-paging = { group = "androidx.room", name = "room-paging", version.ref = "room" }
+####################################################################################################
+
 # preference
 preference = { group = "androidx.preference", name = "preference", version.ref = "preference" }
-# firebase
-firebase-bom = {module = "com.google.firebase:firebase-bom",version.ref = "firebaseBomVersion"}
-firebase-firestore = {module = "com.google.firebase:firebase-firestore"}
+
+####################################################################################################
+# Firebase: Bộ công cụ của Google để phát triển ứng dụng, bao gồm cơ sở dữ liệu, xác thực, thông báo, v.v.
+
+# Firebase BOM (Bill of Materials):
+# - Quản lý phiên bản của các thư viện Firebase, đảm bảo tất cả thư viện Firebase sử dụng phiên bản tương thích.
+# - Loại bỏ nhu cầu chỉ định phiên bản riêng lẻ cho từng thư viện Firebase.
+# - Bắt buộc khi sử dụng nhiều thư viện Firebase để tránh xung đột phiên bản.
+firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "firebaseBomVersion" }
+
+# Firebase Firestore:
+# - Thư viện để làm việc với Cloud Firestore, cơ sở dữ liệu NoSQL thời gian thực trên đám mây.
+# - Hỗ trợ lưu trữ, truy vấn, đồng bộ hóa dữ liệu theo thời gian thực.
+# - Dùng để quản lý dữ liệu ứng dụng (ví dụ: lưu thông tin người dùng, bài viết).
+# - Phụ thuộc vào firebase-bom để lấy phiên bản phù hợp.
+firebase-firestore = { module = "com.google.firebase:firebase-firestore" }
+
+####################################################################################################
 #navigation
 androidx-navigation-runtime = { group = "androidx.navigation", name = "navigation-runtime-ktx", version.ref = "navigationRuntime" }
 androidx-navigation-fragment-ktx = { group = "androidx.navigation", name = "navigation-fragment-ktx", version.ref = "navigationFragmentKtx" }
