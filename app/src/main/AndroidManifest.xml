@@ -16,6 +16,21 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.HybridMusicApp"
         tools:targetApi="35">
+
+        <!-- android:exported="false": Không cho phép các ứng dụng bên ngoài truy cập trực tiếp vào dịch vụ. -->
+
+        <service
+            android:name=".ui.now_playing.PlaybackService"
+            android:exported="false"
+            android:foregroundServiceType="mediaPlayback">
+            <intent-filter>
+                <!-- Hỗ trợ MediaSessionService cho MediaSession, điều khiển media controls (e.g., Android Auto, notifications). -->
+                <action android:name="androidx.media3.session.MediaSessionService" />
+                <!-- Hỗ trợ MediaBrowserService, cho phép duyệt media -->
+                <action android:name="android.media.browse.MediaBrowserService" />
+            </intent-filter>
+        </service>
+
         <activity
             android:name=".ui.now_playing.PlayerActivity"
             android:exported="false" />
