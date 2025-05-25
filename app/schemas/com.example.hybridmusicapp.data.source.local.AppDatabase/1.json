@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "ceda8a8360040835c683bedc7c96b6b8",
+    "identityHash": "582bfe64235c7cd2b4b49ca498802e4e",
     "entities": [
       {
         "tableName": "songs",
@@ -182,6 +182,52 @@
         "foreignKeys": []
       },
       {
+        "tableName": "album_song_cross_ref",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`album_id` INTEGER NOT NULL, `song_id` TEXT NOT NULL, PRIMARY KEY(`album_id`, `song_id`))",
+        "fields": [
+          {
+            "fieldPath": "albumId",
+            "columnName": "album_id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "songId",
+            "columnName": "song_id",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "album_id",
+            "song_id"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_album_song_cross_ref_song_id",
+            "unique": false,
+            "columnNames": [
+              "song_id"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_album_song_cross_ref_song_id` ON `${TABLE_NAME}` (`song_id`)"
+          },
+          {
+            "name": "index_album_song_cross_ref_album_id",
+            "unique": false,
+            "columnNames": [
+              "album_id"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_album_song_cross_ref_album_id` ON `${TABLE_NAME}` (`album_id`)"
+          }
+        ],
+        "foreignKeys": []
+      },
+      {
         "tableName": "artists",
         "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`artist_id` INTEGER NOT NULL, `name` TEXT NOT NULL, `avatar` TEXT NOT NULL, `interested` INTEGER NOT NULL, `care_about` INTEGER NOT NULL, PRIMARY KEY(`artist_id`))",
         "fields": [
@@ -223,6 +269,52 @@
           ]
         },
         "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "artist_song_cross_ref",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`artist_id` INTEGER NOT NULL, `song_id` TEXT NOT NULL, PRIMARY KEY(`artist_id`, `song_id`))",
+        "fields": [
+          {
+            "fieldPath": "artistId",
+            "columnName": "artist_id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "songId",
+            "columnName": "song_id",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "artist_id",
+            "song_id"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_artist_song_cross_ref_artist_id",
+            "unique": false,
+            "columnNames": [
+              "artist_id"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_artist_song_cross_ref_artist_id` ON `${TABLE_NAME}` (`artist_id`)"
+          },
+          {
+            "name": "index_artist_song_cross_ref_song_id",
+            "unique": false,
+            "columnNames": [
+              "song_id"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_artist_song_cross_ref_song_id` ON `${TABLE_NAME}` (`song_id`)"
+          }
+        ],
         "foreignKeys": []
       },
       {
@@ -476,7 +568,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'ceda8a8360040835c683bedc7c96b6b8')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '582bfe64235c7cd2b4b49ca498802e4e')"
     ]
   }
 }

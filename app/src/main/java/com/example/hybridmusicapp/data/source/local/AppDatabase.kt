@@ -7,7 +7,9 @@ import androidx.room.Room.databaseBuilder
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import com.example.hybridmusicapp.data.model.album.Album
+import com.example.hybridmusicapp.data.model.album.AlbumSongCrossRef
 import com.example.hybridmusicapp.data.model.artist.Artist
+import com.example.hybridmusicapp.data.model.artist.ArtistSongCrossRef
 import com.example.hybridmusicapp.data.model.history.HistorySearchedKey
 import com.example.hybridmusicapp.data.model.history.HistorySearchedSong
 import com.example.hybridmusicapp.data.model.playlist.Playlist
@@ -27,16 +29,19 @@ import com.example.hybridmusicapp.data.source.local.song.SongDao
         Song::class,
         NCSong::class,
         Album::class,
+        AlbumSongCrossRef::class,
         Artist::class,
+        ArtistSongCrossRef::class,
         Playlist::class,
         RecentSong::class,
         HistorySearchedKey::class,
         HistorySearchedSong::class
     ],
-    version = 2,
-    autoMigrations = [
-        AutoMigration(from = 1, to = 2)
-    ],
+//    version = 3,
+//    autoMigrations = [
+//        AutoMigration(from = 2, to = 3)
+//    ],
+    version = 1,
     exportSchema = true
 )
 @TypeConverters(value = [DateConverter::class]) // convert Date to Long
@@ -64,7 +69,8 @@ abstract class AppDatabase : RoomDatabase() {
                             context.applicationContext,
                             AppDatabase::class.java,
                             "music.db"
-                        ).build()
+                        )//.fallbackToDestructiveMigration() // Delete all data when upgrade version
+                            .build()
                     }
                 }
             }

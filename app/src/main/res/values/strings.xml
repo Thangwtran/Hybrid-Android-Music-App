@@ -14,34 +14,25 @@
     <string name="next">Next</string>
     <string name="select_interest">Let\'s select your interests.</string>
     <string name="select_interest2">Please select one or more interests to proceed</string>
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
     <!-- Chip Group Names -->
     <string name="dubstep">⚡ Dubstep</string>
     <string name="bass">🎸 Bass</string>
-
     <string name="hype_rap">💥 Hype Rap</string>
     <string name="edm_rap">🎶 EDM Rap</string>
-
     <string name="chill">🕶️ Chill</string>
     <string name="vocal">🎤 Vocal</string>
-
     <string name="epic">🏰 Epic</string>
     <string name="cinematic">🎬 Cinematic</string>
-
     <string name="edm">🎧 EDM</string>
     <string name="other">🎵 Other...</string>
-
-
     <string name="future_bass">🌈 Future Bass</string>
     <string name="dark_pop_alternative">🖤 Dark Pop / Alternative</string>
     <string name="trap">🔥 Trap</string>
     <string name="uplifting_progressive_house">🌟 Uplifting / Progressive House</string>
 
-
-    <!--    NCS Description-->
-
+    <!--  NCS Description-->
     <string name="desc_no_rival">Song: Egzod &amp; Maestro Chives &amp; Alaina Cross - No Rival [NCS Release] Music provided by NoCopyrightSounds Free Download/Stream: NCS.io/NoRival Watch: http://youtu.be/</string>
     <string name="desc_mortals_remix">Song: Warriyo - Mortals (TOKYO MACHINE &amp; Boom Kitty Remix) Music provided by NoCopyrightSounds Free Download/Stream: http://ncs.io/Mortals_TMBK Watch: http://ncs.lnk.to/Mortals_TMBKAT/youtube</string>
     <string name="desc_why_we_lose">Song: Cartoon, Jéja - Why We Lose (feat. Coleman Trapp) [NCS Release] Music provided by NoCopyrightSounds Free Download/Stream: http://ncs.io/whywelose Watch: http://youtu.be/zyXmsVwZqX4</string>
@@ -115,5 +106,10 @@
     <string name="artist_fearless_pt2">TULE, Chris Linton</string>
     <string name="artist_running_wild">Wiguez, Vizzen, Maestro Chives</string>
     <string name="artist_be_the_one_remix">WinWel, Sam Day</string>
+
+    <!--    Notification -->
+    <string name="notification_channel_name">Playback Service Channel</string>
+    <string name="notification_content_text">Press on the play button on the media notification if it\n    is still present, otherwise please open the app to start the playback and re-connect the session\n    to the controller</string>
+
 
 </resources>

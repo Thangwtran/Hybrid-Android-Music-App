@@ -9,7 +9,7 @@
     android:padding="@dimen/_8dp">
 
     <ImageView
-        android:id="@+id/img_recommed_song"
+        android:id="@+id/img_ncs_track"
         android:layout_width="150dp"
         android:layout_height="150dp"
         android:scaleType="centerCrop"
@@ -19,7 +19,7 @@
         app:srcCompat="@drawable/be_the_one_winwel_remix" />
 
     <TextView
-        android:id="@+id/title_recommend_song"
+        android:id="@+id/title_ncs_track"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
@@ -28,21 +28,22 @@
         android:fontFamily="@font/montserrat_semibold"
         android:text="@string/song_be_the_one_remix"
         android:textColor="@color/white"
-        app:layout_constraintBottom_toTopOf="@+id/artist_recommend_song"
-        app:layout_constraintEnd_toEndOf="@+id/img_recommed_song"
-        app:layout_constraintStart_toStartOf="@+id/img_recommed_song"
-        app:layout_constraintTop_toBottomOf="@+id/img_recommed_song" />
+        app:layout_constraintBottom_toTopOf="@+id/artist_ncs_track"
+        app:layout_constraintEnd_toEndOf="@+id/img_ncs_track"
+        app:layout_constraintStart_toStartOf="@+id/img_ncs_track"
+        app:layout_constraintTop_toBottomOf="@+id/img_ncs_track" />
 
     <TextView
-        android:id="@+id/artist_recommend_song"
+        android:id="@+id/artist_ncs_track"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/_8dp"
         android:ellipsize="marquee"
         android:fontFamily="@font/montserrat_medium"
-        android:text="@string/artist_be_the_one_remix"
         android:maxLines="1"
+        android:text="@string/artist_be_the_one_remix"
         android:textColor="@color/grey_light"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@+id/title_recommend_song"
-        app:layout_constraintStart_toStartOf="@+id/title_recommend_song" />
+        app:layout_constraintEnd_toEndOf="@+id/title_ncs_track"
+        app:layout_constraintStart_toStartOf="@+id/title_ncs_track" />
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -29,32 +29,25 @@ class NowPlayingViewModel private constructor(
     private val _searchRepository: SearchingRepositoryImp = searchRepository
     private val _recentSongRepository: RecentSongRepositoryImp = recentSongRepository
 
-    // Đối tượng PlayingSong lưu trạng thái bài hát đang phát
     private val _playingSong = PlayingSong()
 
-    // LiveData lưu thông tin bài hát đang phát
     private val _playingSongLiveData = MutableLiveData<PlayingSong>()
-    val playingSongLiveData: LiveData<PlayingSong> = _playingSongLiveData
+    val currentPlayingSong: LiveData<PlayingSong> = _playingSongLiveData
 
-    // Tên playlist hiện tại
     private var _playlistName: String = ""
 
-    // LiveData lưu playlist hiện tại
     private val _currentPlaylist = MutableLiveData<Playlist?>()
     val currentPlaylist: LiveData<Playlist?> = _currentPlaylist
 
     // Map lưu trữ các playlist (mặc định và tùy chỉnh)
     private val _playlistMap: MutableMap<String, Playlist?> = HashMap()
 
-    // LiveData lưu chỉ số bài hát cần phát
     private val _indexToPlay = MutableLiveData<Int>()
     val indexToPlay: LiveData<Int> = _indexToPlay
 
-    // LiveData kiểm soát hiển thị mini player
     private val _miniPlayerVisibility = MutableLiveData<Boolean>()
     val isMiniPlayerVisible: LiveData<Boolean> = _miniPlayerVisibility
 
-    // LiveData cung cấp lịch sử bài hát tìm kiếm
     val historySearchSongs: LiveData<List<Song>> =
         _searchRepository.historySearchedSongs.asLiveData()
 

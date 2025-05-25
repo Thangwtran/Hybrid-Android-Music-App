@@ -15,4 +15,8 @@ open class PlayerViewModel: ViewModel(){
         _playingState.value = state
     }
 
+    fun setMediaItems(items: List<MediaItem>){
+        _mediaItems.value = items
+    }
+
 }

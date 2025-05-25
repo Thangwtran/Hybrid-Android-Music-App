@@ -20,7 +20,7 @@ class LocalAlbumDataSource(
     }
 
     override fun getAlbumWithSongs(albumId: Int): Flow<AlbumWithSongs> {
-        TODO("Not yet implemented")
+        return albumDao.getAlbumWithSongs(albumId)
     }
 
     // SAVE ALBUMS
@@ -30,7 +30,7 @@ class LocalAlbumDataSource(
     }
 
     override suspend fun saveAlbumCrossRef(vararg crossRef: AlbumSongCrossRef) {
-        TODO("Not yet implemented")
+        albumDao.saveAlbumCrossRef(*crossRef)
     }
 
     override suspend fun updateAlbum(album: Album) {

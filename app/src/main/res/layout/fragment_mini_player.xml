@@ -20,7 +20,7 @@
         app:layout_constraintTop_toTopOf="@+id/guideline4">
 
         <ImageView
-            android:id="@+id/imageView4"
+            android:id="@+id/img_mini_player_artwork"
             android:layout_width="@dimen/_48dp"
             android:layout_height="@dimen/_48dp"
             android:scaleType="centerCrop"
