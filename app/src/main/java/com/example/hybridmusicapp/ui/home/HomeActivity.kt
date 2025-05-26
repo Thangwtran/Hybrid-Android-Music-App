@@ -1,35 +1,51 @@
 package com.example.hybridmusicapp.ui.home
 
 import android.annotation.SuppressLint
+import android.content.SharedPreferences
+import android.content.pm.PackageManager
 import android.graphics.Color
+import android.os.Build
 import android.os.Bundle
+import android.util.DisplayMetrics
+import android.util.DisplayMetrics.DENSITY_DEFAULT
 import android.util.Log
 import android.view.View
 import android.view.Window
-import android.view.WindowManager
-import androidx.activity.enableEdgeToEdge
+import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
+import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
 import com.example.hybridmusicapp.MusicApplication
 import com.example.hybridmusicapp.R
 import com.example.hybridmusicapp.databinding.ActivityHomeBinding
 import com.example.hybridmusicapp.ui.discovery.DiscoveryFragment
-import com.example.hybridmusicapp.ui.viewmodel.NcsViewModel
 import com.example.hybridmusicapp.ui.library.LibraryFragment
 import com.example.hybridmusicapp.ui.setting.SettingFragment
-import com.example.hybridmusicapp.ui.viewmodel.AlbumViewModel
-import com.example.hybridmusicapp.ui.viewmodel.ArtistViewModel
-import kotlin.getValue
+import com.example.hybridmusicapp.ui.home.AlbumViewModel
+import com.example.hybridmusicapp.ui.home.ArtistViewModel
+import com.example.hybridmusicapp.ui.viewmodel.NcsViewModel
+import com.example.hybridmusicapp.ui.viewmodel.NetworkViewModel
+import com.example.hybridmusicapp.ui.viewmodel.NowPlayingViewModel
+import com.example.hybridmusicapp.ui.viewmodel.PermissionViewModel
+import com.example.hybridmusicapp.utils.MusicAppUtils
+import com.google.android.material.snackbar.Snackbar
 
 @Suppress("DEPRECATION")
 class HomeActivity : AppCompatActivity() {
     private val tag = "HomeActivity"
     private lateinit var binding: ActivityHomeBinding
+    private lateinit var sharePreferences: SharedPreferences
+    private lateinit var networkViewModel: NetworkViewModel
 
+    private val nowPlayingViewModel by viewModels<NowPlayingViewModel> {
+        val application = application as MusicApplication
+        val searchingRepository = application.searchingRepository
+        val recentSongRepository = application.recentSongRepository
+        val songRepository = application.songRepository
+        NowPlayingViewModel.Factory(songRepository, searchingRepository, recentSongRepository)
+    }
     private val albumViewModel by viewModels<AlbumViewModel> {
         val application = application as MusicApplication
         AlbumViewModel.Factory(application.albumRepository)
@@ -45,31 +61,135 @@ class HomeActivity : AppCompatActivity() {
         val ncsRepository = application.ncsRepository
         NcsViewModel.Factory(ncsRepository)
     }
-
     private val artistViewModel by viewModels<ArtistViewModel> {
         val application = application as MusicApplication
         val artistRepository = application.artistRepository
         ArtistViewModel.Factory(artistRepository)
     }
 
+
+    private val resultLauncher =
+        registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
+            if (!isGranted) {
+                val snackBar =
+                    Snackbar.make(
+                        binding.root,
+                        getString(R.string.err_permission_denied),
+                        Snackbar.LENGTH_SHORT
+                    )
+                snackBar.show()
+            } else {
+                val internetAccess = MusicAppUtils.isNetworkAvailable(applicationContext)
+                if (internetAccess) {
+                    PermissionViewModel.instance.setPermissionGranted(true)
+                }
+            }
+        }
+
+
     @SuppressLint("ResourceType")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-//        enableEdgeToEdge()
         requestWindowFeature(Window.FEATURE_NO_TITLE)
-       // window.setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN)
-        window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LAYOUT_STABLE or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+        window.decorView.systemUiVisibility =
+            View.SYSTEM_UI_FLAG_LAYOUT_STABLE or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
         window.statusBarColor = Color.parseColor("#99000000")
         supportActionBar?.hide()
         binding = ActivityHomeBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        setupComponents()
+        setupObservers()
         setupBottomNav()
+    }
 
+    private fun setupComponents() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) { // API 30 (Android 11) trở lên
+            val windowMetrics = windowManager.currentWindowMetrics
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) { // API 34 (Android 14) trở lên
+                MusicAppUtils.DENSITY = windowMetrics.density
+            } else {
+                /**
+                 * Trên Android 11 đến Android 13, tính density bằng cách chia chiều rộng màn hình (bounds.width)
+                 * cho giá trị mật độ mặc định (DENSITY_DEFAULT, thường là 160dpi).
+                 * Đây là cách tương thích để tính density trên các phiên bản cũ hơn.
+                 */
+                MusicAppUtils.DENSITY = 1f * windowMetrics.bounds.width() / DENSITY_DEFAULT
 
-//        homeViewModel.loadRemoteSongs()
-        albumViewModel.getTop10AlbumsFireStore()
-        homeViewModel.getTop10MostHeard()
-//        artistViewModel.getTop20Artists()
+            }
+        } else {
+            /**
+             * Trên các phiên bản Android cũ hơn (API < 30), sử dụng DisplayMetrics để lấy thông tin màn hình.
+             * DisplayMetrics là cách truyền thống để lấy density trên các phiên bản Android thấp hơn.
+             */
+            val displayMetrics = DisplayMetrics()
+            windowManager.defaultDisplay.getMetrics(displayMetrics)
+            MusicAppUtils.DENSITY = displayMetrics.density
+        }
+        /**
+         * Khởi tạo SharedPreferences để lưu trữ thông tin bài hát đang phát hoặc danh sách phát.
+         * MODE_PRIVATE đảm bảo rằng file SharedPreferences chỉ có thể được truy cập bởi ứng dụng này.
+         */
+        sharePreferences =
+            applicationContext.getSharedPreferences(getString(R.string.pref_file_key), MODE_PRIVATE)
+
+        networkViewModel = NetworkViewModel.instance
+        // TODO: Load artist remote
+    }
+
+    private fun setupObservers() {
+        PermissionViewModel.instance.permissionAsked.observe(this) { isAsked ->
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU && isAsked) {
+                checkPermission()
+            } else {
+                // Trên API < 33, không cần quyền POST_NOTIFICATIONS, thông báo được hiển thị tự do
+                PermissionViewModel.instance.setPermissionGranted(true)
+                Toast.makeText(this, "Permission granted in Android 9", Toast.LENGTH_SHORT).show()
+            }
+        }
+        artistViewModel.getArtists()
+        artistViewModel.remoteArtists.observe(this) { artists ->
+            if (artists != null) {
+            } else {
+                Toast.makeText(this, "Load Artist Error", Toast.LENGTH_LONG).show()
+            }
+        }
+
+        nowPlayingViewModel.currentPlayingSong.observe(this) { playingSong ->
+            if(playingSong != null){
+                nowPlayingViewModel.setMiniPlayerVisible(playingSong.song != null)
+            }else{
+                Log.d("HomeActivity", "currentPlayingSong is null")
+            }
+        }
+
+        homeViewModel.loadRemoteSongs()
+        homeViewModel.remoteSongs.observe(this){remoteSongs ->
+            if(remoteSongs != null){
+                // TODO: save song 
+            }
+        }
+
+    }
+
+    private fun checkPermission() {
+        val permission = android.Manifest.permission.POST_NOTIFICATIONS
+        val permissionGranted = ActivityCompat.checkSelfPermission(
+            this,
+            permission
+        ) == PackageManager.PERMISSION_GRANTED
+        if (permissionGranted) {
+            PermissionViewModel.instance.setPermissionGranted(true)
+        } else if (ActivityCompat.shouldShowRequestPermissionRationale(this, permission)) {
+            val snackBar = Snackbar.make(
+                binding.root.rootView, getString(R.string.permission_desc),
+                Snackbar.LENGTH_SHORT
+            )
+            snackBar.setAction("YES") { resultLauncher.launch(permission) }
+            snackBar.show()
+        } else {
+            resultLauncher.launch(permission)
+        }
     }
 
     private fun setupBottomNav() {
@@ -91,10 +211,11 @@ class HomeActivity : AppCompatActivity() {
                     true
                 }
 
-                R.id.navigation_setting ->{
+                R.id.navigation_setting -> {
                     replaceFragment(SettingFragment())
                     true
                 }
+
                 else -> false
             }
         }

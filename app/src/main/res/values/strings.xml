@@ -110,6 +110,10 @@
     <!--    Notification -->
     <string name="notification_channel_name">Playback Service Channel</string>
     <string name="notification_content_text">Press on the play button on the media notification if it\n    is still present, otherwise please open the app to start the playback and re-connect the session\n    to the controller</string>
+    <string name="err_permission_denied">Application cannot play music without post notification permission. Please grant post notification to continue.</string>
+    <string name="permission_desc">This application need post notification permission to play music correctly and give you more experience when using app. Would you agree permit app use this permission?</string>
+
+    <string name="pref_file_key">MUSIC_APP_PREF</string>
 
 
 </resources>

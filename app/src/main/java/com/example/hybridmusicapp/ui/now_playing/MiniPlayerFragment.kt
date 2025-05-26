@@ -7,6 +7,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.media3.common.Player
@@ -32,10 +33,26 @@ class MiniPlayerFragment : Fragment(), View.OnClickListener {
 
     private lateinit var btnPressedAnimator: Animator
 
+    /**
+     * - Player.Listener là một interface của Android Media3, dùng để nhận các sự kiện
+     *   như thay đổi trạng thái phát (isPlaying), thay đổi bài hát, v.v.
+     * - listener sẽ được khởi tạo trong registerMediaController().
+     */
     private lateinit var listener: Player.Listener
 
+    /**
+     * Biến playlistName lưu tên của danh sách phát hiện tại.
+     * - Dùng để so sánh với danh sách phát mới, xác định xem danh sách có thay đổi hay không.
+     * - Khởi tạo rỗng và được cập nhật khi danh sách phát thay đổi.
+     */
     private var playlistName: String = ""
 
+    /**
+     * Biến isRegistered kiểu Boolean để theo dõi trạng thái đăng ký MediaController.
+     * - Đảm bảo rằng chỉ số bài hát (setIndexToPlay) chỉ được thiết lập một lần khi
+     *   MediaController được đăng ký lần đầu.
+     * - Khởi tạo là false, chuyển thành true sau khi đăng ký.
+     */
     private var isRegistered = false
 
     private var nowPlayingViewModel: NowPlayingViewModel? = null
@@ -52,6 +69,7 @@ class MiniPlayerFragment : Fragment(), View.OnClickListener {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        Log.d("MiniPlayerFragment", "onCreateView")
         binding = FragmentMiniPlayerBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -63,8 +81,22 @@ class MiniPlayerFragment : Fragment(), View.OnClickListener {
         setupListeners()
     }
 
+    override fun onResume() {
+        super.onResume()
+        // TODO: ONResume
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        // TODO: onDestroy
+    }
 
 
+    /**
+     * - Quan sát currentPlayingSong từ nowPlayingViewModel để cập nhật giao diện mini player.
+     * - Quan sát currentPlaylist từ nowPlayingViewModel (chưa triển khai logic).
+     * - Quan sát isPlaying từ miniPlayerViewModel để cập nhật trạng thái nút play/pause.
+     */
     private fun observeData() {
         nowPlayingViewModel = NowPlayingViewModel.instance
 
@@ -73,10 +105,18 @@ class MiniPlayerFragment : Fragment(), View.OnClickListener {
         }
 
         nowPlayingViewModel?.currentPlaylist?.observe(viewLifecycleOwner) { currentPlaylist ->
-            // TODO:
+            if(!MusicAppUtils.sConfigChanged){
+                currentPlaylist?.mediaItems?.let {
+                    miniPlayerViewModel.setMediaItems(it)
+                }
+            }
         }
 
-        // mini player view model
+        /**
+         * Quan sát isPlaying để cập nhật nút play/pause và trạng thái nút next.
+         * - Nếu isPlaying = true, hiển thị icon pause và kiểm tra xem nút next có khả dụng không.
+         * - Nếu isPlaying = false, hiển thị icon play.
+         */
         miniPlayerViewModel.isPlaying.observe(viewLifecycleOwner) { isPlaying ->
             if (isPlaying) {
                 binding.btnMiniPlayerPlayPause.setImageResource(androidx.media3.session.R.drawable.media3_icon_pause)
@@ -130,6 +170,9 @@ class MiniPlayerFragment : Fragment(), View.OnClickListener {
         }
     }
 
+    /**
+     * - Khi MediaController được cung cấp, gọi registerMediaController() để đăng ký listener và xử lý danh sách phát.
+     */
     private fun setupMediaController() {
         MediaViewModel.instance
             .mediaController
@@ -139,28 +182,41 @@ class MiniPlayerFragment : Fragment(), View.OnClickListener {
             }
     }
 
+    /**
+     * registerMediaController đăng ký listener và xử lý danh sách MediaItem cho MediaController.
+     * - Tạo Player.Listener để theo dõi sự kiện phát lại (isPlayingChanged).
+     * - Quan sát danh sách MediaItem từ miniPlayerViewModel để cập nhật danh sách phát.
+     * - Kiểm tra các điều kiện để quyết định cập nhật danh sách MediaItem.
+     */
     private fun registerMediaController() {
-        // 1. Tạo một Player.Listener để theo dõi sự kiện phát lại
+        // Tạo một Player.Listener để theo dõi sự kiện phát lại
         listener = object : Player.Listener {
             override fun onIsPlayingChanged(isPlaying: Boolean) {
                 miniPlayerViewModel.setPlayingState(isPlaying)
             }
         }
-        // 2. Kiểm tra nếu mediaController tồn tại
         if (mediaController != null) {
+            Log.d("MiniPlayerFragment", "registerMediaController")
+
             mediaController?.addListener(listener)
-            // 3. Quan sát danh sách MediaItem từ miniPlayerViewModel
+
             miniPlayerViewModel.mediaItems.observe(viewLifecycleOwner) { items ->
                 if (MusicAppUtils.sConfigChanged) { // Nếu cấu hình thay đổi (ví dụ: xoay màn hình), bỏ qua
                     return@observe
                 }
                 val playlist = nowPlayingViewModel?.currentPlaylist?.value
-                // 4. Kiểm tra điều kiện để cập nhật danh sách phát
+                /**
+                 *  Kiểm tra điều kiện để cập nhật danh sách phát:
+                 * - Danh sách phát trống (mediaItemCount == 0).
+                 * - Danh sách phát thay đổi (playlistName khác playlist.name).
+                 * - Danh sách phát là danh sách tìm kiếm (SEARCHED).
+                 * - Danh sách phát là tùy chỉnh (isCustomPlaylist).
+                 */
                 if (playlist != null &&
-                    (mediaController?.mediaItemCount == 0 || // Danh sách phát trống
-                            playlistName.compareTo(playlist.name) != 0 || // Danh sách phát thay đổi
-                            playlist.name.compareTo(DefaultPlaylistName.SEARCHED.value) == 0 || // Danh sách tìm kiếm
-                            isCustomPlaylist(playlist)) // Danh sách phát tùy chỉnh
+                    (mediaController?.mediaItemCount == 0 ||
+                            playlistName.compareTo(playlist.name) != 0 ||
+                            playlist.name.compareTo(DefaultPlaylistName.SEARCHED.value) == 0 ||
+                            isCustomPlaylist(playlist))
                 ) {
                     // Đánh dấu danh sách phát đã thay đổi
                     miniPlayerViewModel.isPlaylistChanged = true
@@ -173,8 +229,10 @@ class MiniPlayerFragment : Fragment(), View.OnClickListener {
                         setIndexToPlay()
                         isRegistered = true
                     }
+                }else{
+                    Log.d("MiniPlayerFragment", "Playlist is empty")
+                    Toast.makeText(requireContext(), "Playlist is empty", Toast.LENGTH_SHORT).show()
                 }
-
             }
         } else {
             Log.e("MiniPlayerFragment", "MediaController is null")

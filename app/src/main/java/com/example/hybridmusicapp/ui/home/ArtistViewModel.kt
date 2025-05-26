@@ -1,9 +1,10 @@
-package com.example.hybridmusicapp.ui.viewmodel
+package com.example.hybridmusicapp.ui.home
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import com.example.hybridmusicapp.ResultCallback
 import com.example.hybridmusicapp.data.model.artist.Artist
@@ -16,7 +17,10 @@ class ArtistViewModel(
     private val artistRepository: ArtistRepositoryImp
 ) : ViewModel() {
     private val _artists = MutableLiveData<List<Artist>?>()
-    val artists: LiveData<List<Artist>?> = _artists
+    val remoteArtists: LiveData<List<Artist>?> = _artists
+
+    val localArtists: LiveData<List<Artist>>
+        get() = artistRepository.getLocalArtists().asLiveData()
 
     fun getArtists() {
         viewModelScope.launch(Dispatchers.IO) {
@@ -50,9 +54,9 @@ class ArtistViewModel(
         private val artistRepository: ArtistRepositoryImp
     ) : ViewModelProvider.Factory {
         override fun <T : ViewModel> create(modelClass: Class<T>): T {
-            if(modelClass.isAssignableFrom(ArtistViewModel::class.java)){
+            if (modelClass.isAssignableFrom(ArtistViewModel::class.java)) {
                 return ArtistViewModel(artistRepository) as T
-            }else{
+            } else {
                 throw IllegalArgumentException("Unknown ViewModel class")
             }
         }

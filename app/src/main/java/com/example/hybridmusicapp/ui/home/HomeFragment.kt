@@ -7,12 +7,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.activity.viewModels
 import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.example.hybridmusicapp.MusicApplication
-import com.example.hybridmusicapp.R
 import com.example.hybridmusicapp.data.model.album.Album
 import com.example.hybridmusicapp.databinding.FragmentHomeBinding
 import com.example.hybridmusicapp.ui.home.adapter.CarouselAdapter
@@ -20,12 +17,9 @@ import com.example.hybridmusicapp.ui.home.adapter.RecommendedSong
 import com.example.hybridmusicapp.ui.home.adapter.RecommendedSongAdapter
 import com.example.hybridmusicapp.ui.home.adapter.TopArtistAdapter
 import com.example.hybridmusicapp.ui.home.adapter.TrendingNcsTrackAdapter
-import com.example.hybridmusicapp.ui.viewmodel.AlbumViewModel
-import com.example.hybridmusicapp.ui.viewmodel.ArtistViewModel
+import com.example.hybridmusicapp.ui.home.AlbumViewModel
+import com.example.hybridmusicapp.ui.home.ArtistViewModel
 import com.example.hybridmusicapp.ui.viewmodel.NcsViewModel
-import com.google.android.material.carousel.CarouselLayoutManager
-import com.google.android.material.carousel.CarouselSnapHelper
-import com.google.android.material.carousel.MultiBrowseCarouselStrategy
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlin.getValue
@@ -97,7 +91,7 @@ class HomeFragment : Fragment() {
     private fun setupTopArtist() {
         artistViewModel.getTop20Artists()
         topArtistAdapter = TopArtistAdapter()
-        artistViewModel.artists.observe(viewLifecycleOwner) { artists ->
+        artistViewModel.remoteArtists.observe(viewLifecycleOwner) { artists ->
             if (artists != null) {
                 topArtistAdapter.updateArtists(artists)
             } else {

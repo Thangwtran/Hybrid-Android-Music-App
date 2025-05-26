@@ -1,4 +1,4 @@
-package com.example.hybridmusicapp.ui.viewmodel
+package com.example.hybridmusicapp.ui.home
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel

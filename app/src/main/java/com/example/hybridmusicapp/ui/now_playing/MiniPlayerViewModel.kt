@@ -17,7 +17,6 @@ class MiniPlayerViewModel(
 
     var isPlaylistChanged = false
 
-
     override fun setPlayingState(state: Boolean) {
         _isPlaying.value = state
     }

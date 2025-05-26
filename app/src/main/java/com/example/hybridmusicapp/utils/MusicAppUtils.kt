@@ -6,6 +6,7 @@ import android.net.NetworkCapabilities
 
 object MusicAppUtils {
     var sConfigChanged: Boolean = false
+    var DENSITY: Float = 0f
 
     fun isNetworkAvailable(context: Context): Boolean {
         val manager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
