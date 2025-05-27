@@ -3,6 +3,7 @@ package com.example.hybridmusicapp.data.repository.album
 import com.example.hybridmusicapp.ResultCallback
 import com.example.hybridmusicapp.data.model.album.Album
 import com.example.hybridmusicapp.data.model.album.AlbumList
+import com.example.hybridmusicapp.data.model.album.AlbumSongCrossRef
 import com.example.hybridmusicapp.data.source.AlbumDataSource
 import com.example.hybridmusicapp.data.source.remote.RemoteAlbumDataSource
 import com.example.hybridmusicapp.data.source.remote.Result
@@ -23,6 +24,10 @@ class AlbumRepositoryImp(
 
     override suspend fun saveAlbums(vararg albums: Album): Boolean {
         return localAlbumDataSource.saveAlbums(*albums)
+    }
+
+    override suspend fun saveAlbumCrossRef(vararg crossRefs: AlbumSongCrossRef) {
+        return localAlbumDataSource.saveAlbumCrossRef(*crossRefs)
     }
 
     override suspend fun updateAlbum(album: Album) {

@@ -110,11 +110,11 @@ class HomeFragment : Fragment() {
 
             // remote
 //            homeViewModel.getTop10MostHeard()
-            homeViewModel.remoteSongs.observe(viewLifecycleOwner) { remoteSongs ->
-                if (remoteSongs != null) {
+            homeViewModel.remoteSongLoaded.observe(viewLifecycleOwner) { isLoaded ->
+                if (isLoaded) {
                     for (genre in recommendGenre) {
                         if (genre == "Vietnamese Pop") {
-                            for (song in remoteSongs) {
+                            for (song in homeViewModel.remoteSongs) {
                                 listRecommendedSong.add(
                                     RecommendedSong(
                                         remoteImageRes = song.image,

@@ -8,6 +8,7 @@ import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import com.example.hybridmusicapp.data.model.playing_song.PlayingSong
 import com.example.hybridmusicapp.data.model.playlist.Playlist
+import com.example.hybridmusicapp.data.model.playlist.PlaylistWithSongs
 import com.example.hybridmusicapp.data.model.song.Song
 import com.example.hybridmusicapp.data.repository.recent_song.RecentSongRepositoryImp
 import com.example.hybridmusicapp.data.repository.search.SearchingRepositoryImp
@@ -22,9 +23,6 @@ class NowPlayingViewModel private constructor(
     recentSongRepository: RecentSongRepositoryImp
 ) : ViewModel() {
 
-    /**
-     * Repository
-     */
     private var _songRepository: SongRepositoryImp = songRepository
     private val _searchRepository: SearchingRepositoryImp = searchRepository
     private val _recentSongRepository: RecentSongRepositoryImp = recentSongRepository
@@ -105,6 +103,22 @@ class NowPlayingViewModel private constructor(
         }
     }
 
+    fun setPlaylistWithSongs(playlists: List<PlaylistWithSongs>){
+        for (i in playlists.indices){
+            val playlistWithSongs = playlists[i]
+            val playlist = playlistWithSongs.playlist
+            playlist?.updateSongList(playlist.songs)
+            playlist?.let { addPlaylist(it) }
+        }
+    }
+
+    private fun addPlaylist(playlist: Playlist) : Boolean{
+        if(!_playlistMap.containsKey(playlist.name)){
+            return _playlistMap.put(playlist.name, playlist) != null
+        }
+        return updatePlaylist(playlist)
+    }
+
     /**
      * Song Management
      */
@@ -127,7 +141,6 @@ class NowPlayingViewModel private constructor(
         _playingSongLiveData.value = _playingSong
     }
 
-    // Cập nhật trạng thái yêu thích của bài hát trong DB
     fun updateFavouriteStatus(song: Song) {
         viewModelScope.launch(Dispatchers.IO) {
             song.isFavorite = true
@@ -135,7 +148,6 @@ class NowPlayingViewModel private constructor(
         }
     }
 
-    // Cập nhật số lần phát và phát lại của bài hát trong DB
     fun updateSongInDB(song: Song) {
         viewModelScope.launch(Dispatchers.IO) {
             song.counter += 1
@@ -144,14 +156,12 @@ class NowPlayingViewModel private constructor(
         }
     }
 
-    // Cập nhật số lần phát của bài hát theo ID trong DB
     fun updateSongCounter(songId: String) {
         viewModelScope.launch(Dispatchers.IO) {
             _songRepository.updateSongCounter(songId)
         }
     }
 
-    // Cập nhật bài hát đang phát
     fun setPlayingSongLiveData(playingSong: PlayingSong) {
         _playingSongLiveData.value = playingSong
     }
@@ -161,16 +171,19 @@ class NowPlayingViewModel private constructor(
         _indexToPlay.value = index
     }
 
+    fun loadPrevSessionPlayingSong(songId: String?, playlistName: String?) {
+
+    }
+
 
     /**
      * Mini Player Management
      */
-    // Cập nhật trạng thái hiển thị của mini player
+
     fun setMiniPlayerVisible(state: Boolean) {
         _miniPlayerVisibility.value = state
     }
 
-    // Factory để tạo instance của NowPlayingViewModel với các repository
     class Factory(
         private val _songRepository: SongRepositoryImp,
         private val _searchingRepository: SearchingRepositoryImp,
@@ -189,7 +202,6 @@ class NowPlayingViewModel private constructor(
         }
     }
 
-    // Singleton để đảm bảo chỉ có một instance của ViewModel
     companion object {
         @Volatile
         var instance: NowPlayingViewModel? = null

@@ -6,16 +6,21 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.example.hybridmusicapp.ResultCallback
 import com.example.hybridmusicapp.data.model.album.Album
+import com.example.hybridmusicapp.data.model.album.AlbumSongCrossRef
 import com.example.hybridmusicapp.data.repository.album.AlbumRepositoryImp
 import com.example.hybridmusicapp.data.source.remote.Result
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import java.util.ArrayList
 
 class AlbumViewModel(
     private val albumRepository: AlbumRepositoryImp
 ) : ViewModel() {
     private val _albums = MutableLiveData<List<Album>?>()
     val albums = _albums
+
+    private val _album = MutableLiveData<Album>()
+    val album = _album
 
     fun loadAlbums() {
         viewModelScope.launch(Dispatchers.IO) {
@@ -38,9 +43,9 @@ class AlbumViewModel(
         viewModelScope.launch(Dispatchers.IO) {
             albumRepository.getTop10AlbumsFireStore(object : ResultCallback<Result<List<Album>>> {
                 override fun onResult(result: Result<List<Album>>) {
-                    if(result is Result.Success){
+                    if (result is Result.Success) {
                         _albums.postValue(result.data)
-                    }else if(result is Result.Failure){
+                    } else if (result is Result.Failure) {
                         _albums.postValue(emptyList())
                     }
                 }
@@ -48,18 +53,55 @@ class AlbumViewModel(
         }
     }
 
-    fun getAlbumsFireStore(){
+    fun getAlbumsFireStore() {
         viewModelScope.launch(Dispatchers.IO) {
             albumRepository.getAlbumsFireStore(object : ResultCallback<Result<List<Album>>> {
                 override fun onResult(result: Result<List<Album>>) {
-                    if(result is Result.Success){
+                    if (result is Result.Success) {
                         _albums.postValue(result.data)
-                    }else if(result is Result.Failure){
+                    } else if (result is Result.Failure) {
                         _albums.postValue(emptyList())
                     }
                 }
             })
         }
+    }
+
+    fun saveAlbumsToDB(albums: List<Album>, callback: ResultCallback<Boolean>) {
+        if(albums.isNotEmpty()){
+            viewModelScope.launch(Dispatchers.IO) {
+                val albumArr = albums.toTypedArray()
+                val result = albumRepository.saveAlbums(*albumArr)
+                callback.onResult(result)
+            }
+        }
+    }
+
+    fun saveAlbumSongCrossRef(albums: List<Album>) {
+        if(albums.isNotEmpty()){
+            viewModelScope.launch(Dispatchers.IO) {
+                val crossRefs = createAlbumSongCrossRef(albums)
+                albumRepository.saveAlbumCrossRef(*crossRefs)
+            }
+        }
+    }
+
+    private fun createAlbumSongCrossRef(albums: List<Album>): Array<AlbumSongCrossRef> {
+        val crossRefs: MutableList<AlbumSongCrossRef> = ArrayList()
+        for (album in albums) {
+            for (songId in album.songs!!) {
+                crossRefs.add(AlbumSongCrossRef(album.id, songId))
+            }
+        }
+        return crossRefs.toTypedArray<AlbumSongCrossRef>()
+    }
+
+    fun setAlbum(album: Album) {
+        _album.value = album
+    }
+
+    fun setAlbums(albums: List<Album>) {
+        _albums.value = albums
     }
 
 

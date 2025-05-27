@@ -4,6 +4,9 @@ import android.annotation.SuppressLint
 import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.graphics.Color
+import android.net.ConnectivityManager
+import android.net.Network
+import android.net.NetworkRequest
 import android.os.Build
 import android.os.Bundle
 import android.util.DisplayMetrics
@@ -19,12 +22,14 @@ import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
 import com.example.hybridmusicapp.MusicApplication
 import com.example.hybridmusicapp.R
+import com.example.hybridmusicapp.ResultCallback
 import com.example.hybridmusicapp.databinding.ActivityHomeBinding
 import com.example.hybridmusicapp.ui.discovery.DiscoveryFragment
 import com.example.hybridmusicapp.ui.library.LibraryFragment
 import com.example.hybridmusicapp.ui.setting.SettingFragment
 import com.example.hybridmusicapp.ui.home.AlbumViewModel
 import com.example.hybridmusicapp.ui.home.ArtistViewModel
+import com.example.hybridmusicapp.ui.library.playlist.PlaylistViewModel
 import com.example.hybridmusicapp.ui.viewmodel.NcsViewModel
 import com.example.hybridmusicapp.ui.viewmodel.NetworkViewModel
 import com.example.hybridmusicapp.ui.viewmodel.NowPlayingViewModel
@@ -65,6 +70,11 @@ class HomeActivity : AppCompatActivity() {
         val application = application as MusicApplication
         val artistRepository = application.artistRepository
         ArtistViewModel.Factory(artistRepository)
+    }
+    private val playlistViewModel by viewModels<PlaylistViewModel> {
+        val application = application as MusicApplication
+        val playlistRepository = application.playlistRepository
+        PlaylistViewModel.Factory(playlistRepository)
     }
 
 
@@ -147,29 +157,112 @@ class HomeActivity : AppCompatActivity() {
                 Toast.makeText(this, "Permission granted in Android 9", Toast.LENGTH_SHORT).show()
             }
         }
+
         artistViewModel.getArtists()
         artistViewModel.remoteArtists.observe(this) { artists ->
             if (artists != null) {
+                // TODO: Save artist to DB, save artist cross ref
             } else {
                 Toast.makeText(this, "Load Artist Error", Toast.LENGTH_LONG).show()
             }
         }
 
         nowPlayingViewModel.currentPlayingSong.observe(this) { playingSong ->
-            if(playingSong != null){
+            if (playingSong != null) {
                 nowPlayingViewModel.setMiniPlayerVisible(playingSong.song != null)
-            }else{
+            } else {
                 Log.d("HomeActivity", "currentPlayingSong is null")
             }
         }
 
         homeViewModel.loadRemoteSongs()
-        homeViewModel.remoteSongs.observe(this){remoteSongs ->
-            if(remoteSongs != null){
-                // TODO: save song 
+        homeViewModel.remoteSongLoaded.observe(this) { isLoaded ->
+            if (isLoaded) {
+                saveSongData()
             }
         }
 
+        observerLocalData()
+
+        nowPlayingViewModel.historySearchSongs.observe(this) { songs ->
+            nowPlayingViewModel.setupPlaylist(
+                songs,
+                MusicAppUtils.DefaultPlaylistName.SEARCHED.value
+            )
+        }
+
+        playlistViewModel.loadPlaylistWithSongs(null)
+        playlistViewModel.playlists.observe(this) { playlistWithSongs ->
+            playlistViewModel.setPlaylists(playlistWithSongs)
+            nowPlayingViewModel.setPlaylistWithSongs(playlistWithSongs)
+        }
+
+    }
+
+    private fun saveSongData() {
+        homeViewModel.saveSongToDB(object : ResultCallback<Boolean> {
+            override fun onResult(result: Boolean) {
+                if (result) {
+                    homeViewModel.loadLocalSongs()
+                } else {
+                    Toast.makeText(this@HomeActivity, "Save Song Error", Toast.LENGTH_LONG).show()
+                }
+            }
+        })
+        observerLocalData()
+    }
+
+    private fun observerLocalData() {
+        homeViewModel.localSongs.observe(this) { songs ->
+            nowPlayingViewModel.setupPlaylist(
+                songs,
+                MusicAppUtils.DefaultPlaylistName.DEFAULT.value
+            )
+        }
+    }
+
+    private fun saveCurrentSong() {
+        val playingSong = nowPlayingViewModel.currentPlayingSong.value
+        if (playingSong != null) {
+            val song = playingSong.song
+            if (song != null) {
+                sharePreferences.edit()
+                    .putString(PREF_SONG_ID, song.id)
+                    .putString(PREF_PLAYLIST_NAME, playingSong.playlist!!.name)
+                    .apply()
+            }
+        }
+    }
+
+    private fun registerNetworkCallBack() {
+        val connectivityManager =
+            getSystemService(CONNECTIVITY_SERVICE) as ConnectivityManager
+        val builder = NetworkRequest.Builder()
+        connectivityManager.registerNetworkCallback(
+            builder.build(),
+            object : ConnectivityManager.NetworkCallback() {
+                override fun onAvailable(network: Network) {
+                    super.onAvailable(network)
+                }
+
+                override fun onBlockedStatusChanged(network: Network, blocked: Boolean) {
+                    super.onBlockedStatusChanged(network, blocked)
+                }
+
+                override fun onLost(network: Network) {
+                    super.onLost(network)
+                }
+            })
+    }
+
+    private fun loadPrevSessionPlayingSong() {
+        val songId = sharePreferences.getString(PREF_SONG_ID, null)
+        val playlistName = sharePreferences.getString(PREF_PLAYLIST_NAME, null)
+        homeViewModel.localSongs.observe(this) { songs ->
+            if (!songs.isNullOrEmpty()) {
+                nowPlayingViewModel.loadPrevSessionPlayingSong(songId, playlistName)
+            }
+        }
     }
 
     private fun checkPermission() {
@@ -230,5 +323,7 @@ class HomeActivity : AppCompatActivity() {
 
     companion object {
         const val EXTRA_GENRE_RECOMMENDED = "EXTRA_GENRE_RECOMMENDED"
+        const val PREF_SONG_ID: String = "SONG_ID"
+        const val PREF_PLAYLIST_NAME: String = "PLAYLIST_NAME"
     }
 }

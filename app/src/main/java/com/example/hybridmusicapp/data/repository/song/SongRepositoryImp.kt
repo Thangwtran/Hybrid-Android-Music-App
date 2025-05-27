@@ -31,7 +31,7 @@ class SongRepositoryImp(
         return localDataSource.getById(songId)
     }
 
-    override suspend fun insert(vararg songs: Song): LongArray {
+    override suspend fun insert(vararg songs: Song): Boolean {
         return localDataSource.insert(*songs)
     }
 

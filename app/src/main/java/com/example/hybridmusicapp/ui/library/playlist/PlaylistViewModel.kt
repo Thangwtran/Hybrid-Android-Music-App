@@ -18,30 +18,32 @@ import kotlinx.coroutines.launch
 
 class PlaylistViewModel(
     private val repository: PlaylistRepositoryImp
-): ViewModel() {
+) : ViewModel() {
 
-    private val _playlists = MutableLiveData<List<PlaylistWithSongs>>() // lưu danh sách các playlist
-    private val _playlistWithSongs = MutableLiveData<PlaylistWithSongs>() // lưu danh sách các bài hát trong playlist
+    private val _playlists =
+        MutableLiveData<List<PlaylistWithSongs>>() // lưu danh sách các playlist
+    private val _playlistWithSongs =
+        MutableLiveData<PlaylistWithSongs>() // lưu danh sách các bài hát trong playlist
 
     val playlists: LiveData<List<PlaylistWithSongs>>
         get() = _playlists
     val playlistWithSong: LiveData<PlaylistWithSongs>
         get() = _playlistWithSongs
 
-    fun loadPlaylist(): Flow<List<Playlist>>{
+    fun loadPlaylist(): Flow<List<Playlist>> {
         return repository.getAllPlaylists()
     }
 
-    fun loadPlaylistWithSongs(callback: ResultCallback<List<PlaylistWithSongs>>?){
-        viewModelScope.launch(Dispatchers.IO){
-            repository.getAllPlaylistWithSongs().collect {playlists ->
+    fun loadPlaylistWithSongs(callback: ResultCallback<List<PlaylistWithSongs>>?) {
+        viewModelScope.launch(Dispatchers.IO) {
+            repository.getAllPlaylistWithSongs().collect { playlists ->
                 setPlaylists(playlists)
             }
         }
     }
 
-    fun loadPlaylistWithSongsByPlaylistId(playlistId: Int){
-        viewModelScope.launch(Dispatchers.IO){
+    fun loadPlaylistWithSongsByPlaylistId(playlistId: Int) {
+        viewModelScope.launch(Dispatchers.IO) {
             val playlist = repository.getPlaylistWithSongByPlaylistId(playlistId)
             playlist.collect {
                 setPlaylistWithSongs(it)
@@ -49,8 +51,8 @@ class PlaylistViewModel(
         }
     }
 
-    fun createPlaylistCrossRef(playlist:Playlist, song: Song?, callback: ResultCallback<Boolean>){
-        if(song != null) {
+    fun createPlaylistCrossRef(playlist: Playlist, song: Song?, callback: ResultCallback<Boolean>) {
+        if (song != null) {
             val playlistCrossRef = PlaylistSongCrossRef()
             playlistCrossRef.playlistId = playlist.id
             playlistCrossRef.songId = song.id
@@ -62,44 +64,44 @@ class PlaylistViewModel(
         callback.onResult(false)
     }
 
-    fun createNewPlaylist(playlistName:String?){
-        if(playlistName != null){
+    fun createNewPlaylist(playlistName: String?) {
+        if (playlistName != null) {
             val playlist = Playlist(name = playlistName)
             viewModelScope.launch(Dispatchers.IO) {
                 repository.insertPlaylist(playlist)
             }
-        }else{
+        } else {
             Log.d("PlaylistViewModel", "Playlist name is null")
         }
     }
 
-    fun updatePlaylist(playlist: Playlist){
-        viewModelScope.launch (Dispatchers.IO){
+    fun updatePlaylist(playlist: Playlist) {
+        viewModelScope.launch(Dispatchers.IO) {
             repository.updatePlaylist(playlist)
         }
     }
 
-    fun deletePlaylist(playlist: Playlist){
-        viewModelScope.launch (Dispatchers.IO){
+    fun deletePlaylist(playlist: Playlist) {
+        viewModelScope.launch(Dispatchers.IO) {
             repository.deletePlaylist(playlist)
         }
     }
 
-    fun setPlaylists(playlists: List<PlaylistWithSongs>){
+    fun setPlaylists(playlists: List<PlaylistWithSongs>) {
         _playlists.postValue(playlists)
     }
 
-    private fun setPlaylistWithSongs(playlistWithSongs: PlaylistWithSongs){
+    private fun setPlaylistWithSongs(playlistWithSongs: PlaylistWithSongs) {
         _playlistWithSongs.postValue(playlistWithSongs)
     }
 
     class Factory(
         private val playlistRepositoryImp: PlaylistRepositoryImp
-    ): ViewModelProvider.Factory{
+    ) : ViewModelProvider.Factory {
         override fun <T : ViewModel> create(modelClass: Class<T>): T {
-            if(modelClass.isAssignableFrom(PlaylistViewModel::class.java)){
+            if (modelClass.isAssignableFrom(PlaylistViewModel::class.java)) {
                 return PlaylistViewModel(playlistRepositoryImp) as T
-            }else{
+            } else {
                 throw IllegalArgumentException("Unknown ViewModel class")
             }
         }

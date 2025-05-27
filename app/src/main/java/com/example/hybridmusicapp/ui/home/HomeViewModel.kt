@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.example.hybridmusicapp.ResultCallback
+import com.example.hybridmusicapp.data.model.album.Album
 import com.example.hybridmusicapp.data.model.song.Song
 import com.example.hybridmusicapp.data.repository.album.AlbumRepository
 import com.example.hybridmusicapp.data.repository.album.AlbumRepositoryImp
@@ -15,6 +16,7 @@ import com.example.hybridmusicapp.data.source.remote.Result
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlin.collections.MutableList
 
 class HomeViewModel(
     private val albumRepository: AlbumRepositoryImp,
@@ -22,19 +24,28 @@ class HomeViewModel(
 ) : ViewModel() {
     private var dispatcher: CoroutineDispatcher = Dispatchers.IO
 
-    private val _remoteSongs =  MutableLiveData<List<Song>?>()
+    private val _remoteSongs: MutableList<Song> = mutableListOf()
     val remoteSongs = _remoteSongs
 
-//    private val _remoteSongLoaded = MutableLiveData<Boolean>()
-//    val remoteSongLoaded: LiveData<Boolean>
-//        get() = _remoteSongLoaded
+    private val _remoteSongLoaded = MutableLiveData<Boolean>()
+    val remoteSongLoaded: LiveData<Boolean>
+        get() = _remoteSongLoaded
+
+    private val _albums = MutableLiveData<List<Album>?>()
+    val albums: LiveData<List<Album>?>
+        get() = _albums
+
+    private val _localSongs = MutableLiveData<List<Song>?>()
+    val localSongs: LiveData<List<Song>?>
+        get() = _localSongs
 
     fun loadRemoteSongs() {
         viewModelScope.launch(dispatcher) {
             val result = songRepository.loadRemoteSongs()
             if (result is Result.Success) {
-                _remoteSongs.postValue(result.data.songs)
-//                _remoteSongLoaded.postValue(true)
+                _remoteSongs.clear()
+                _remoteSongs.addAll(result.data.songs)
+                _remoteSongLoaded.postValue(true)
             } else if (result is Result.Failure) {
                 // TODO: HomeViewModel -> Handle exception
             }
@@ -47,21 +58,59 @@ class HomeViewModel(
         }
     }
 
-    fun getTop10MostHeard(){
+    fun getTop10MostHeard() {
         viewModelScope.launch(dispatcher) {
-            songRepository.getTop10MostHeard(object : ResultCallback<Result<List<Song>>>{
+            songRepository.getTop10MostHeard(object : ResultCallback<Result<List<Song>>> {
                 override fun onResult(result: Result<List<Song>>) {
-                    if(result is Result.Success){
-//                        _remoteSongs.clear()
-                        _remoteSongs.postValue(result.data)
-//                        _remoteSongLoaded.postValue(true)
-                    }else if(result is Result.Failure){
-//                        _remoteSongLoaded.postValue(false)
-                        _remoteSongs.postValue(emptyList())
+                    if (result is Result.Success) {
+                        _remoteSongs.clear()
+                        _remoteSongs.addAll(result.data)
+                        _remoteSongLoaded.postValue(true)
+                    } else if (result is Result.Failure) {
+                        _remoteSongLoaded.postValue(false)
+                        _remoteSongs.addAll(emptyList())
                     }
                 }
             })
         }
+    }
+
+    fun reloadData() {
+        loadRemoteSongs()
+        getTop10MostHeard()
+    }
+
+    fun loadLocalSongs() {
+        viewModelScope.launch(dispatcher) {
+            val result = songRepository.getSongList()
+            _localSongs.postValue(result)
+        }
+    }
+
+    fun saveSongToDB(callback: ResultCallback<Boolean>) {
+        viewModelScope.launch(dispatcher) {
+            val songs = extractSongs()
+            if (songs.isNotEmpty()) {
+                val songArr = songs.toTypedArray()
+                val result = songRepository.insert(*songArr)
+                callback.onResult(result)
+            }
+        }
+    }
+
+    private fun extractSongs(): List<Song> {
+        val result: MutableList<Song> = ArrayList()
+        val localSongs = _localSongs.value
+        if (localSongs == null) {
+            result.addAll(_remoteSongs)
+        } else {                                  // localSongs != null
+            for (song in _remoteSongs) {
+                if (!localSongs.contains(song)) { // Song is not in local
+                    result.add(song)
+                }
+            }
+        }
+        return result
     }
 
     class Factory(

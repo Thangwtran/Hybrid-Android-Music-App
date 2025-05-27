@@ -3,6 +3,7 @@ package com.example.hybridmusicapp.data.repository.album
 import com.example.hybridmusicapp.ResultCallback
 import com.example.hybridmusicapp.data.model.album.Album
 import com.example.hybridmusicapp.data.model.album.AlbumList
+import com.example.hybridmusicapp.data.model.album.AlbumSongCrossRef
 import com.example.hybridmusicapp.data.source.remote.Result
 
 interface AlbumRepository {
@@ -13,7 +14,7 @@ interface AlbumRepository {
         // TODO: album with song 
         suspend fun saveAlbums(vararg album: Album): Boolean
 
-        // TODO: album cross ref 
+        suspend fun saveAlbumCrossRef(vararg crossRefs: AlbumSongCrossRef)
         suspend fun updateAlbum(album: Album)
         suspend fun deleteAlbum(album: Album)
 
