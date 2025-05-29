@@ -39,7 +39,7 @@ interface SongDao {
     suspend fun getById(id: String): Song // get song by id
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insert(vararg songs: Song): Boolean
+    suspend fun insert(vararg songs: Song): LongArray // insert song
 
     @Update
     suspend fun update(song:Song)

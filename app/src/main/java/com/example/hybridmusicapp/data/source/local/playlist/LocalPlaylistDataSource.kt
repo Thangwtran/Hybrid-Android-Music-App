@@ -14,15 +14,15 @@ class LocalPlaylistDataSource(
     }
 
     override fun getAllPlaylistWithSongs(): Flow<List<PlaylistWithSongs>> {
-        TODO("Not yet implemented")
+        return playlistDao.getAllPlaylistWithSongs()
     }
 
     override fun getPlaylistWithSongByPlaylistId(id: Int): Flow<PlaylistWithSongs> {
-        TODO("Not yet implemented")
+        return playlistDao.getPlaylistWithSongByPlaylistId(id)
     }
 
     override suspend fun insertPlaylistSongCrossRef(obj: PlaylistSongCrossRef): Boolean {
-        TODO("Not yet implemented")
+        return playlistDao.insertPlaylistSongCrossRef(obj) != -1L
     }
 
     override suspend fun insert(playlist: Playlist) {
@@ -30,12 +30,10 @@ class LocalPlaylistDataSource(
     }
 
     override suspend fun deletePlaylist(playlist: Playlist) {
-        TODO("Not yet implemented")
+        playlistDao.delete(playlist)
     }
 
     override suspend fun updatePlaylist(playlist: Playlist) {
-        TODO("Not yet implemented")
+        playlistDao.update(playlist)
     }
-
-
 }

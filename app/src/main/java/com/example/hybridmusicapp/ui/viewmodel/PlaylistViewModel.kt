@@ -1,4 +1,4 @@
-package com.example.hybridmusicapp.ui.library.playlist
+package com.example.hybridmusicapp.ui.viewmodel
 
 import android.util.Log
 import androidx.lifecycle.LiveData
@@ -10,6 +10,7 @@ import com.example.hybridmusicapp.ResultCallback
 import com.example.hybridmusicapp.data.model.playlist.Playlist
 import com.example.hybridmusicapp.data.model.playlist.PlaylistSongCrossRef
 import com.example.hybridmusicapp.data.model.playlist.PlaylistWithSongs
+import com.example.hybridmusicapp.data.model.song.NCSong
 import com.example.hybridmusicapp.data.model.song.Song
 import com.example.hybridmusicapp.data.repository.playlist.PlaylistRepositoryImp
 import kotlinx.coroutines.Dispatchers
@@ -20,24 +21,28 @@ class PlaylistViewModel(
     private val repository: PlaylistRepositoryImp
 ) : ViewModel() {
 
-    private val _playlists =
+    private val _listPlaylist =
         MutableLiveData<List<PlaylistWithSongs>>() // lưu danh sách các playlist
+    val playlists: LiveData<List<PlaylistWithSongs>>
+        get() = _listPlaylist
+
     private val _playlistWithSongs =
         MutableLiveData<PlaylistWithSongs>() // lưu danh sách các bài hát trong playlist
-
-    val playlists: LiveData<List<PlaylistWithSongs>>
-        get() = _playlists
     val playlistWithSong: LiveData<PlaylistWithSongs>
         get() = _playlistWithSongs
+
+    private val _ncsPlaylist = MutableLiveData<List<NCSong>>()
+    val ncsPlaylist: LiveData<List<NCSong>>
+        get() = _ncsPlaylist
 
     fun loadPlaylist(): Flow<List<Playlist>> {
         return repository.getAllPlaylists()
     }
 
-    fun loadPlaylistWithSongs(callback: ResultCallback<List<PlaylistWithSongs>>?) {
+    fun loadPlaylistWithSongs() {
         viewModelScope.launch(Dispatchers.IO) {
             repository.getAllPlaylistWithSongs().collect { playlists ->
-                setPlaylists(playlists)
+                setListPlaylist(playlists)
             }
         }
     }
@@ -87,8 +92,12 @@ class PlaylistViewModel(
         }
     }
 
-    fun setPlaylists(playlists: List<PlaylistWithSongs>) {
-        _playlists.postValue(playlists)
+    fun setListPlaylist(playlists: List<PlaylistWithSongs>) {
+        _listPlaylist.postValue(playlists)
+    }
+
+    fun setNcsPlaylist(ncsSongs: List<NCSong>) {
+        _ncsPlaylist.postValue(ncsSongs)
     }
 
     private fun setPlaylistWithSongs(playlistWithSongs: PlaylistWithSongs) {

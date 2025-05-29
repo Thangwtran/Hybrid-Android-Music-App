@@ -1,13 +1,21 @@
 package com.example.hybridmusicapp.data.model.playlist
 
+import android.annotation.SuppressLint
+import android.content.Context
+import android.net.Uri
+import androidx.annotation.OptIn
 import androidx.media3.common.MediaItem
+import androidx.media3.common.util.UnstableApi
+import androidx.media3.datasource.RawResourceDataSource
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.Ignore
 import androidx.room.PrimaryKey
+import com.example.hybridmusicapp.data.model.song.NCSong
 import com.example.hybridmusicapp.data.model.song.Song
 import java.util.Date
 import java.util.Objects
+import kotlin.coroutines.coroutineContext
 
 
 @Suppress("unused")
@@ -31,6 +39,10 @@ data class Playlist(
         private set
 
     @Ignore
+    var ncsSongs: List<NCSong> = listOf()
+        private set
+
+    @Ignore
     private val _mediaItems: MutableList<MediaItem> = ArrayList()
 
     var id: Int
@@ -51,10 +63,25 @@ data class Playlist(
         updateMediaItems()
     }
 
+    fun updateNcsSongList(ncsSongs: List<NCSong>, context: Context) {
+        this.ncsSongs = ncsSongs
+        updateNcsMediaItems(context)
+    }
+
     private fun updateMediaItems() {
         _mediaItems.clear()
         for (song in songs) {
             _mediaItems.add(MediaItem.fromUri(song.source))
+        }
+    }
+
+    @SuppressLint("UseKtx")
+    private fun updateNcsMediaItems(context: Context) {
+        _mediaItems.clear()
+        for (ncs in ncsSongs) {
+            val rawUri = Uri.parse("android.resource://${context!!.packageName}/${ncs.audioRes}")
+            val mediaItem = MediaItem.fromUri(rawUri)
+            _mediaItems.add(mediaItem)
         }
     }
 

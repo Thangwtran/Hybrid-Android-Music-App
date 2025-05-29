@@ -24,7 +24,7 @@ interface SongRepository {
         val top30Replay: Flow<List<Song>>
         suspend fun getByTitle(title: String): List<Song>
         suspend fun getById(songId: String): Song
-        suspend fun insert(vararg songs: Song): LongArray
+        suspend fun insert(vararg songs: Song): Boolean
         suspend fun update(song: Song)
         suspend fun delete(song: Song)
     }

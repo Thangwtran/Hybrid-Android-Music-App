@@ -1,5 +1,8 @@
 package com.example.hybridmusicapp.ui.viewmodel
 
+import android.content.Context
+import android.util.Log
+import android.widget.Toast
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -9,6 +12,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.hybridmusicapp.data.model.playing_song.PlayingSong
 import com.example.hybridmusicapp.data.model.playlist.Playlist
 import com.example.hybridmusicapp.data.model.playlist.PlaylistWithSongs
+import com.example.hybridmusicapp.data.model.song.NCSong
 import com.example.hybridmusicapp.data.model.song.Song
 import com.example.hybridmusicapp.data.repository.recent_song.RecentSongRepositoryImp
 import com.example.hybridmusicapp.data.repository.search.SearchingRepositoryImp
@@ -23,121 +27,88 @@ class NowPlayingViewModel private constructor(
     recentSongRepository: RecentSongRepositoryImp
 ) : ViewModel() {
 
-    private var _songRepository: SongRepositoryImp = songRepository
-    private val _searchRepository: SearchingRepositoryImp = searchRepository
-    private val _recentSongRepository: RecentSongRepositoryImp = recentSongRepository
+    // Repository
+    private var _songRepository: SongRepositoryImp
+    private val _searchingRepository: SearchingRepositoryImp
+    private val _recentSongRepository: RecentSongRepositoryImp
 
+    // Playing Song
     private val _playingSong = PlayingSong()
-
     private val _playingSongLiveData = MutableLiveData<PlayingSong>()
-    val currentPlayingSong: LiveData<PlayingSong> = _playingSongLiveData
+    val playingSong: LiveData<PlayingSong>
+        get() = _playingSongLiveData
 
-    private var _playlistName: String = ""
-
+    // Playlist
+    private var _playlistName: String = "" // Is ncs after set
+    var playlistName: String
+        get() = playlistName
+        set(playlistName) {
+            _playlistName = playlistName
+            val playlist = getPlaylist(playlistName) // get default playlist
+            setCurrentPlaylist(playlist)
+        }
     private val _currentPlaylist = MutableLiveData<Playlist?>()
     val currentPlaylist: LiveData<Playlist?> = _currentPlaylist
-
-    // Map lưu trữ các playlist (mặc định và tùy chỉnh)
     private val _playlistMap: MutableMap<String, Playlist?> = HashMap()
 
-    private val _indexToPlay = MutableLiveData<Int>()
+    // Index
+    private val _indexToPlay = MutableLiveData<Int>()   // is nulling
     val indexToPlay: LiveData<Int> = _indexToPlay
 
     private val _miniPlayerVisibility = MutableLiveData<Boolean>()
     val isMiniPlayerVisible: LiveData<Boolean> = _miniPlayerVisibility
 
-    val historySearchSongs: LiveData<List<Song>> =
-        _searchRepository.historySearchedSongs.asLiveData()
+    val historySearchSongs: LiveData<List<Song>>
+        get() = _searchingRepository.historySearchedSongs.asLiveData()
 
     /**
      * init
      */
     init {
-        // Khởi tạo Singleton và playlist mặc định
-        synchronized(NowPlayingViewModel::class.java) {
-            if (instance == null) {
-                instance = this
-            }
-        }
+//        synchronized(NowPlayingViewModel::class.java) {
+//            if (instance == null) {
+//                instance = this
+//            }
+//        }
+        _songRepository = songRepository
+        _searchingRepository = searchRepository
+        _recentSongRepository = recentSongRepository
         initPlaylists()
-    }
-
-    // Khởi tạo các playlist mặc định từ enum DefaultPlaylistName
-    private fun initPlaylists() {
-        for (playlistName in DefaultPlaylistName.entries.toTypedArray()) {
-            val playlist = Playlist(_id = -1, name = playlistName.value)
-            _playlistMap[playlistName.value] = playlist
-        }
-    }
-
-    /**
-     * Playlist Management
-     */
-
-    // Lấy playlist từ map theo tên, trả về null nếu không tìm thấy
-    private fun getPlaylist(playlistName: String): Playlist? {
-        return _playlistMap.getOrDefault(playlistName, null)
-    }
-
-    // Cập nhật playlist trong map
-    private fun updatePlaylist(playlist: Playlist): Boolean {
-        return _playlistMap.put(playlist.name, playlist) != null
-    }
-
-    // Thiết lập danh sách bài hát cho playlist
-    fun setupPlaylist(songs: List<Song>?, playlistName: String) {
-        if (songs != null) {
-            val playlist = getPlaylist(playlistName)
-            if (playlist != null) {
-                playlist.updateSongList(songs)
-                updatePlaylist(playlist)
-            }
-        }
-    }
-
-    // Cập nhật playlist hiện tại và đồng bộ với PlayingSong
-    fun setCurrentPlaylist(playlist: Playlist) {
-        _currentPlaylist.value = playlist
-        if (_playingSong.playlist == null || _playingSong.playlist !== playlist) {
-            _playingSong.playlist = playlist
-        }
-    }
-
-    fun setPlaylistWithSongs(playlists: List<PlaylistWithSongs>){
-        for (i in playlists.indices){
-            val playlistWithSongs = playlists[i]
-            val playlist = playlistWithSongs.playlist
-            playlist?.updateSongList(playlist.songs)
-            playlist?.let { addPlaylist(it) }
-        }
-    }
-
-    private fun addPlaylist(playlist: Playlist) : Boolean{
-        if(!_playlistMap.containsKey(playlist.name)){
-            return _playlistMap.put(playlist.name, playlist) != null
-        }
-        return updatePlaylist(playlist)
     }
 
     /**
      * Song Management
      */
 
-    // Cập nhật bài hát đang phát dựa trên chỉ số trong playlist
     fun setPlayingSongIndex(index: Int) {
-        if (index != -1 && _playingSong.playlist?.songs?.size ?: 0 > index) {
-            val song = _playingSong.playlist!!.songs[index]
-            _playingSong.apply {
-                this.song = song
-                currentPosition = 0
-                currentSongIndex = index
+        // TODO: Co van de  
+        if (index != -1
+            && (_playingSong.playlist?.songs?.size ?: 0) > index
+            || (_playingSong.playlist?.ncsSongs?.size ?: 0) > index
+        ) {
+            Log.e("NowPlayingViewModel", "setPlayingSongIndex: $index")
+            if (_playingSong.playlist!!.songs.isNotEmpty()) {
+                val song = _playingSong.playlist!!.songs[index]
+                _playingSong.apply {
+                    this.song = song
+                    this.ncSong = null
+                    currentPosition = 0
+                    currentSongIndex = index
+                }
+            } else {
+                val ncSong = _playingSong.playlist!!.ncsSongs[index]
+                _playingSong.apply {
+                    this.song = null
+                    this.ncSong = ncSong
+                    currentPosition = 0
+                    currentSongIndex = index
+                }
             }
-            updatePlayingSongLiveData()
+            updatePlayingSong()
         }
     }
 
-    // Cập nhật LiveData của bài hát đang phát
-    private fun updatePlayingSongLiveData() {
+    private fun updatePlayingSong() {
         _playingSongLiveData.value = _playingSong
     }
 
@@ -162,17 +133,86 @@ class NowPlayingViewModel private constructor(
         }
     }
 
-    fun setPlayingSongLiveData(playingSong: PlayingSong) {
+    fun setPlayingSong(playingSong: PlayingSong) {
         _playingSongLiveData.value = playingSong
     }
 
-    // Đặt chỉ số bài hát cần phát
-    fun setIndexToPlay(index: Int) {
+    fun setIndexToPlay(index: Int) {  // is called in PlayerBaseFragment
         _indexToPlay.value = index
     }
 
     fun loadPrevSessionPlayingSong(songId: String?, playlistName: String?) {
 
+    }
+
+
+    /**
+     * Playlist Management
+     */
+    // Khởi tạo các playlist mặc định từ enum DefaultPlaylistName
+    private fun initPlaylists() { // oke
+        for (playlistName in DefaultPlaylistName.entries.toTypedArray()) {
+            val playlist = Playlist(_id = -1, name = playlistName.value)
+            _playlistMap[playlistName.value] = playlist
+        }
+    }
+
+    // Lấy playlist từ map theo tên, trả về null nếu không tìm thấy
+    private fun getPlaylist(playlistName: String): Playlist? {
+        return _playlistMap.getOrDefault(playlistName, null)
+    }
+
+    // Cập nhật playlist trong map
+    private fun updatePlaylist(playlist: Playlist): Boolean {
+        return _playlistMap.put(playlist.name, playlist) != null
+    }
+
+    // Thiết lập danh sách bài hát cho playlist
+    fun setupPlaylist(songs: List<Song>?, playlistName: String) {
+        if (songs != null) {
+            val playlist = getPlaylist(playlistName)
+            if (playlist != null) {
+                playlist.updateSongList(songs)
+                updatePlaylist(playlist)
+            }
+        }
+    }
+
+    // Thiết lập danh sách bài hát cho playlist ncs
+    fun setupNcsPlaylist(context: Context, ncsSongs: List<NCSong>?, playlistName: String) {
+        if (ncsSongs != null) {
+            val playlist = getPlaylist(playlistName)
+            if (playlist != null) {
+                playlist.updateNcsSongList(ncsSongs, context)
+                updatePlaylist(playlist)
+            } else {
+                Log.i("NowPlayingViewModel", "setupNcsPlaylist: playlist is null")
+            }
+        }
+    }
+
+    // Cập nhật playlist hiện tại và đồng bộ với PlayingSong
+    fun setCurrentPlaylist(playlist: Playlist?) {
+        _currentPlaylist.value = playlist
+        if (_playingSong.playlist == null || _playingSong.playlist !== playlist) {
+            _playingSong.playlist = playlist
+        }
+    }
+
+    fun setPlaylistWithSongs(playlists: List<PlaylistWithSongs>) {
+        for (i in playlists.indices) {
+            val playlistWithSongs = playlists[i]
+            val playlist = playlistWithSongs.playlist
+            playlist?.updateSongList(playlist.songs)
+            playlist?.let { addPlaylist(it) }
+        }
+    }
+
+    fun addPlaylist(playlist: Playlist): Boolean {
+        if (!_playlistMap.containsKey(playlist.name)) {
+            return _playlistMap.put(playlist.name, playlist) != null
+        }
+        return updatePlaylist(playlist)
     }
 
 
@@ -203,8 +243,25 @@ class NowPlayingViewModel private constructor(
     }
 
     companion object {
+        //        @Volatile
+//        var instance: NowPlayingViewModel? = null
+//            private set
         @Volatile
         var instance: NowPlayingViewModel? = null
-            private set
+
+        fun getInstance(
+            songRepository: SongRepositoryImp,
+            searchRepository: SearchingRepositoryImp,
+            recentSongRepository: RecentSongRepositoryImp
+        ): NowPlayingViewModel {
+            return instance ?: synchronized(this) {
+                instance ?: NowPlayingViewModel(
+                    songRepository,
+                    searchRepository,
+                    recentSongRepository
+                )
+                    .also { instance = it }
+            }
+        }
     }
 }

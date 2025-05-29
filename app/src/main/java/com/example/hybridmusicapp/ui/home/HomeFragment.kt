@@ -10,7 +10,9 @@ import android.widget.Toast
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import com.example.hybridmusicapp.MusicApplication
+import com.example.hybridmusicapp.PlayerBaseFragment
 import com.example.hybridmusicapp.data.model.album.Album
+import com.example.hybridmusicapp.data.model.song.NCSong
 import com.example.hybridmusicapp.databinding.FragmentHomeBinding
 import com.example.hybridmusicapp.ui.home.adapter.CarouselAdapter
 import com.example.hybridmusicapp.ui.home.adapter.RecommendedSong
@@ -20,11 +22,12 @@ import com.example.hybridmusicapp.ui.home.adapter.TrendingNcsTrackAdapter
 import com.example.hybridmusicapp.ui.home.AlbumViewModel
 import com.example.hybridmusicapp.ui.home.ArtistViewModel
 import com.example.hybridmusicapp.ui.viewmodel.NcsViewModel
+import com.example.hybridmusicapp.utils.MusicAppUtils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlin.getValue
 
-class HomeFragment : Fragment() {
+class HomeFragment : PlayerBaseFragment() {
     private lateinit var binding: FragmentHomeBinding
     private lateinit var carouselAdapter: CarouselAdapter
     private lateinit var recommendedSongAdapter: RecommendedSongAdapter
@@ -40,12 +43,13 @@ class HomeFragment : Fragment() {
         val artistRepository = application.artistRepository
         ArtistViewModel.Factory(artistRepository)
     }
-    private val homeViewModel by activityViewModels<HomeViewModel> {
-        val application = requireActivity().application as MusicApplication
-        val songRepository = application.songRepository
-        val albumRepository = application.albumRepository
-        HomeViewModel.Factory(songRepository, albumRepository)
-    }
+
+    //    private val homeViewModel by activityViewModels<HomeViewModel> {
+//        val application = requireActivity().application as MusicApplication
+//        val songRepository = application.songRepository
+//        val albumRepository = application.albumRepository
+//        HomeViewModel.Factory(songRepository, albumRepository)
+//    }
     private val ncsViewModel by activityViewModels<NcsViewModel> {
         val application = requireActivity().application as MusicApplication
         val ncsRepository = application.ncsRepository
@@ -77,15 +81,33 @@ class HomeFragment : Fragment() {
     }
 
     private fun setupTrendingNcsTrack() {
-        trendingNcsTrackAdapter = TrendingNcsTrackAdapter()
-        ncsViewModel.ncsSongs.observe (viewLifecycleOwner){ ncsSongs ->
-            if(ncsSongs.isNotEmpty()){
+
+        ncsViewModel.ncsSongs.observe(viewLifecycleOwner) { ncsSongs ->
+            if (ncsSongs.isNotEmpty()) {
                 trendingNcsTrackAdapter.updateNcsTracks(ncsSongs)
-            }else{
+            } else {
                 Toast.makeText(requireContext(), "No songs found", Toast.LENGTH_SHORT).show()
             }
         }
+        trendingNcsTrackAdapter =
+            TrendingNcsTrackAdapter(object : TrendingNcsTrackAdapter.OnNcsItemClickListener {
+                override fun onNcsSongClick(
+                    ncs: NCSong,
+                    index: Int
+                ) {
+                    playNcsSong(ncs, index)
+                    Toast.makeText(requireContext(), "$index", Toast.LENGTH_SHORT).show()
+                }
+            })
         binding.rvNcsTracks.adapter = trendingNcsTrackAdapter
+    }
+
+    private fun playNcsSong(
+        ncSong: NCSong,
+        songIndex: Int
+    ) {
+        val playlistName = MusicAppUtils.DefaultPlaylistName.NCS_SONG.value
+        setupPlayer(song = null, ncSong, songIndex, playlistName)
     }
 
     private fun setupTopArtist() {
@@ -138,7 +160,7 @@ class HomeFragment : Fragment() {
                         val ncsGenre = song.genre.trim().split('/')
                         Log.i("HomeFragment", "ncs: $ncsGenre")
                         for (genre in recommendGenre) {
-                            if(ncsGenre.size > 1){
+                            if (ncsGenre.size > 1) {
                                 if (genre == ncsGenre[0].trim() || genre == ncsGenre[1].trim()) {
                                     listRecommendedSong.add(
                                         RecommendedSong(
@@ -149,7 +171,7 @@ class HomeFragment : Fragment() {
                                         )
                                     )
                                 }
-                            }else{
+                            } else {
                                 if (genre == ncsGenre[0].trim()) {
                                     listRecommendedSong.add(
                                         RecommendedSong(

@@ -28,7 +28,7 @@ class LocalSongDataSource(
     }
 
     override suspend fun insert(vararg songs: Song): Boolean {
-        return songDao.insert(*songs)
+        return songDao.insert(*songs).isNotEmpty()
     }
 
     override suspend fun update(song: Song) {

@@ -18,6 +18,7 @@ import androidx.core.app.TaskStackBuilder
 import androidx.media3.common.AudioAttributes
 import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
+import androidx.media3.common.util.Log
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.session.MediaSession
@@ -119,6 +120,7 @@ class PlaybackService : MediaSessionService() {
              * @param mediaItem MediaItem mới, hoặc null nếu không có.
              * @param reason Lý do chuyển đổi (ví dụ: thay đổi danh sách phát).
              */
+            @OptIn(UnstableApi::class)
             override fun onMediaItemTransition(mediaItem: MediaItem?, reason: Int) {
                 /**
                  * Kiểm tra xem chuyển đổi có do thay đổi danh sách phát hay không.
@@ -128,6 +130,8 @@ class PlaybackService : MediaSessionService() {
                  */
                 val playlistChanged = reason == Player.TIMELINE_CHANGE_REASON_PLAYLIST_CHANGED
                 val indexToPlay = nowPlayingViewModel?.indexToPlay?.value
+
+                Log.i("PlaybackService", "index: $indexToPlay $nowPlayingViewModel") // now playing viewmodel null
 
                 /**
                  * Chỉ cập nhật nếu không phải thay đổi danh sách phát hoặc indexToPlay là 0.
@@ -199,7 +203,7 @@ class PlaybackService : MediaSessionService() {
     }
 
     private fun extractSong(): Song? {
-        return nowPlayingViewModel?.currentPlayingSong?.value?.song
+        return nowPlayingViewModel?.playingSong?.value?.song
     }
 
     /**

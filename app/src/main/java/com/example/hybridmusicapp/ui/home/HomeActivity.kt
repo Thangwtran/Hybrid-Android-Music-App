@@ -23,13 +23,16 @@ import androidx.fragment.app.Fragment
 import com.example.hybridmusicapp.MusicApplication
 import com.example.hybridmusicapp.R
 import com.example.hybridmusicapp.ResultCallback
+import com.example.hybridmusicapp.data.model.playlist.PlaylistWithSongs
+import com.example.hybridmusicapp.data.source.remote.Result
 import com.example.hybridmusicapp.databinding.ActivityHomeBinding
 import com.example.hybridmusicapp.ui.discovery.DiscoveryFragment
 import com.example.hybridmusicapp.ui.library.LibraryFragment
 import com.example.hybridmusicapp.ui.setting.SettingFragment
 import com.example.hybridmusicapp.ui.home.AlbumViewModel
 import com.example.hybridmusicapp.ui.home.ArtistViewModel
-import com.example.hybridmusicapp.ui.library.playlist.PlaylistViewModel
+import com.example.hybridmusicapp.ui.now_playing.MiniPlayerViewModel
+import com.example.hybridmusicapp.ui.viewmodel.PlaylistViewModel
 import com.example.hybridmusicapp.ui.viewmodel.NcsViewModel
 import com.example.hybridmusicapp.ui.viewmodel.NetworkViewModel
 import com.example.hybridmusicapp.ui.viewmodel.NowPlayingViewModel
@@ -75,6 +78,10 @@ class HomeActivity : AppCompatActivity() {
         val application = application as MusicApplication
         val playlistRepository = application.playlistRepository
         PlaylistViewModel.Factory(playlistRepository)
+    }
+    private val miniPlayerViewModel by viewModels<MiniPlayerViewModel> {
+        val application = application as MusicApplication
+        MiniPlayerViewModel.Factory(application.songRepository)
     }
 
 
@@ -167,9 +174,9 @@ class HomeActivity : AppCompatActivity() {
             }
         }
 
-        nowPlayingViewModel.currentPlayingSong.observe(this) { playingSong ->
+        nowPlayingViewModel.playingSong.observe(this) { playingSong ->
             if (playingSong != null) {
-                nowPlayingViewModel.setMiniPlayerVisible(playingSong.song != null)
+                nowPlayingViewModel.setMiniPlayerVisible(true)
             } else {
                 Log.d("HomeActivity", "currentPlayingSong is null")
             }
@@ -181,21 +188,32 @@ class HomeActivity : AppCompatActivity() {
                 saveSongData()
             }
         }
+        // ncs playlist
+        ncsViewModel.getNCSongs()
+        ncsViewModel.ncsSongs.observe(this) { ncsSongList ->
+            nowPlayingViewModel.setupNcsPlaylist(
+                this,
+                ncsSongList,
+                MusicAppUtils.DefaultPlaylistName.NCS_SONG.value
+            )
+            playlistViewModel.setNcsPlaylist(ncsSongs = ncsSongList)
+        }
 
-        observerLocalData()
-
+        // search playlist
         nowPlayingViewModel.historySearchSongs.observe(this) { songs ->
             nowPlayingViewModel.setupPlaylist(
                 songs,
                 MusicAppUtils.DefaultPlaylistName.SEARCHED.value
             )
         }
-
-        playlistViewModel.loadPlaylistWithSongs(null)
+        // list playlists
+        playlistViewModel.loadPlaylistWithSongs()
         playlistViewModel.playlists.observe(this) { playlistWithSongs ->
-            playlistViewModel.setPlaylists(playlistWithSongs)
+            playlistViewModel.setListPlaylist(playlistWithSongs)
             nowPlayingViewModel.setPlaylistWithSongs(playlistWithSongs)
         }
+
+        observerLocalData()
 
     }
 
@@ -215,14 +233,24 @@ class HomeActivity : AppCompatActivity() {
     private fun observerLocalData() {
         homeViewModel.localSongs.observe(this) { songs ->
             nowPlayingViewModel.setupPlaylist(
-                songs,
-                MusicAppUtils.DefaultPlaylistName.DEFAULT.value
+                songs, MusicAppUtils.DefaultPlaylistName.DEFAULT.value
+            )
+        }
+
+        // TODO: save recommend to local and observe
+
+        ncsViewModel.ncsSongs.observe(this) { ncsSongs ->
+            Log.i("HomeActivity", "ncsSongs: $ncsSongs")
+            nowPlayingViewModel.setupNcsPlaylist(
+                this,
+                ncsSongs,
+                MusicAppUtils.DefaultPlaylistName.NCS_SONG.value
             )
         }
     }
 
     private fun saveCurrentSong() {
-        val playingSong = nowPlayingViewModel.currentPlayingSong.value
+        val playingSong = nowPlayingViewModel.playingSong.value
         if (playingSong != null) {
             val song = playingSong.song
             if (song != null) {

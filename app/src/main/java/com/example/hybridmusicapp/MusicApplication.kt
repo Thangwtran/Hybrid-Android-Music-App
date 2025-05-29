@@ -13,6 +13,7 @@ import com.example.hybridmusicapp.data.repository.song.NCSongRepositoryImp
 import com.example.hybridmusicapp.data.repository.song.SongRepositoryImp
 import com.example.hybridmusicapp.ui.now_playing.PlaybackService
 import com.example.hybridmusicapp.ui.viewmodel.MediaViewModel
+import com.example.hybridmusicapp.ui.viewmodel.NowPlayingViewModel
 import com.example.hybridmusicapp.utils.InjectionUtils
 import com.google.common.util.concurrent.ListenableFuture
 import com.google.common.util.concurrent.MoreExecutors
@@ -41,7 +42,12 @@ class MusicApplication : Application() {
     override fun onCreate() {
         super.onCreate()
         setupViewModelComponents()
-        createMediaPlayer()
+        NowPlayingViewModel.getInstance(
+            songRepository,
+            searchingRepository,
+            recentSongRepository
+        )
+        createMediaPlayer() // duoc tao truoc nowplaying
     }
 
     private fun createMediaPlayer() {

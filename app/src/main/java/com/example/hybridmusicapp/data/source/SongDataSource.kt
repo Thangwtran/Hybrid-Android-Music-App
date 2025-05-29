@@ -14,7 +14,7 @@ interface SongDataSource {
         fun getTop30Replay(): Flow<List<Song>>
         suspend fun getByTitle(title: String): List<Song>
         suspend fun getById(id: String): Song
-        suspend fun insert(vararg songs: Song): LongArray
+        suspend fun insert(vararg songs: Song): Boolean
         suspend fun update(song: Song)
         suspend fun delete(song: Song)
     }
