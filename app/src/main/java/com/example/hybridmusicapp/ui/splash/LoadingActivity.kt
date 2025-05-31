@@ -48,7 +48,16 @@ class LoadingActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_loading)
         enableEdgeToEdge()
-        insertNcsSong()
+        if(isFirstLaunch()){
+            insertNcsSong()
+            setFirstLaunchFalse()
+        }else{
+            Handler(Looper.getMainLooper()).postDelayed({
+                val intent = Intent(this, SplashActivity::class.java)
+                startActivity(intent)
+                finish()
+            }, 2000)
+        }
 
     }
 

@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
+import com.example.hybridmusicapp.HomeActivity
 import com.example.hybridmusicapp.MusicApplication
 import com.example.hybridmusicapp.PlayerBaseFragment
 import com.example.hybridmusicapp.data.model.album.Album
@@ -21,6 +22,7 @@ import com.example.hybridmusicapp.ui.home.adapter.TopArtistAdapter
 import com.example.hybridmusicapp.ui.home.adapter.TrendingNcsTrackAdapter
 import com.example.hybridmusicapp.ui.home.AlbumViewModel
 import com.example.hybridmusicapp.ui.home.ArtistViewModel
+import com.example.hybridmusicapp.ui.now_playing.MiniPlayerViewModel
 import com.example.hybridmusicapp.ui.viewmodel.NcsViewModel
 import com.example.hybridmusicapp.utils.MusicAppUtils
 import kotlinx.coroutines.Dispatchers
@@ -43,17 +45,15 @@ class HomeFragment : PlayerBaseFragment() {
         val artistRepository = application.artistRepository
         ArtistViewModel.Factory(artistRepository)
     }
-
-    //    private val homeViewModel by activityViewModels<HomeViewModel> {
-//        val application = requireActivity().application as MusicApplication
-//        val songRepository = application.songRepository
-//        val albumRepository = application.albumRepository
-//        HomeViewModel.Factory(songRepository, albumRepository)
-//    }
     private val ncsViewModel by activityViewModels<NcsViewModel> {
         val application = requireActivity().application as MusicApplication
         val ncsRepository = application.ncsRepository
         NcsViewModel.Factory(ncsRepository)
+    }
+    private val miniPlayerViewModel by activityViewModels<MiniPlayerViewModel> {
+        val application = requireActivity().application as MusicApplication
+        val songRepository = application.songRepository
+        MiniPlayerViewModel.Factory(songRepository)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -106,6 +106,7 @@ class HomeFragment : PlayerBaseFragment() {
         ncSong: NCSong,
         songIndex: Int
     ) {
+        miniPlayerViewModel.setPlayingState(true)
         val playlistName = MusicAppUtils.DefaultPlaylistName.NCS_SONG.value
         setupPlayer(song = null, ncSong, songIndex, playlistName)
     }

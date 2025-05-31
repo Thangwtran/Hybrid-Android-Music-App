@@ -4,6 +4,7 @@ plugins {
     alias(libs.plugins.room)
     alias(libs.plugins.google.services)
     alias(libs.plugins.devtools)
+    alias(libs.plugins.hilt)
 }
 
 android {
@@ -67,6 +68,8 @@ dependencies {
     implementation(libs.room.ktx)
     // annotationProcessor(libs.room.compiler)
     ksp(libs.room.compiler)
+    ksp("com.google.dagger:hilt-android-compiler:2.56.2")
+    implementation("com.google.dagger:hilt-android:2.56.2")
     // navigation
     implementation(libs.androidx.navigation.runtime)
     implementation(libs.androidx.navigation.fragment.ktx)
@@ -75,6 +78,7 @@ dependencies {
     implementation("com.tbuonomo:dotsindicator:5.1.0")
     implementation("com.airbnb.android:lottie:6.6.4")
     implementation("de.hdodenhof:circleimageview:3.1.0")
+    implementation("io.github.cooliceman:marquee-text-view:1.0.0")
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)

@@ -39,7 +39,7 @@
             android:name=".ui.now_playing.PlayerActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.home.HomeActivity"
+            android:name=".HomeActivity"
             android:exported="false" />
         <activity
             android:name=".ui.onboarding.OnBoardingActivity"

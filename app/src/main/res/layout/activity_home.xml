@@ -6,7 +6,7 @@
     android:background="@drawable/bg_11"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.home.HomeActivity">
+    tools:context=".HomeActivity">
 
 <!--    <ImageView-->
 <!--        android:id="@+id/imageView5"-->
@@ -53,9 +53,11 @@
         android:name="com.example.hybridmusicapp.ui.now_playing.MiniPlayerFragment"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:visibility="gone"
         app:layout_constraintBottom_toTopOf="@+id/bottom_nav"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        tools:layout="@layout/fragment_mini_player" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

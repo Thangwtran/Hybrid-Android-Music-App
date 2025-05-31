@@ -7,11 +7,11 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.Animation
+import android.view.animation.AnimationUtils
+import android.view.animation.TranslateAnimation
 import android.widget.Toast
-import androidx.activity.viewModels
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.viewModelScope
 import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
 import androidx.media3.session.MediaController
@@ -24,16 +24,12 @@ import com.example.hybridmusicapp.data.model.playlist.Playlist
 import com.example.hybridmusicapp.data.model.song.NCSong
 import com.example.hybridmusicapp.data.model.song.Song
 import com.example.hybridmusicapp.databinding.FragmentMiniPlayerBinding
-import com.example.hybridmusicapp.ui.viewmodel.PlaylistViewModel
 import com.example.hybridmusicapp.ui.viewmodel.MediaViewModel
 import com.example.hybridmusicapp.ui.viewmodel.NcsViewModel
 import com.example.hybridmusicapp.ui.viewmodel.NowPlayingViewModel
+import com.example.hybridmusicapp.ui.viewmodel.PlaylistViewModel
 import com.example.hybridmusicapp.utils.MusicAppUtils
 import com.example.hybridmusicapp.utils.MusicAppUtils.DefaultPlaylistName
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlin.getValue
-import kotlin.text.compareTo
 
 class MiniPlayerFragment : PlayerBaseFragment(), View.OnClickListener {
     private lateinit var binding: FragmentMiniPlayerBinding
@@ -89,6 +85,7 @@ class MiniPlayerFragment : PlayerBaseFragment(), View.OnClickListener {
     override fun onResume() {
         super.onResume()
         // TODO: update song status
+
     }
 
     override fun onDestroy() {
@@ -96,15 +93,8 @@ class MiniPlayerFragment : PlayerBaseFragment(), View.OnClickListener {
         mediaController?.removeListener(listener)
     }
 
-
-    /**
-     * - Quan sát currentPlayingSong từ nowPlayingViewModel để cập nhật giao diện mini player.
-     * - Quan sát currentPlaylist từ nowPlayingViewModel (chưa triển khai logic).
-     * - Quan sát isPlaying từ miniPlayerViewModel để cập nhật trạng thái nút play/pause.
-     */
     private fun observeData() {
         nowPlayingViewModel = NowPlayingViewModel.instance
-
 
         // ncs playlist
         ncsViewModel.getNCSongs()
@@ -117,8 +107,10 @@ class MiniPlayerFragment : PlayerBaseFragment(), View.OnClickListener {
             playlistViewModel.setNcsPlaylist(ncsSongs = ncsSongList)
         }
 
+
         nowPlayingViewModel?.playingSong?.observe(viewLifecycleOwner) { playingSong ->
-            Log.i("MiniPlayerFragment", "showSongMiniPlayerUI: $playingSong")
+            mediaController?.prepare()
+            mediaController?.play()
             showSongMiniPlayerUI(playingSong)
         }
 
@@ -150,8 +142,9 @@ class MiniPlayerFragment : PlayerBaseFragment(), View.OnClickListener {
     }
 
     private fun showSongMiniPlayerUI(playingSong: PlayingSong) {
-        Log.i("MiniPlayerFragment", "showSongMiniPlayerUI: $playingSong")
-        if (playingSong.ncSong == null && playingSong.song != null) {
+        Log.i("MiniPlayerFragment", "showSongMiniPlayerUI: ${playingSong.ncSong}")
+
+        if (playingSong.ncSong == null) {
             binding.miniPlayerSongName.text = playingSong.song?.title
             binding.miniPlayerArtist.text = playingSong.song?.artist
             Glide.with(requireContext())
@@ -162,6 +155,7 @@ class MiniPlayerFragment : PlayerBaseFragment(), View.OnClickListener {
             updateFavouriteStatus(playingSong.song, ncSong = null)
         } else if (playingSong.song == null) {
             binding.miniPlayerSongName.text = playingSong.ncSong?.ncsName
+            binding.miniPlayerSongName.isSelected = true
             binding.miniPlayerArtist.text = playingSong.ncSong?.artist
             Glide.with(requireContext())
                 .load(playingSong.ncSong?.imageRes)
@@ -200,15 +194,15 @@ class MiniPlayerFragment : PlayerBaseFragment(), View.OnClickListener {
     private fun updateFavouriteStatus(song: Song?, ncSong: NCSong?) {
         if (ncSong == null) {
             if (song!!.isFavorite) {
-                binding.btnMiniPlayerFavourite.setImageResource(R.drawable.ic_heart_selected)
+                binding.btnMiniPlayerFavourite.setImageResource(androidx.media3.session.R.drawable.media3_icon_heart_filled)
             } else {
-                binding.btnMiniPlayerFavourite.setImageResource(R.drawable.ic_heart)
+                binding.btnMiniPlayerFavourite.setImageResource(androidx.media3.session.R.drawable.media3_icon_heart_unfilled)
             }
         } else if (song == null) {
             if (ncSong!!.isFavourite) {
-                binding.btnMiniPlayerFavourite.setImageResource(R.drawable.ic_heart_selected)
+                binding.btnMiniPlayerFavourite.setImageResource(androidx.media3.session.R.drawable.media3_icon_heart_filled)
             } else {
-                binding.btnMiniPlayerFavourite.setImageResource(R.drawable.ic_heart)
+                binding.btnMiniPlayerFavourite.setImageResource(androidx.media3.session.R.drawable.media3_icon_heart_unfilled)
             }
         }
 
@@ -236,7 +230,6 @@ class MiniPlayerFragment : PlayerBaseFragment(), View.OnClickListener {
             }
         }
         if (mediaController != null) {
-            Log.i("MiniPlayerFragment", "registerMediaController")
             mediaController?.addListener(listener)
 
             miniPlayerViewModel.mediaItems.observe(viewLifecycleOwner) { items ->
@@ -266,8 +259,6 @@ class MiniPlayerFragment : PlayerBaseFragment(), View.OnClickListener {
                         setIndexToPlay()
                         isRegistered = true
                     }
-                    Log.d("MiniPlayerFragment", "Playlist: $playlist")
-
                 } else {
                     Log.d("MiniPlayerFragment", "Playlist is empty")
                     Toast.makeText(requireContext(), "Playlist is empty", Toast.LENGTH_SHORT).show()
@@ -392,15 +383,24 @@ class MiniPlayerFragment : PlayerBaseFragment(), View.OnClickListener {
         }
     }
 
-    private fun setupFavourite() {
+    private fun setupFavourite() { // favourite click
         val playingSong = nowPlayingViewModel?.playingSong?.value
+        Log.i("MiniPlayerFragment", "setupFavourite: $playingSong")
         if (playingSong != null) {
             val song = playingSong.song
             val ncsSong = playingSong.ncSong
-            if (ncsSong == null) {
-                song!!.isFavorite = !song.isFavorite
+            Log.i("MiniPlayerFragment", "setupFavourite: $ncsSong")
+
+            if (song != null) {
+                song.isFavorite = !song.isFavorite
                 nowPlayingViewModel?.updateFavouriteStatus(song)
                 updateFavouriteStatus(song, ncsSong)
+            }else if (ncsSong != null) {
+                ncsSong.isFavourite = !ncsSong.isFavourite
+                nowPlayingViewModel?.updateNcsFavouriteStatus(ncsSong)
+                updateFavouriteStatus(song, ncsSong)
+            }else{
+                Toast.makeText(requireContext(), "song, ncs is null", Toast.LENGTH_SHORT).show()
             }
 
         }

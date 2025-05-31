@@ -1,5 +1,6 @@
-package com.example.hybridmusicapp.ui.home
+package com.example.hybridmusicapp
 
+import android.Manifest
 import android.annotation.SuppressLint
 import android.content.SharedPreferences
 import android.content.pm.PackageManager
@@ -10,7 +11,6 @@ import android.net.NetworkRequest
 import android.os.Build
 import android.os.Bundle
 import android.util.DisplayMetrics
-import android.util.DisplayMetrics.DENSITY_DEFAULT
 import android.util.Log
 import android.view.View
 import android.view.Window
@@ -20,23 +20,22 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
-import com.example.hybridmusicapp.MusicApplication
-import com.example.hybridmusicapp.R
-import com.example.hybridmusicapp.ResultCallback
-import com.example.hybridmusicapp.data.model.playlist.PlaylistWithSongs
-import com.example.hybridmusicapp.data.source.remote.Result
+import androidx.media3.session.MediaController
 import com.example.hybridmusicapp.databinding.ActivityHomeBinding
 import com.example.hybridmusicapp.ui.discovery.DiscoveryFragment
-import com.example.hybridmusicapp.ui.library.LibraryFragment
-import com.example.hybridmusicapp.ui.setting.SettingFragment
 import com.example.hybridmusicapp.ui.home.AlbumViewModel
 import com.example.hybridmusicapp.ui.home.ArtistViewModel
+import com.example.hybridmusicapp.ui.home.HomeFragment
+import com.example.hybridmusicapp.ui.home.HomeViewModel
+import com.example.hybridmusicapp.ui.library.LibraryFragment
 import com.example.hybridmusicapp.ui.now_playing.MiniPlayerViewModel
-import com.example.hybridmusicapp.ui.viewmodel.PlaylistViewModel
+import com.example.hybridmusicapp.ui.setting.SettingFragment
+import com.example.hybridmusicapp.ui.viewmodel.MediaViewModel
 import com.example.hybridmusicapp.ui.viewmodel.NcsViewModel
 import com.example.hybridmusicapp.ui.viewmodel.NetworkViewModel
 import com.example.hybridmusicapp.ui.viewmodel.NowPlayingViewModel
 import com.example.hybridmusicapp.ui.viewmodel.PermissionViewModel
+import com.example.hybridmusicapp.ui.viewmodel.PlaylistViewModel
 import com.example.hybridmusicapp.utils.MusicAppUtils
 import com.google.android.material.snackbar.Snackbar
 
@@ -47,13 +46,15 @@ class HomeActivity : AppCompatActivity() {
     private lateinit var sharePreferences: SharedPreferences
     private lateinit var networkViewModel: NetworkViewModel
 
-    private val nowPlayingViewModel by viewModels<NowPlayingViewModel> {
-        val application = application as MusicApplication
-        val searchingRepository = application.searchingRepository
-        val recentSongRepository = application.recentSongRepository
-        val songRepository = application.songRepository
-        NowPlayingViewModel.Factory(songRepository, searchingRepository, recentSongRepository)
-    }
+
+//    private val nowPlayingViewModel by viewModels<NowPlayingViewModel> {
+//        val application = application as MusicApplication
+//        val searchingRepository = application.searchingRepository
+//        val recentSongRepository = application.recentSongRepository
+//        val songRepository = application.songRepository
+//        NowPlayingViewModel.Factory(songRepository, application.ncsRepository ,searchingRepository, recentSongRepository)
+//    }
+    private val nowPlayingViewModel = NowPlayingViewModel.instance
     private val albumViewModel by viewModels<AlbumViewModel> {
         val application = application as MusicApplication
         AlbumViewModel.Factory(application.albumRepository)
@@ -79,10 +80,6 @@ class HomeActivity : AppCompatActivity() {
         val playlistRepository = application.playlistRepository
         PlaylistViewModel.Factory(playlistRepository)
     }
-    private val miniPlayerViewModel by viewModels<MiniPlayerViewModel> {
-        val application = application as MusicApplication
-        MiniPlayerViewModel.Factory(application.songRepository)
-    }
 
 
     private val resultLauncher =
@@ -98,11 +95,10 @@ class HomeActivity : AppCompatActivity() {
             } else {
                 val internetAccess = MusicAppUtils.isNetworkAvailable(applicationContext)
                 if (internetAccess) {
-                    PermissionViewModel.instance.setPermissionGranted(true)
+                    PermissionViewModel.Companion.instance.setPermissionGranted(true)
                 }
             }
         }
-
 
     @SuppressLint("ResourceType")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -131,7 +127,7 @@ class HomeActivity : AppCompatActivity() {
                  * cho giá trị mật độ mặc định (DENSITY_DEFAULT, thường là 160dpi).
                  * Đây là cách tương thích để tính density trên các phiên bản cũ hơn.
                  */
-                MusicAppUtils.DENSITY = 1f * windowMetrics.bounds.width() / DENSITY_DEFAULT
+                MusicAppUtils.DENSITY = 1f * windowMetrics.bounds.width() / DisplayMetrics.DENSITY_DEFAULT
 
             }
         } else {
@@ -150,21 +146,23 @@ class HomeActivity : AppCompatActivity() {
         sharePreferences =
             applicationContext.getSharedPreferences(getString(R.string.pref_file_key), MODE_PRIVATE)
 
-        networkViewModel = NetworkViewModel.instance
+        networkViewModel = NetworkViewModel.Companion.instance
         // TODO: Load artist remote
     }
 
     private fun setupObservers() {
-        PermissionViewModel.instance.permissionAsked.observe(this) { isAsked ->
+        // permission
+        PermissionViewModel.Companion.instance.permissionAsked.observe(this) { isAsked -> // oke
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU && isAsked) {
                 checkPermission()
             } else {
                 // Trên API < 33, không cần quyền POST_NOTIFICATIONS, thông báo được hiển thị tự do
-                PermissionViewModel.instance.setPermissionGranted(true)
+                PermissionViewModel.Companion.instance.setPermissionGranted(true)
                 Toast.makeText(this, "Permission granted in Android 9", Toast.LENGTH_SHORT).show()
             }
         }
 
+        // artist
         artistViewModel.getArtists()
         artistViewModel.remoteArtists.observe(this) { artists ->
             if (artists != null) {
@@ -174,24 +172,41 @@ class HomeActivity : AppCompatActivity() {
             }
         }
 
-        nowPlayingViewModel.playingSong.observe(this) { playingSong ->
-            if (playingSong != null) {
-                nowPlayingViewModel.setMiniPlayerVisible(true)
-            } else {
-                Log.d("HomeActivity", "currentPlayingSong is null")
+        // now playing - playing song
+//        nowPlayingViewModel.playingSong.observe(this) { playingSong ->
+//            if (playingSong != null) {
+////                nowPlayingViewModel.setMiniPlayerVisible(true)
+//                Log.i("HomeActivity", "isMiniPlayerVisible: $playingSong")
+//
+//                binding.fragmentContainerMiniPlayer.visibility = View.VISIBLE
+//            } else {
+//                Log.d("HomeActivity", "currentPlayingSong is null")
+//                binding.fragmentContainerMiniPlayer.visibility = View.GONE
+//            }
+//        }
+
+        // now playing - mini player
+        nowPlayingViewModel?.isMiniPlayerVisible?.observe(this) {
+            Log.d("HomeActivity", "isMiniPlayerVisible: $it")
+            if(it){
+                binding.fragmentContainerMiniPlayer.visibility = View.VISIBLE
+            }else{
+                binding.fragmentContainerMiniPlayer.visibility = View.GONE
             }
         }
 
+        // home
         homeViewModel.loadRemoteSongs()
         homeViewModel.remoteSongLoaded.observe(this) { isLoaded ->
             if (isLoaded) {
                 saveSongData()
             }
         }
+
         // ncs playlist
         ncsViewModel.getNCSongs()
         ncsViewModel.ncsSongs.observe(this) { ncsSongList ->
-            nowPlayingViewModel.setupNcsPlaylist(
+            nowPlayingViewModel?.setupNcsPlaylist(
                 this,
                 ncsSongList,
                 MusicAppUtils.DefaultPlaylistName.NCS_SONG.value
@@ -200,17 +215,18 @@ class HomeActivity : AppCompatActivity() {
         }
 
         // search playlist
-        nowPlayingViewModel.historySearchSongs.observe(this) { songs ->
-            nowPlayingViewModel.setupPlaylist(
+        nowPlayingViewModel?.historySearchSongs?.observe(this) { songs ->
+            nowPlayingViewModel?.setupPlaylist(
                 songs,
                 MusicAppUtils.DefaultPlaylistName.SEARCHED.value
             )
         }
+
         // list playlists
         playlistViewModel.loadPlaylistWithSongs()
         playlistViewModel.playlists.observe(this) { playlistWithSongs ->
             playlistViewModel.setListPlaylist(playlistWithSongs)
-            nowPlayingViewModel.setPlaylistWithSongs(playlistWithSongs)
+            nowPlayingViewModel?.setPlaylistWithSongs(playlistWithSongs)
         }
 
         observerLocalData()
@@ -232,16 +248,15 @@ class HomeActivity : AppCompatActivity() {
 
     private fun observerLocalData() {
         homeViewModel.localSongs.observe(this) { songs ->
-            nowPlayingViewModel.setupPlaylist(
+            nowPlayingViewModel?.setupPlaylist(
                 songs, MusicAppUtils.DefaultPlaylistName.DEFAULT.value
             )
         }
 
         // TODO: save recommend to local and observe
 
-        ncsViewModel.ncsSongs.observe(this) { ncsSongs ->
-            Log.i("HomeActivity", "ncsSongs: $ncsSongs")
-            nowPlayingViewModel.setupNcsPlaylist(
+        ncsViewModel.ncsSongs.observe(this) { ncsSongs -> // oke
+            nowPlayingViewModel?.setupNcsPlaylist(
                 this,
                 ncsSongs,
                 MusicAppUtils.DefaultPlaylistName.NCS_SONG.value
@@ -250,7 +265,7 @@ class HomeActivity : AppCompatActivity() {
     }
 
     private fun saveCurrentSong() {
-        val playingSong = nowPlayingViewModel.playingSong.value
+        val playingSong = nowPlayingViewModel?.playingSong?.value
         if (playingSong != null) {
             val song = playingSong.song
             if (song != null) {
@@ -288,19 +303,19 @@ class HomeActivity : AppCompatActivity() {
         val playlistName = sharePreferences.getString(PREF_PLAYLIST_NAME, null)
         homeViewModel.localSongs.observe(this) { songs ->
             if (!songs.isNullOrEmpty()) {
-                nowPlayingViewModel.loadPrevSessionPlayingSong(songId, playlistName)
+                nowPlayingViewModel?.loadPrevSessionPlayingSong(songId, playlistName)
             }
         }
     }
 
     private fun checkPermission() {
-        val permission = android.Manifest.permission.POST_NOTIFICATIONS
+        val permission = Manifest.permission.POST_NOTIFICATIONS
         val permissionGranted = ActivityCompat.checkSelfPermission(
             this,
             permission
         ) == PackageManager.PERMISSION_GRANTED
         if (permissionGranted) {
-            PermissionViewModel.instance.setPermissionGranted(true)
+            PermissionViewModel.Companion.instance.setPermissionGranted(true)
         } else if (ActivityCompat.shouldShowRequestPermissionRationale(this, permission)) {
             val snackBar = Snackbar.make(
                 binding.root.rootView, getString(R.string.permission_desc),

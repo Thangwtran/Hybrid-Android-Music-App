@@ -18,6 +18,13 @@ class LibraryFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentLibraryBinding.inflate(inflater,container,false)
+        binding.textView4.isSelected = true
+        var parentScale:Float = 1f
+        binding.frame.animate().scaleX(parentScale)
+        binding.frame.animate().scaleY(parentScale)
+        val childScale: Float = 1.0f / parentScale
+        binding.textView4?.animate()?.scaleX(childScale)
+        binding.textView4?.animate()?.scaleY(childScale)
         return binding.root
     }
 

@@ -59,7 +59,6 @@ class PlaybackService : MediaSessionService() {
         return mediaSession;
     }
 
-
     /**
      * Khởi tạo dịch vụ khi được gọi.
      * Khởi tạo ExoPlayer, MediaSession, thiết lập listener cho player,
@@ -72,7 +71,6 @@ class PlaybackService : MediaSessionService() {
         setupPlayerListener()
         setListener(MediaSessionServiceListener())
     }
-
 
     /**
      * Xử lý khi ứng dụng bị xóa tab (ví dụ: người dùng vuốt bỏ).
@@ -107,10 +105,6 @@ class PlaybackService : MediaSessionService() {
         super.onDestroy()
     }
 
-    /**
-     * Thiết lập listener cho ExoPlayer để theo dõi sự kiện chuyển đổi bài hát.
-     * Cập nhật trạng thái bài hát trong NowPlayingViewModel và lưu vào cơ sở dữ liệu.
-     */
     private fun setupPlayerListener() {
         val player = mediaSession.player
         listener = object : Player.Listener {
@@ -122,16 +116,10 @@ class PlaybackService : MediaSessionService() {
              */
             @OptIn(UnstableApi::class)
             override fun onMediaItemTransition(mediaItem: MediaItem?, reason: Int) {
-                /**
-                 * Kiểm tra xem chuyển đổi có do thay đổi danh sách phát hay không.
-                 * Sử dụng TIMELINE_CHANGE_REASON_PLAYLIST_CHANGED thay vì
-                 * MEDIA_ITEM_TRANSITION_REASON_PLAYLIST_CHANGED
-                 * để phù hợp với API mới của Media3.
-                 */
                 val playlistChanged = reason == Player.TIMELINE_CHANGE_REASON_PLAYLIST_CHANGED
                 val indexToPlay = nowPlayingViewModel?.indexToPlay?.value
 
-                Log.i("PlaybackService", "index: $indexToPlay $nowPlayingViewModel") // now playing viewmodel null
+                Log.i("PlaybackService", "index: $indexToPlay, $reason") // now playing viewmodel null
 
                 /**
                  * Chỉ cập nhật nếu không phải thay đổi danh sách phát hoặc indexToPlay là 0.
@@ -142,10 +130,6 @@ class PlaybackService : MediaSessionService() {
                     saveDataToDB()
                 }
 
-                /**
-                 * Xử lý thay đổi cấu hình (configuration change) nếu có.
-                 * Đặt lại cờ sConfigChanged để tránh xử lý lặp lại.
-                 */
                 if (MusicAppUtils.sConfigChanged) {
                     MusicAppUtils.sConfigChanged = false
                 }

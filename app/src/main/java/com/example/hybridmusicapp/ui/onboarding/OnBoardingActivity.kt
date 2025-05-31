@@ -6,7 +6,7 @@ import android.util.Log
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import com.example.hybridmusicapp.databinding.ActivityOnBoardingBinding
-import com.example.hybridmusicapp.ui.home.HomeActivity
+import com.example.hybridmusicapp.HomeActivity
 import com.example.hybridmusicapp.ui.home.HomeFragment
 
 class OnBoardingActivity : AppCompatActivity() {

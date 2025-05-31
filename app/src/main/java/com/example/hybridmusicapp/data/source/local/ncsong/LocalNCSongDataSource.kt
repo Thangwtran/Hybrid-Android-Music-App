@@ -12,11 +12,11 @@ class LocalNCSongDataSource (
     }
 
     override suspend fun getNCSongById(id: Int): NCSong {
-        TODO("Not yet implemented")
+        return ncSongDao.getNCSongById(id)
     }
 
     override fun getFavouriteNCSongs(): Flow<List<NCSong>> {
-        TODO("Not yet implemented")
+        return ncSongDao.getFavouriteNCSongs()
     }
 
     override suspend fun insert(ncSongs: List<NCSong>): LongArray {
@@ -24,10 +24,10 @@ class LocalNCSongDataSource (
     }
 
     override suspend fun update(ncSong: NCSong) {
-        TODO("Not yet implemented")
+        ncSongDao.update(ncSong)
     }
 
     override suspend fun delete(ncSong: NCSong) {
-        TODO("Not yet implemented")
+        ncSongDao.delete(ncSong)
     }
 }

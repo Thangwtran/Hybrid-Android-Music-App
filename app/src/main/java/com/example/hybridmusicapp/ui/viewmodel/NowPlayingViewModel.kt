@@ -16,21 +16,26 @@ import com.example.hybridmusicapp.data.model.song.NCSong
 import com.example.hybridmusicapp.data.model.song.Song
 import com.example.hybridmusicapp.data.repository.recent_song.RecentSongRepositoryImp
 import com.example.hybridmusicapp.data.repository.search.SearchingRepositoryImp
+import com.example.hybridmusicapp.data.repository.song.NCSongRepositoryImp
 import com.example.hybridmusicapp.data.repository.song.SongRepositoryImp
 import com.example.hybridmusicapp.utils.MusicAppUtils.DefaultPlaylistName
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlin.concurrent.Volatile
 
 class NowPlayingViewModel private constructor(
     songRepository: SongRepositoryImp,
+    ncsSongRepository: NCSongRepositoryImp,
     searchRepository: SearchingRepositoryImp,
     recentSongRepository: RecentSongRepositoryImp
 ) : ViewModel() {
 
     // Repository
-    private var _songRepository: SongRepositoryImp
-    private val _searchingRepository: SearchingRepositoryImp
-    private val _recentSongRepository: RecentSongRepositoryImp
+
+    private var _songRepository: SongRepositoryImp = songRepository
+    private var _ncsSongRepository: NCSongRepositoryImp = ncsSongRepository
+    private val _searchingRepository: SearchingRepositoryImp = searchRepository
+    private val _recentSongRepository: RecentSongRepositoryImp = recentSongRepository
 
     // Playing Song
     private val _playingSong = PlayingSong()
@@ -65,14 +70,6 @@ class NowPlayingViewModel private constructor(
      * init
      */
     init {
-//        synchronized(NowPlayingViewModel::class.java) {
-//            if (instance == null) {
-//                instance = this
-//            }
-//        }
-        _songRepository = songRepository
-        _searchingRepository = searchRepository
-        _recentSongRepository = recentSongRepository
         initPlaylists()
     }
 
@@ -81,7 +78,6 @@ class NowPlayingViewModel private constructor(
      */
 
     fun setPlayingSongIndex(index: Int) {
-        // TODO: Co van de  
         if (index != -1
             && (_playingSong.playlist?.songs?.size ?: 0) > index
             || (_playingSong.playlist?.ncsSongs?.size ?: 0) > index
@@ -116,6 +112,14 @@ class NowPlayingViewModel private constructor(
         viewModelScope.launch(Dispatchers.IO) {
             song.isFavorite = true
             _songRepository.update(song)
+
+
+        }
+    }
+    fun updateNcsFavouriteStatus( ncs: NCSong) {
+        viewModelScope.launch(Dispatchers.IO) {
+//            ncs.isFavourite = true
+            _ncsSongRepository.update(ncs)
         }
     }
 
@@ -226,6 +230,7 @@ class NowPlayingViewModel private constructor(
 
     class Factory(
         private val _songRepository: SongRepositoryImp,
+        private val _ncsSongRepository: NCSongRepositoryImp,
         private val _searchingRepository: SearchingRepositoryImp,
         private val _recentSongRepository: RecentSongRepositoryImp
     ) : ViewModelProvider.Factory {
@@ -234,6 +239,7 @@ class NowPlayingViewModel private constructor(
             if (modelClass.isAssignableFrom(NowPlayingViewModel::class.java)) {
                 return NowPlayingViewModel(
                     _songRepository,
+                    _ncsSongRepository,
                     _searchingRepository,
                     _recentSongRepository
                 ) as T
@@ -243,24 +249,23 @@ class NowPlayingViewModel private constructor(
     }
 
     companion object {
-        //        @Volatile
-//        var instance: NowPlayingViewModel? = null
-//            private set
         @Volatile
         var instance: NowPlayingViewModel? = null
 
         fun getInstance(
             songRepository: SongRepositoryImp,
+            ncsSongRepository: NCSongRepositoryImp,
             searchRepository: SearchingRepositoryImp,
             recentSongRepository: RecentSongRepositoryImp
         ): NowPlayingViewModel {
-            return instance ?: synchronized(this) {
-                instance ?: NowPlayingViewModel(
+            return instance ?: synchronized(this) { // sync block
+                instance ?: NowPlayingViewModel( // instance or if null -> create new
                     songRepository,
+                    ncsSongRepository,
                     searchRepository,
                     recentSongRepository
                 )
-                    .also { instance = it }
+                    .also { instance = it } // set instance = new instance
             }
         }
     }

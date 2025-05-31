@@ -5,4 +5,5 @@ plugins {
     alias(libs.plugins.room) apply false
     alias(libs.plugins.google.services) apply false
     alias(libs.plugins.devtools) apply false
+    alias(libs.plugins.hilt) apply false
 }

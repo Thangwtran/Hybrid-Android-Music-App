@@ -44,10 +44,12 @@ class MusicApplication : Application() {
         setupViewModelComponents()
         NowPlayingViewModel.getInstance(
             songRepository,
+            ncsRepository,
             searchingRepository,
             recentSongRepository
         )
-        createMediaPlayer() // duoc tao truoc nowplaying
+        NowPlayingViewModel.instance
+        createMediaPlayer()
     }
 
     private fun createMediaPlayer() {
