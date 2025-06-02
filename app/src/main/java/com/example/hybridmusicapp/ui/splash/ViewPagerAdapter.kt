@@ -11,17 +11,17 @@ class ViewPagerAdapter(fragment: FragmentActivity):FragmentStateAdapter(fragment
         SplashFragment.newInstance(
             fragment.getString(R.string.onboarding_title1),
             fragment.getString(R.string.onboarding_des1),
-            R.drawable.splash1
+            R.drawable.bg_5
         ),
         SplashFragment.newInstance(
             fragment.getString(R.string.onboarding_title2),
             fragment.getString(R.string.onboarding_des2),
-            R.drawable.splash2
+            R.drawable.bg_13
         ),
         SplashFragment.newInstance(
             fragment.getString(R.string.onboarding_title3),
             fragment.getString(R.string.onboarding_des3),
-            R.drawable.splash3
+            R.drawable.bg_9
         )
     )
     override fun getItemCount(): Int {

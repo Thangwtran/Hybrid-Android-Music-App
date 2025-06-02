@@ -1,18 +1,25 @@
 package com.example.hybridmusicapp.data.source.local
 
 import android.content.Context
+import androidx.room.AutoMigration
 import androidx.room.Database
 import androidx.room.Room.databaseBuilder
 import androidx.room.RoomDatabase
+import androidx.room.TypeConverters
 import com.example.hybridmusicapp.data.model.album.Album
+import com.example.hybridmusicapp.data.model.album.AlbumSongCrossRef
 import com.example.hybridmusicapp.data.model.artist.Artist
+import com.example.hybridmusicapp.data.model.artist.ArtistSongCrossRef
 import com.example.hybridmusicapp.data.model.history.HistorySearchedKey
 import com.example.hybridmusicapp.data.model.history.HistorySearchedSong
 import com.example.hybridmusicapp.data.model.playlist.Playlist
+import com.example.hybridmusicapp.data.model.playlist.PlaylistSongCrossRef
 import com.example.hybridmusicapp.data.model.recent.RecentSong
+import com.example.hybridmusicapp.data.model.song.NCSong
 import com.example.hybridmusicapp.data.model.song.Song
 import com.example.hybridmusicapp.data.source.local.album.AlbumDao
 import com.example.hybridmusicapp.data.source.local.artist.ArtistDao
+import com.example.hybridmusicapp.data.source.local.ncsong.NCSongDao
 import com.example.hybridmusicapp.data.source.local.playlist.PlaylistDao
 import com.example.hybridmusicapp.data.source.local.recent_song.RecentSongDao
 import com.example.hybridmusicapp.data.source.local.searching.SearchingDao
@@ -21,16 +28,24 @@ import com.example.hybridmusicapp.data.source.local.song.SongDao
 @Database(
     entities = [
         Song::class,
+        NCSong::class,
         Album::class,
+        AlbumSongCrossRef::class,
         Artist::class,
+        ArtistSongCrossRef::class,
         Playlist::class,
+        PlaylistSongCrossRef::class,
         RecentSong::class,
         HistorySearchedKey::class,
         HistorySearchedSong::class
     ],
-    version = 1,
+    version = 2,
+    autoMigrations = [
+        AutoMigration(from = 1, to = 2)
+    ],
     exportSchema = true
 )
+@TypeConverters(value = [DateConverter::class]) // convert Date to Long
 abstract class AppDatabase : RoomDatabase() {
     abstract fun songDao(): SongDao
     abstract fun albumDao(): AlbumDao
@@ -38,11 +53,13 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun recentSongDao(): RecentSongDao
     abstract fun searchingDao(): SearchingDao
     abstract fun artistDao(): ArtistDao
+    abstract fun ncSongDao(): NCSongDao
 
     /**
      * AppDatabase is a singleton
      */
     companion object {
+        @Volatile
         private var _instance: AppDatabase? = null
 
         fun getInstance(context: Context): AppDatabase {
@@ -53,7 +70,8 @@ abstract class AppDatabase : RoomDatabase() {
                             context.applicationContext,
                             AppDatabase::class.java,
                             "music.db"
-                        ).build()
+                        ).fallbackToDestructiveMigration() // Delete all data when upgrade version
+                            .build()
                     }
                 }
             }

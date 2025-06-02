@@ -14,18 +14,19 @@ interface SongDataSource {
         fun getTop30Replay(): Flow<List<Song>>
         suspend fun getByTitle(title: String): List<Song>
         suspend fun getById(id: String): Song
-        suspend fun insert(vararg songs: Song): LongArray
+        suspend fun insert(vararg songs: Song): Boolean
         suspend fun update(song: Song)
         suspend fun delete(song: Song)
     }
 
     interface Remote {
-        suspend fun getSongList():Result<SongList>
+        suspend fun loadRemoteSongs():Result<SongList> // load remote
         suspend fun getSongByArtist(artist: String): Result<List<Song>>
         suspend fun getSongByTitle(title: String): Result<List<Song>>
         suspend fun getSongById(songId: String, callback: ResultCallback<Result<Song>>)
         suspend fun getTop10MostHeard(callback: ResultCallback<Result<List<Song>>>)
-        suspend fun getTop10Replay(callback: ResultCallback<Result<List<Song>>>)
+        suspend fun getTop15Replay(callback: ResultCallback<Result<List<Song>>>)
         suspend fun updateSongCounter(songId: String)
+        suspend fun addSongToFireStore(songs: List<Song>)
     }
 }

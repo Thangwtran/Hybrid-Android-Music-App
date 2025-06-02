@@ -2,6 +2,7 @@ package com.example.hybridmusicapp.data.model.song
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
+import androidx.room.Ignore
 import androidx.room.PrimaryKey
 import com.google.gson.annotations.SerializedName
 import java.util.Objects
@@ -47,7 +48,10 @@ open class Song(
 
     @ColumnInfo(name = "replay", defaultValue = "0")
     @Transient
-    var replay: Int = 0
+    var replay: Int = 0,
+
+    @Ignore
+    var isSelected: Boolean = false
 ) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

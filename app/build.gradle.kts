@@ -2,6 +2,9 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.room)
+    alias(libs.plugins.google.services)
+    alias(libs.plugins.devtools)
+    alias(libs.plugins.hilt)
 }
 
 android {
@@ -10,7 +13,7 @@ android {
 
     defaultConfig {
         applicationId = "com.example.hybridmusicapp"
-        minSdk = 33
+        minSdk = 28
         targetSdk = 35
         versionCode = 1
         versionName = "1.0"
@@ -45,22 +48,40 @@ android {
 }
 
 dependencies {
-    implementation("com.tbuonomo:dotsindicator:5.1.0")
-    implementation("com.airbnb.android:lottie:6.6.4")
-    // custom
+
+    // retrofit
     implementation(libs.gson)
     implementation(libs.glide)
     implementation(libs.retrofit)
     implementation(libs.gson.converter)
+    // firebase
+    implementation(platform(libs.firebase.bom))
+    implementation(libs.firebase.firestore)
+    // media
     implementation(libs.media3.xoplayer)
     implementation(libs.media3.common)
     implementation(libs.media3.media.session)
     implementation(libs.media3.ui)
+    // room
     implementation(libs.room.runtime)
     implementation(libs.room.paging)
     implementation(libs.room.ktx)
-    annotationProcessor(libs.room.compiler)
-    //
+    // annotationProcessor(libs.room.compiler)
+    ksp(libs.room.compiler)
+    ksp("com.google.dagger:hilt-android-compiler:2.56.2")
+    implementation("com.google.dagger:hilt-android:2.56.2")
+    // navigation
+    implementation(libs.androidx.navigation.runtime)
+    implementation(libs.androidx.navigation.fragment.ktx)
+    implementation(libs.androidx.navigation.ui.ktx)
+    // custom
+    implementation("com.tbuonomo:dotsindicator:5.1.0")
+    implementation("com.airbnb.android:lottie:6.6.4")
+    implementation("de.hdodenhof:circleimageview:3.1.0")
+    implementation("io.github.glailton.expandabletextview:expandabletextview:1.0.4")
+
+
+
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)

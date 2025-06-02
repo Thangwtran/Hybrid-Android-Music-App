@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/app_navigation"
+    app:startDestination="@id/homeFragment">
+
+    <!-- Activity -->
+    <activity
+        android:id="@+id/homeActivity"
+        android:name="com.example.hybridmusicapp.HomeActivity"
+        android:label="activity_home"
+        tools:layout="@layout/activity_home" />
+    <activity
+        android:id="@+id/splashActivity"
+        android:name="com.example.hybridmusicapp.ui.splash.SplashActivity"
+        android:label="activity_splash"
+        tools:layout="@layout/activity_splash" />
+    <activity
+        android:id="@+id/loadingActivity"
+        android:name="com.example.hybridmusicapp.ui.splash.LoadingActivity"
+        android:label="activity_loading"
+        tools:layout="@layout/activity_loading" />
+
+    <!-- Fragment -->
+    <fragment
+        android:id="@+id/homeFragment"
+        android:name="com.example.hybridmusicapp.ui.home.HomeFragment"
+        android:label="fragment_home"
+        tools:layout="@layout/fragment_home" >
+        <action
+            android:id="@+id/action_homeFragment_to_albumFragment"
+            app:destination="@id/albumFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/settingFragment"
+        android:name="com.example.hybridmusicapp.ui.setting.SettingFragment"
+        android:label="fragment_setting"
+        tools:layout="@layout/fragment_setting" />
+    <fragment
+        android:id="@+id/libraryFragment"
+        android:name="com.example.hybridmusicapp.ui.library.LibraryFragment"
+        android:label="fragment_library"
+        tools:layout="@layout/fragment_library" />
+    <fragment
+        android:id="@+id/discoveryFragment"
+        android:name="com.example.hybridmusicapp.ui.discovery.DiscoveryFragment"
+        android:label="fragment_discovery"
+        tools:layout="@layout/fragment_discovery" />
+    <fragment
+        android:id="@+id/albumFragment"
+        android:name="com.example.hybridmusicapp.ui.home.album.AlbumFragment"
+        android:label="fragment_album"
+        tools:layout="@layout/fragment_album" />
+</navigation>

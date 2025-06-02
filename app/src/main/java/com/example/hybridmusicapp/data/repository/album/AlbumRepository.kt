@@ -1,24 +1,32 @@
 package com.example.hybridmusicapp.data.repository.album
 
+import com.example.hybridmusicapp.ResultCallback
 import com.example.hybridmusicapp.data.model.album.Album
-import okhttp3.Callback
+import com.example.hybridmusicapp.data.model.album.AlbumList
+import com.example.hybridmusicapp.data.model.album.AlbumSongCrossRef
+import com.example.hybridmusicapp.data.model.album.AlbumWithSongs
+import com.example.hybridmusicapp.data.source.remote.Result
+import kotlinx.coroutines.flow.Flow
 
 interface AlbumRepository {
     interface Local{
         suspend fun getTop10Albums(): List<Album>
         suspend fun getAlbums():List<Album>
 
-        // TODO: album with song 
-        suspend fun saveAlbums(albums: List<Album>): Boolean
+        fun getAlbumWithSongs(albumId: Int): Flow<AlbumWithSongs>
 
-        // TODO: album cross ref 
-        suspend fun updateAlbum(album: Album): Boolean
-        suspend fun deleteAlbum(album: Album): Boolean
+        suspend fun saveAlbums(vararg album: Album): Boolean
+
+        suspend fun saveAlbumCrossRef(vararg crossRefs: AlbumSongCrossRef)
+        suspend fun updateAlbum(album: Album)
+        suspend fun deleteAlbum(album: Album)
 
     }
 
     interface Remote{
-        suspend fun getTop10AlbumsRequest(callback: Callback)
-        suspend fun getAlbumsRequest(callback: Callback)
+        suspend fun loadRemoteAlbums(): Result<AlbumList>
+        suspend fun addAlbumToFireStore(albums: List<Album>)
+        suspend fun getTop10AlbumsFireStore(callback: ResultCallback<Result<List<Album>>>)
+        suspend fun getAlbumsFireStore(callback: ResultCallback<Result<List<Album>>>)
     }
 }

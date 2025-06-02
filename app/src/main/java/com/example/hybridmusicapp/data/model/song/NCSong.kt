@@ -3,17 +3,16 @@ package com.example.hybridmusicapp.data.model.song
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.google.gson.annotations.SerializedName
 
 
 @Entity(tableName = "nc_songs" )
 data class NCSong(
     @PrimaryKey
-    @ColumnInfo(name = "ncs_song_id", defaultValue = "")
-    val id: Int,
+    @ColumnInfo(name = "ncs_song_id")
+    val id: Int = 0,
 
-    @ColumnInfo(name = "ncs_title")
-    val title: String,
+    @ColumnInfo(name = "ncs_name")
+    val ncsName: String,
 
     @ColumnInfo(name = "ncs_artist")
     val artist: String,
@@ -31,5 +30,5 @@ data class NCSong(
     val audioRes: Int,
 
     @ColumnInfo(name = "is_favourite")
-    val isFavourite:Boolean = false,
+    var isFavourite:Boolean = false,
 )

@@ -8,7 +8,7 @@ interface NCSongDataSource {
     suspend fun getNCSongs():List<NCSong>
     suspend fun getNCSongById(id:Int):NCSong
     fun getFavouriteNCSongs(): Flow<List<NCSong>>
-    suspend fun insert(vararg ncSongs:NCSong):LongArray
+    suspend fun insert(ncSongs: List<NCSong>): LongArray
     suspend fun update(ncSong:NCSong)
     suspend fun delete(ncSong:NCSong)
 }

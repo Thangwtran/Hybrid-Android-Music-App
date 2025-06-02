@@ -4,54 +4,66 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
     android:background="@drawable/main_background"
+    android:layout_height="match_parent"
     tools:context=".ui.splash.SplashActivity">
 
-    <com.tbuonomo.viewpagerdotsindicator.DotsIndicator
-        android:id="@+id/dots_indicator"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="32dp"
-        app:dotsColor="@color/gray"
-        app:dotsCornerRadius="8dp"
-        app:dotsSize="12dp"
-        app:dotsSpacing="4dp"
-        app:dotsWidthFactor="1.5"
-        app:layout_constraintBottom_toTopOf="@+id/btn_splash"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:progressMode="true"
-        app:selectedDotColor="@color/white" />
+
 
     <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/splash_pager"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginStart="1dp"
-        android:layout_marginEnd="1dp"
-        android:layout_marginBottom="16dp"
-        app:layout_constraintBottom_toTopOf="@+id/dots_indicator"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0">
 
     </androidx.viewpager2.widget.ViewPager2>
 
-    <Button
-        android:id="@+id/btn_splash"
-        android:layout_width="180dp"
+    <com.tbuonomo.viewpagerdotsindicator.DotsIndicator
+        android:id="@+id/dots_indicator"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
-        android:backgroundTint="#7C4DFF"
-        android:paddingStart="@dimen/_24dp"
+        app:dotsColor="@color/gray"
+        app:dotsCornerRadius="8dp"
+        app:dotsSize="10dp"
+        app:dotsSpacing="6dp"
+        app:dotsWidthFactor="1"
+        app:layout_constraintBottom_toTopOf="@+id/btn_splash"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/guideline5"
+        app:progressMode="true"
+        app:selectedDotColor="#FF5F15" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btn_splash"
+        style="@style/Widget.MaterialComponents.Button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/_16dp"
+        android:layout_marginEnd="@dimen/_16dp"
+        android:layout_marginBottom="24dp"
+        android:backgroundTint="@color/btn_color"
+        android:insetTop="0dp"
+        android:fontFamily="@font/montserrat_semibold"
+        android:insetBottom="@dimen/_0dp"
         android:paddingTop="@dimen/_12dp"
-        android:paddingEnd="@dimen/_24dp"
         android:paddingBottom="@dimen/_12dp"
         android:text="@string/next"
         android:textSize="@dimen/text_large"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.75239396" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
