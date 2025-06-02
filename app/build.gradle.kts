@@ -78,7 +78,9 @@ dependencies {
     implementation("com.tbuonomo:dotsindicator:5.1.0")
     implementation("com.airbnb.android:lottie:6.6.4")
     implementation("de.hdodenhof:circleimageview:3.1.0")
-    implementation("io.github.cooliceman:marquee-text-view:1.0.0")
+    implementation("io.github.glailton.expandabletextview:expandabletextview:1.0.4")
+
+
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)

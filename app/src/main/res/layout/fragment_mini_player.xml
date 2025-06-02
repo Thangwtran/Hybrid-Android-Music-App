@@ -7,7 +7,7 @@
     android:layout_height="wrap_content"
     android:background="@drawable/bg_12"
     android:clickable="true"
-    android:focusable="true"
+    android:focusable="false"
     android:foreground="?attr/selectableItemBackground"
     android:visibility="visible"
     tools:context=".ui.now_playing.MiniPlayerFragment">
@@ -85,6 +85,7 @@
         android:layout_marginStart="8dp"
         android:ellipsize="marquee"
         android:fontFamily="@font/montserrat"
+        android:focusedByDefault="true"
         android:marqueeRepeatLimit="marquee_forever"
         android:maxLines="1"
         android:text="@string/song_blank_remix"
@@ -93,15 +94,11 @@
         app:layout_constraintEnd_toStartOf="@+id/guideline6"
         app:layout_constraintStart_toEndOf="@+id/cardView" />
 
-
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/mini_player_artist"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:ellipsize="marquee"
-        android:focusable="true"
-        android:focusableInTouchMode="true"
-        android:marqueeRepeatLimit="marquee_forever"
         android:maxLines="1"
         android:text="@string/artist_blank_remix"
         android:textColor="@color/grey_light"

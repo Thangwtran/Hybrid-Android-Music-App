@@ -1,4 +1,4 @@
-package com.example.hybridmusicapp.ui.home
+package com.example.hybridmusicapp.ui.home.album
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -7,11 +7,15 @@ import androidx.lifecycle.viewModelScope
 import com.example.hybridmusicapp.ResultCallback
 import com.example.hybridmusicapp.data.model.album.Album
 import com.example.hybridmusicapp.data.model.album.AlbumSongCrossRef
+import com.example.hybridmusicapp.data.model.album.AlbumWithSongs
+import com.example.hybridmusicapp.data.model.playlist.Playlist
 import com.example.hybridmusicapp.data.repository.album.AlbumRepositoryImp
 import com.example.hybridmusicapp.data.source.remote.Result
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-import java.util.ArrayList
 
 class AlbumViewModel(
     private val albumRepository: AlbumRepositoryImp
@@ -21,6 +25,16 @@ class AlbumViewModel(
 
     private val _album = MutableLiveData<Album>()
     val album = _album
+
+    val playlist = Playlist()
+
+    fun setPlaylistSongs(albumWithSongs: AlbumWithSongs){
+        val songs = albumWithSongs.songs
+        val playlistName = albumWithSongs.album?.name
+        playlist.name = playlistName!!
+        playlist.updateSongList(songs)
+    }
+
 
     fun loadAlbums() {
         viewModelScope.launch(Dispatchers.IO) {
@@ -103,6 +117,17 @@ class AlbumViewModel(
     fun setAlbums(albums: List<Album>) {
         _albums.value = albums
     }
+
+    fun getAlbumWithSongs(albumId: Int): Flow<AlbumWithSongs?> {
+        val result = albumRepository.getAlbumWithSongs(albumId)
+        return result.stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.Lazily,
+            initialValue = null
+        )
+    }
+
+
 
 
     class Factory(

@@ -1,4 +1,4 @@
-package com.example.hybridmusicapp.ui.home
+package com.example.hybridmusicapp.ui.home.artist
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -43,6 +43,7 @@ class ArtistViewModel(
                     if (result is Result.Success) {
                         _artists.postValue(result.data)
                     } else if (result is Result.Failure) {
+                        // TODO: Handle exception artist
                         _artists.postValue(null)
                     }
                 }

@@ -82,19 +82,19 @@ class NowPlayingViewModel private constructor(
             && (_playingSong.playlist?.songs?.size ?: 0) > index
             || (_playingSong.playlist?.ncsSongs?.size ?: 0) > index
         ) {
-            Log.e("NowPlayingViewModel", "setPlayingSongIndex: $index")
+            Log.e("NowPlayingViewModel", "song: ${_playingSong.song}")
+            Log.e("NowPlayingViewModel", "ncsSong: ${_playingSong.ncSong}")
             if (_playingSong.playlist!!.songs.isNotEmpty()) {
                 val song = _playingSong.playlist!!.songs[index]
                 _playingSong.apply {
                     this.song = song
-                    this.ncSong = null
                     currentPosition = 0
                     currentSongIndex = index
                 }
-            } else {
+            }
+            if(_playingSong.playlist!!.ncsSongs.isNotEmpty()) {
                 val ncSong = _playingSong.playlist!!.ncsSongs[index]
                 _playingSong.apply {
-                    this.song = null
                     this.ncSong = ncSong
                     currentPosition = 0
                     currentSongIndex = index
@@ -104,8 +104,15 @@ class NowPlayingViewModel private constructor(
         }
     }
 
+    fun setNcsIsPlaying(isPlaying: Boolean) {
+        _playingSong.isNcsSong = isPlaying
+    }
     private fun updatePlayingSong() {
         _playingSongLiveData.value = _playingSong
+    }
+
+    fun setPlayingSong(playingSong: PlayingSong) {
+        _playingSongLiveData.value = playingSong
     }
 
     fun updateFavouriteStatus(song: Song) {
@@ -137,9 +144,7 @@ class NowPlayingViewModel private constructor(
         }
     }
 
-    fun setPlayingSong(playingSong: PlayingSong) {
-        _playingSongLiveData.value = playingSong
-    }
+
 
     fun setIndexToPlay(index: Int) {  // is called in PlayerBaseFragment
         _indexToPlay.value = index
@@ -153,7 +158,7 @@ class NowPlayingViewModel private constructor(
     /**
      * Playlist Management
      */
-    // Khởi tạo các playlist mặc định từ enum DefaultPlaylistName
+    // Init playlist map (all playlists have id = -1 and value is playlist name )
     private fun initPlaylists() { // oke
         for (playlistName in DefaultPlaylistName.entries.toTypedArray()) {
             val playlist = Playlist(_id = -1, name = playlistName.value)
@@ -161,17 +166,17 @@ class NowPlayingViewModel private constructor(
         }
     }
 
-    // Lấy playlist từ map theo tên, trả về null nếu không tìm thấy
+    // Get playlist by playlist name from map
     private fun getPlaylist(playlistName: String): Playlist? {
         return _playlistMap.getOrDefault(playlistName, null)
     }
 
-    // Cập nhật playlist trong map
+    // Update playlist in map
     private fun updatePlaylist(playlist: Playlist): Boolean {
         return _playlistMap.put(playlist.name, playlist) != null
     }
 
-    // Thiết lập danh sách bài hát cho playlist
+    // Set songs for song playlist
     fun setupPlaylist(songs: List<Song>?, playlistName: String) {
         if (songs != null) {
             val playlist = getPlaylist(playlistName)
@@ -182,7 +187,7 @@ class NowPlayingViewModel private constructor(
         }
     }
 
-    // Thiết lập danh sách bài hát cho playlist ncs
+    // Set songs for ncs playlist
     fun setupNcsPlaylist(context: Context, ncsSongs: List<NCSong>?, playlistName: String) {
         if (ncsSongs != null) {
             val playlist = getPlaylist(playlistName)
@@ -195,14 +200,15 @@ class NowPlayingViewModel private constructor(
         }
     }
 
-    // Cập nhật playlist hiện tại và đồng bộ với PlayingSong
+    // Set current playlist
     fun setCurrentPlaylist(playlist: Playlist?) {
         _currentPlaylist.value = playlist
-        if (_playingSong.playlist == null || _playingSong.playlist !== playlist) {
-            _playingSong.playlist = playlist
+        if (_playingSong.playlist == null || _playingSong.playlist !== playlist) { // if not same playlist
+            _playingSong.playlist = playlist // set new playlist
         }
     }
 
+    // Set playlist with songs (for album)
     fun setPlaylistWithSongs(playlists: List<PlaylistWithSongs>) {
         for (i in playlists.indices) {
             val playlistWithSongs = playlists[i]
@@ -213,9 +219,10 @@ class NowPlayingViewModel private constructor(
     }
 
     fun addPlaylist(playlist: Playlist): Boolean {
-        if (!_playlistMap.containsKey(playlist.name)) {
+        if (!_playlistMap.containsKey(playlist.name)) { // if not exist
             return _playlistMap.put(playlist.name, playlist) != null
         }
+        // if exist
         return updatePlaylist(playlist)
     }
 

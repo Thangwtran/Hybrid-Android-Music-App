@@ -1,4 +1,4 @@
-package com.example.hybridmusicapp.ui.home.adapter
+package com.example.hybridmusicapp.ui.home.album
 
 import android.annotation.SuppressLint
 import android.view.LayoutInflater
@@ -8,7 +8,9 @@ import com.bumptech.glide.Glide
 import com.example.hybridmusicapp.R
 import com.example.hybridmusicapp.data.model.album.Album
 import com.example.hybridmusicapp.databinding.ItemCarouselBinding
-import com.google.android.material.animation.AnimationUtils.lerp
+import com.example.hybridmusicapp.ui.viewmodel.PermissionViewModel
+import com.example.hybridmusicapp.utils.MusicAppUtils
+import com.google.android.material.animation.AnimationUtils
 
 class CarouselAdapter(
     private val listener: OnAlbumClickListener
@@ -29,7 +31,7 @@ class CarouselAdapter(
     ): ViewHolder {
         val inflater = LayoutInflater.from(parent.context)
         val binding = ItemCarouselBinding.inflate(inflater, parent, false)
-        return ViewHolder(binding)
+        return ViewHolder(binding,listener)
     }
 
     override fun onBindViewHolder(
@@ -44,7 +46,8 @@ class CarouselAdapter(
     }
 
     class ViewHolder(
-        private val binding: ItemCarouselBinding
+        private val binding: ItemCarouselBinding,
+        private val listener: OnAlbumClickListener
 
     ) : RecyclerView.ViewHolder(binding.root) {
 
@@ -58,7 +61,18 @@ class CarouselAdapter(
 
             binding.root.setOnMaskChangedListener { maskRect ->
                 binding.carouselTitle.translationX = maskRect.left
-                binding.carouselTitle.alpha = lerp(1F, 0F, 0F, 80F, maskRect.left)
+                binding.carouselTitle.alpha = AnimationUtils.lerp(1F, 0F, 0F, 80F, maskRect.left)
+            }
+
+            binding.carouselImageView.setOnClickListener {
+                val isGranted = PermissionViewModel.instance.isPermissionGranted.value
+                if (isGranted == null || !isGranted) {
+                    PermissionViewModel.instance.setPermissionAsked(true) // Ask permission
+                }
+                listener.onClick(album)
+                if (MusicAppUtils.sConfigChanged) {
+                    MusicAppUtils.sConfigChanged = false
+                }
             }
         }
     }

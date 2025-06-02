@@ -68,8 +68,8 @@ class SongRepositoryImp(
         remoteDataSource.getTop10MostHeard(callback)
     }
 
-    override suspend fun getTop10Replay(callback: ResultCallback<Result<List<Song>>>) {
-        remoteDataSource.getTop10Replay(callback)
+    override suspend fun getTop15Replay(callback: ResultCallback<Result<List<Song>>>) {
+        remoteDataSource.getTop15Replay(callback)
     }
 
     override suspend fun updateSongCounter(songId: String) {

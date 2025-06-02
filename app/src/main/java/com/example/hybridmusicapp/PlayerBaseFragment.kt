@@ -9,6 +9,7 @@ import com.example.hybridmusicapp.data.model.playlist.Playlist
 import com.example.hybridmusicapp.data.model.song.NCSong
 import com.example.hybridmusicapp.data.model.song.Song
 import com.example.hybridmusicapp.ui.home.HomeViewModel
+import com.example.hybridmusicapp.ui.now_playing.MiniPlayerViewModel
 import com.example.hybridmusicapp.ui.viewmodel.NetworkViewModel
 import com.example.hybridmusicapp.ui.viewmodel.NowPlayingViewModel
 import com.example.hybridmusicapp.ui.viewmodel.PermissionViewModel
@@ -17,6 +18,11 @@ open class PlayerBaseFragment : Fragment() {
     protected val homeViewModel by activityViewModels<HomeViewModel>() {
         val application = requireActivity().application as MusicApplication
         HomeViewModel.Factory(application.songRepository, application.albumRepository)
+    }
+    protected val miniPlayerViewModel by activityViewModels<MiniPlayerViewModel> {
+        val application = requireActivity().application as MusicApplication
+        val songRepository = application.songRepository
+        MiniPlayerViewModel.Factory(songRepository)
     }
 
     protected lateinit var networkViewModel: NetworkViewModel

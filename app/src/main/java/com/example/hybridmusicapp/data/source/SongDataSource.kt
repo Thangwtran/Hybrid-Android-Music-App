@@ -25,7 +25,7 @@ interface SongDataSource {
         suspend fun getSongByTitle(title: String): Result<List<Song>>
         suspend fun getSongById(songId: String, callback: ResultCallback<Result<Song>>)
         suspend fun getTop10MostHeard(callback: ResultCallback<Result<List<Song>>>)
-        suspend fun getTop10Replay(callback: ResultCallback<Result<List<Song>>>)
+        suspend fun getTop15Replay(callback: ResultCallback<Result<List<Song>>>)
         suspend fun updateSongCounter(songId: String)
         suspend fun addSongToFireStore(songs: List<Song>)
     }

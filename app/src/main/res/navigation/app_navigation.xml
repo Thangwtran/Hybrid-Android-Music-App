@@ -27,7 +27,11 @@
         android:id="@+id/homeFragment"
         android:name="com.example.hybridmusicapp.ui.home.HomeFragment"
         android:label="fragment_home"
-        tools:layout="@layout/fragment_home" />
+        tools:layout="@layout/fragment_home" >
+        <action
+            android:id="@+id/action_homeFragment_to_albumFragment"
+            app:destination="@id/albumFragment" />
+    </fragment>
     <fragment
         android:id="@+id/settingFragment"
         android:name="com.example.hybridmusicapp.ui.setting.SettingFragment"
@@ -43,4 +47,9 @@
         android:name="com.example.hybridmusicapp.ui.discovery.DiscoveryFragment"
         android:label="fragment_discovery"
         tools:layout="@layout/fragment_discovery" />
+    <fragment
+        android:id="@+id/albumFragment"
+        android:name="com.example.hybridmusicapp.ui.home.album.AlbumFragment"
+        android:label="fragment_album"
+        tools:layout="@layout/fragment_album" />
 </navigation>

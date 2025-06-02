@@ -79,8 +79,20 @@ class RemoteSongDataSource : SongDataSource.Remote {
         }
     }
 
-    override suspend fun getTop10Replay(callback: ResultCallback<Result<List<Song>>>) {
-        TODO("Not yet implemented")
+    override suspend fun getTop15Replay(callback: ResultCallback<Result<List<Song>>>) {
+        withContext(Dispatchers.IO) {
+            firestore.collection("songs")
+                .orderBy("replay", Query.Direction.DESCENDING)
+                .limit(15)
+                .get()
+                .addOnSuccessListener { queryDocumentSnapshots ->
+                    val songs = queryDocumentSnapshots.toObjects(Song::class.java)
+                    callback.onResult(Result.Success(songs))
+                }
+                .addOnFailureListener { exception ->
+                    callback.onResult(Result.Failure(exception))
+                }
+        }
     }
 
     override suspend fun updateSongCounter(songId: String) {

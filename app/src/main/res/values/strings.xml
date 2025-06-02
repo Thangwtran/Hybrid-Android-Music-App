@@ -114,6 +114,6 @@
     <string name="permission_desc">This application need post notification permission to play music correctly and give you more experience when using app. Would you agree permit app use this permission?</string>
 
     <string name="pref_file_key">MUSIC_APP_PREF</string>
-
+    <string name="album_desc">🎵 Welcome! 📀 Let dive into the world of music, explore its tracks 🎶, discover the stories behind the sound 📖, and get ready for an unforgettable listening experience! 🎧</string>
 
 </resources>

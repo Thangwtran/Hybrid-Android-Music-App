@@ -17,6 +17,10 @@ import com.example.hybridmusicapp.ui.viewmodel.NowPlayingViewModel
 import com.example.hybridmusicapp.utils.InjectionUtils
 import com.google.common.util.concurrent.ListenableFuture
 import com.google.common.util.concurrent.MoreExecutors
+import com.google.firebase.Firebase
+import com.google.firebase.firestore.FirebaseFirestoreSettings
+import com.google.firebase.firestore.PersistentCacheSettings
+import com.google.firebase.firestore.firestore
 import java.util.concurrent.ExecutionException
 
 class MusicApplication : Application() {
@@ -41,6 +45,13 @@ class MusicApplication : Application() {
 
     override fun onCreate() {
         super.onCreate()
+        val persistenceCacheSettings = PersistentCacheSettings.newBuilder()
+            .setSizeBytes(FirebaseFirestoreSettings.CACHE_SIZE_UNLIMITED)
+            .build()
+        val settings = FirebaseFirestoreSettings.Builder()
+            .setLocalCacheSettings(persistenceCacheSettings)
+            .build()
+        Firebase.firestore.firestoreSettings = settings
         setupViewModelComponents()
         NowPlayingViewModel.getInstance(
             songRepository,

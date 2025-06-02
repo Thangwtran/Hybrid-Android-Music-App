@@ -1,4 +1,4 @@
-package com.example.hybridmusicapp.ui.home.adapter
+package com.example.hybridmusicapp.ui.home.artist
 
 import android.annotation.SuppressLint
 import android.view.LayoutInflater
@@ -7,7 +7,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.hybridmusicapp.R
 import com.example.hybridmusicapp.data.model.artist.Artist
-import com.example.hybridmusicapp.data.model.artist.ArtistList
 import com.example.hybridmusicapp.databinding.ItemArtistBinding
 
 class TopArtistAdapter: RecyclerView.Adapter<TopArtistAdapter.ViewHolder>() {

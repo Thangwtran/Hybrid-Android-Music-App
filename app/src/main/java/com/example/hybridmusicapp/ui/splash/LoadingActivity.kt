@@ -11,7 +11,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.example.hybridmusicapp.MusicApplication
 import com.example.hybridmusicapp.R
 import com.example.hybridmusicapp.ui.discovery.artist.ArtistViewModel
-import com.example.hybridmusicapp.ui.home.AlbumViewModel
+import com.example.hybridmusicapp.ui.home.album.AlbumViewModel
 import com.example.hybridmusicapp.ui.home.HomeViewModel
 import com.example.hybridmusicapp.ui.viewmodel.NcsViewModel
 import com.example.hybridmusicapp.utils.NCSUtils

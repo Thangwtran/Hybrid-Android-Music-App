@@ -23,8 +23,8 @@ import androidx.fragment.app.Fragment
 import androidx.media3.session.MediaController
 import com.example.hybridmusicapp.databinding.ActivityHomeBinding
 import com.example.hybridmusicapp.ui.discovery.DiscoveryFragment
-import com.example.hybridmusicapp.ui.home.AlbumViewModel
-import com.example.hybridmusicapp.ui.home.ArtistViewModel
+import com.example.hybridmusicapp.ui.home.album.AlbumViewModel
+import com.example.hybridmusicapp.ui.home.artist.ArtistViewModel
 import com.example.hybridmusicapp.ui.home.HomeFragment
 import com.example.hybridmusicapp.ui.home.HomeViewModel
 import com.example.hybridmusicapp.ui.library.LibraryFragment
@@ -153,8 +153,8 @@ class HomeActivity : AppCompatActivity() {
     private fun setupObservers() {
         // permission
         PermissionViewModel.Companion.instance.permissionAsked.observe(this) { isAsked -> // oke
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU && isAsked) {
-                checkPermission()
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU && isAsked) { // đã hỏi
+                checkPermission() // check xem có cấp quyền không
             } else {
                 // Trên API < 33, không cần quyền POST_NOTIFICATIONS, thông báo được hiển thị tự do
                 PermissionViewModel.Companion.instance.setPermissionGranted(true)
@@ -200,6 +200,8 @@ class HomeActivity : AppCompatActivity() {
         homeViewModel.remoteSongLoaded.observe(this) { isLoaded ->
             if (isLoaded) {
                 saveSongData()
+            }else{
+                Toast.makeText(this, "Load Song Error", Toast.LENGTH_LONG).show()
             }
         }
 

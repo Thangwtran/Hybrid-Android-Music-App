@@ -8,22 +8,28 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import com.example.hybridmusicapp.HomeActivity
 import com.example.hybridmusicapp.MusicApplication
 import com.example.hybridmusicapp.PlayerBaseFragment
+import com.example.hybridmusicapp.R
+import com.example.hybridmusicapp.ResultCallback
 import com.example.hybridmusicapp.data.model.album.Album
+import com.example.hybridmusicapp.data.model.playing_song.PlayingSong
 import com.example.hybridmusicapp.data.model.song.NCSong
 import com.example.hybridmusicapp.databinding.FragmentHomeBinding
-import com.example.hybridmusicapp.ui.home.adapter.CarouselAdapter
+import com.example.hybridmusicapp.ui.home.album.CarouselAdapter
 import com.example.hybridmusicapp.ui.home.adapter.RecommendedSong
 import com.example.hybridmusicapp.ui.home.adapter.RecommendedSongAdapter
-import com.example.hybridmusicapp.ui.home.adapter.TopArtistAdapter
+import com.example.hybridmusicapp.ui.home.artist.TopArtistAdapter
 import com.example.hybridmusicapp.ui.home.adapter.TrendingNcsTrackAdapter
-import com.example.hybridmusicapp.ui.home.AlbumViewModel
-import com.example.hybridmusicapp.ui.home.ArtistViewModel
+import com.example.hybridmusicapp.ui.home.album.AlbumFragment
+import com.example.hybridmusicapp.ui.home.album.AlbumViewModel
+import com.example.hybridmusicapp.ui.home.artist.ArtistViewModel
 import com.example.hybridmusicapp.ui.now_playing.MiniPlayerViewModel
 import com.example.hybridmusicapp.ui.viewmodel.NcsViewModel
+import com.example.hybridmusicapp.ui.viewmodel.NowPlayingViewModel
 import com.example.hybridmusicapp.utils.MusicAppUtils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -50,17 +56,18 @@ class HomeFragment : PlayerBaseFragment() {
         val ncsRepository = application.ncsRepository
         NcsViewModel.Factory(ncsRepository)
     }
-    private val miniPlayerViewModel by activityViewModels<MiniPlayerViewModel> {
-        val application = requireActivity().application as MusicApplication
-        val songRepository = application.songRepository
-        MiniPlayerViewModel.Factory(songRepository)
-    }
+//    private val miniPlayerViewModel by activityViewModels<MiniPlayerViewModel> {
+//        val application = requireActivity().application as MusicApplication
+//        val songRepository = application.songRepository
+//        MiniPlayerViewModel.Factory(songRepository)
+//    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         ncsViewModel.getNCSongs()
         albumViewModel.getTop10AlbumsFireStore()
         homeViewModel.getTop10MostHeard()
+        homeViewModel.getTop15Replay()
     }
 
     override fun onCreateView(
@@ -108,6 +115,7 @@ class HomeFragment : PlayerBaseFragment() {
     ) {
         miniPlayerViewModel.setPlayingState(true)
         val playlistName = MusicAppUtils.DefaultPlaylistName.NCS_SONG.value
+        NowPlayingViewModel.instance?.setNcsIsPlaying(true)
         setupPlayer(song = null, ncSong, songIndex, playlistName)
     }
 
@@ -125,14 +133,14 @@ class HomeFragment : PlayerBaseFragment() {
     }
 
     private fun setUpRecommendedSong() {
-        val listRecommendedSong = mutableListOf<RecommendedSong>()
-        lifecycleScope.launch(Dispatchers.Main) {
-            val recommendGenre =
-                requireActivity().intent.getStringArrayListExtra(HomeActivity.EXTRA_GENRE_RECOMMENDED) as List<String>
-            Log.d("HomeFragment", "setUpRecommendedSong: $recommendGenre")
+        recommendedSongAdapter = RecommendedSongAdapter()
+        binding.rvRecommended.adapter = recommendedSongAdapter
 
+        val listRecommendedSong = mutableListOf<RecommendedSong>()
+        val recommendGenre =
+            requireActivity().intent.getStringArrayListExtra(HomeActivity.EXTRA_GENRE_RECOMMENDED) as List<String>
+        if (recommendGenre.isNotEmpty()) {
             // remote
-//            homeViewModel.getTop10MostHeard()
             homeViewModel.remoteSongLoaded.observe(viewLifecycleOwner) { isLoaded ->
                 if (isLoaded) {
                     for (genre in recommendGenre) {
@@ -151,11 +159,11 @@ class HomeFragment : PlayerBaseFragment() {
 
                     }
                 } else {
-                    Toast.makeText(requireContext(), "No songs found", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(requireContext(), "No songs found", Toast.LENGTH_SHORT)
+                        .show()
                 }
 
                 // local
-//                ncsViewModel.getNCSongs()
                 ncsViewModel.ncsSongs.observe(viewLifecycleOwner) {
                     for (song in it) {
                         val ncsGenre = song.genre.trim().split('/')
@@ -189,34 +197,82 @@ class HomeFragment : PlayerBaseFragment() {
                     }
                 }
 
-                //adapter
-                recommendedSongAdapter = RecommendedSongAdapter()
                 recommendedSongAdapter.updateRecommendedSongs(listRecommendedSong)
-                binding.rvRecommended.adapter = recommendedSongAdapter
+
             }
-
-
+        } else {
+            if (MusicAppUtils.isNetworkAvailable(requireContext())) {
+                homeViewModel.topReplaySong.observe(viewLifecycleOwner) { replaySongs ->
+                    for (song in replaySongs) {
+                        listRecommendedSong.add(
+                            RecommendedSong(
+                                remoteImageRes = song.image,
+                                title = song.title,
+                                remoteAudioUrl = song.source,
+                                artist = song.artist
+                            )
+                        )
+                    }
+                    recommendedSongAdapter.updateRecommendedSongs(listRecommendedSong)
+                }
+            } else {
+                ncsViewModel.ncsSongs.observe(viewLifecycleOwner) { ncsSongs ->
+                    for (song in ncsSongs.reversed()) {
+                        listRecommendedSong.add(
+                            RecommendedSong(
+                                imageRes = song.imageRes,
+                                title = song.ncsName,
+                                ncsAudioRes = song.audioRes,
+                                artist = song.artist
+                            )
+                        )
+                    }
+                    recommendedSongAdapter.updateRecommendedSongs(listRecommendedSong)
+                }
+            }
         }
-
     }
 
     private fun setupCarousel() {
-        carouselAdapter = CarouselAdapter(object : CarouselAdapter.OnAlbumClickListener {
-            override fun onClick(album: Album) {
-                Toast.makeText(requireContext(), album.name, Toast.LENGTH_SHORT).show()
-            }
-        })
-
-        albumViewModel.albums.observe(viewLifecycleOwner) {
-            if (it != null) {
-                carouselAdapter.updateAlbums(it)
+        albumViewModel.albums.observe(viewLifecycleOwner) {albums->
+            if (albums != null) {
+                saveAlbumToDB(albums)
+                carouselAdapter.updateAlbums(albums)
             } else {
                 Toast.makeText(requireContext(), "Error loading albums", Toast.LENGTH_SHORT).show()
             }
 
         }
+        carouselAdapter = CarouselAdapter(object : CarouselAdapter.OnAlbumClickListener {
+            override fun onClick(album: Album) {
+                Toast.makeText(requireContext(),album.name, Toast.LENGTH_SHORT).show()
+                albumViewModel.setAlbum(album)
+                replaceFragment(AlbumFragment())
+            }
+        })
         binding.rvCarousel.adapter = carouselAdapter
+    }
 
+    private fun saveAlbumToDB(albums: List<Album>) {
+        homeViewModel.saveAlbumToDB(albums, object : ResultCallback<Boolean>{
+            override fun onResult(result: Boolean) {
+                if(result){
+                    homeViewModel.saveAlbumSongCrossRef(albums)
+                }else{
+                    Toast.makeText(requireContext(), "Save Album Cross Ref Error", Toast.LENGTH_LONG).show()
+                }
+            }
+
+        })
+    }
+
+
+    private fun replaceFragment(fragment: Fragment) {
+       parentFragmentManager.beginTransaction()
+           .replace(R.id.fragment_container,fragment)
+           .addToBackStack(fragment.toString())
+           .setReorderingAllowed(true)
+           .commit()
     }
 
 

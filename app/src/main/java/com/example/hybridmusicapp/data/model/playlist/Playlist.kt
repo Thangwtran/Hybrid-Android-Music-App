@@ -36,11 +36,11 @@ data class Playlist(
 ) {
     @Ignore
     var songs: List<Song> = listOf()
-        private set
+//        private set
 
     @Ignore
     var ncsSongs: List<NCSong> = listOf()
-        private set
+//        private set
 
     @Ignore
     private val _mediaItems: MutableList<MediaItem> = ArrayList()

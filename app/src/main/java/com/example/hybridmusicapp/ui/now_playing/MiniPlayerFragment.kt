@@ -3,6 +3,7 @@ package com.example.hybridmusicapp.ui.now_playing
 import android.animation.Animator
 import android.animation.ObjectAnimator
 import android.os.Bundle
+import android.text.TextUtils
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -48,11 +49,11 @@ class MiniPlayerFragment : PlayerBaseFragment(), View.OnClickListener {
 
     private var nowPlayingViewModel: NowPlayingViewModel? = null
 
-    private val miniPlayerViewModel by activityViewModels<MiniPlayerViewModel> {
-        val application = requireActivity().application as MusicApplication
-        val songRepository = application.songRepository
-        MiniPlayerViewModel.Factory(songRepository)
-    }
+//    private val miniPlayerViewModel by activityViewModels<MiniPlayerViewModel> {
+//        val application = requireActivity().application as MusicApplication
+//        val songRepository = application.songRepository
+//        MiniPlayerViewModel.Factory(songRepository)
+//    }
 
     private val playlistViewModel by activityViewModels<PlaylistViewModel> {
         val application = requireActivity().application as MusicApplication
@@ -142,30 +143,47 @@ class MiniPlayerFragment : PlayerBaseFragment(), View.OnClickListener {
     }
 
     private fun showSongMiniPlayerUI(playingSong: PlayingSong) {
-        Log.i("MiniPlayerFragment", "showSongMiniPlayerUI: ${playingSong.ncSong}")
-
-        if (playingSong.ncSong == null) {
-            binding.miniPlayerSongName.text = playingSong.song?.title
-            binding.miniPlayerArtist.text = playingSong.song?.artist
-            Glide.with(requireContext())
-                .load(playingSong.song?.image)
-                .error(R.drawable.itunes)
-                .into(binding.imgMiniPlayerArtwork)
-
-            updateFavouriteStatus(playingSong.song, ncSong = null)
-        } else if (playingSong.song == null) {
-            binding.miniPlayerSongName.text = playingSong.ncSong?.ncsName
-            binding.miniPlayerSongName.isSelected = true
-            binding.miniPlayerArtist.text = playingSong.ncSong?.artist
-            Glide.with(requireContext())
-                .load(playingSong.ncSong?.imageRes)
-                .error(R.drawable.itunes)
-                .into(binding.imgMiniPlayerArtwork)
-
-            updateFavouriteStatus(song = null, playingSong.ncSong)
-        } else {
-            Toast.makeText(requireContext(), "Song data is null", Toast.LENGTH_SHORT).show()
+        Log.i("MiniPlayerFragment", "ncs: ${playingSong.ncSong}, isNcs: ${playingSong.isNcsSong}")
+        with(binding.miniPlayerSongName) {
+            isSelected = true
+            ellipsize = TextUtils.TruncateAt.MARQUEE
+            marqueeRepeatLimit = -1 // marquee_forever
+            maxLines = 1
+            isFocusable = true
+            isFocusableInTouchMode = true
+            setHorizontallyScrolling(true)
+            requestFocus()
         }
+
+        if(playingSong.isNcsSong){ // ncs is playing
+            if (playingSong.ncSong != null) {
+                binding.miniPlayerSongName.text = playingSong.ncSong?.ncsName
+                binding.miniPlayerSongName.isSelected = true
+                binding.miniPlayerArtist.text = playingSong.ncSong?.artist
+                Glide.with(requireContext())
+                    .load(playingSong.ncSong?.imageRes)
+                    .error(R.drawable.itunes)
+                    .into(binding.imgMiniPlayerArtwork)
+
+                updateFavouriteStatus(song = null, playingSong.ncSong)
+            }else{
+                Toast.makeText(requireContext(), "ncs song is null", Toast.LENGTH_SHORT).show()
+            }
+        }else{ // song is playing
+            if (playingSong.song != null) {
+                binding.miniPlayerSongName.text = playingSong.song?.title
+                binding.miniPlayerArtist.text = playingSong.song?.artist
+                Glide.with(requireContext())
+                    .load(playingSong.song?.image)
+                    .error(R.drawable.itunes)
+                    .into(binding.imgMiniPlayerArtwork)
+
+                updateFavouriteStatus(playingSong.song, ncSong = null)
+            }else{
+                Toast.makeText(requireContext(), "song or data is null", Toast.LENGTH_SHORT).show()
+            }
+        }
+
 
     }
 
@@ -269,24 +287,12 @@ class MiniPlayerFragment : PlayerBaseFragment(), View.OnClickListener {
         }
     }
 
-    /**
-     * Kiểm tra điều kiện để phát bài hát tại chỉ số index:
-     *  - index khác -1 (giá trị hợp lệ, vì -1 thường biểu thị không có bài hát được chọn)
-     *  - Và một trong hai điều kiện sau:
-     *  1. Chỉ số hiện tại của mediaController khác index và danh sách bài hát có đủ bài (mediaItemCount > index)
-     *  2. Chỉ số hiện tại bằng index nhưng danh sách phát đã thay đổi (isPlaylistChanged = true)
-     */
+
     private fun setIndexToPlay() {
         nowPlayingViewModel?.indexToPlay?.observe(viewLifecycleOwner) { index ->
             if (MusicAppUtils.sConfigChanged || index == -1) {
                 return@observe
             }
-
-            /**
-             * Kiểm tra nếu chỉ số hợp lệ và cần phát bài hát tại chỉ số này.
-             * Nếu đúng, gọi hàm playMediaAtIndex để phát bài hát.
-             * Ngược lại, nếu chỉ số vượt quá số lượng bài hát, chờ danh sách phát thay đổi.
-             */
             if (isValidIndex(index) && shouldPlayIndex(index)) {
                 playMediaAtIndex(index)
             } else if (index >= mediaController?.mediaItemCount!!) {
@@ -295,22 +301,10 @@ class MiniPlayerFragment : PlayerBaseFragment(), View.OnClickListener {
         }
     }
 
-    /**
-     * Kiểm tra xem chỉ số bài hát có hợp lệ hay không.
-     * Chỉ số được coi là hợp lệ nếu nó nhỏ hơn số lượng bài hát trong danh sách phát.
-     * @param index Chỉ số bài hát cần kiểm tra.
-     * @return True nếu chỉ số hợp lệ, false nếu không.
-     */
     private fun isValidIndex(index: Int): Boolean {
         return mediaController?.mediaItemCount!! > index
     }
 
-    /**
-     * Kiểm tra xem có nên phát bài hát tại chỉ số được chỉ định hay không.
-     * Phát bài nếu chỉ số hiện tại khác với chỉ số cần phát hoặc danh sách phát đã thay đổi.
-     * @param index Chỉ số bài hát cần kiểm tra.
-     * @return True nếu nên phát bài hát, false nếu không.
-     */
     private fun shouldPlayIndex(index: Int): Boolean {
         /**
          * Kiểm tra hai điều kiện:
@@ -327,12 +321,6 @@ class MiniPlayerFragment : PlayerBaseFragment(), View.OnClickListener {
         miniPlayerViewModel.isPlaylistChanged = false
     }
 
-
-    /**
-     * Chờ danh sách phát thay đổi để thử phát bài hát tại chỉ số được chỉ định.
-     * Thêm một listener để theo dõi sự kiện thay đổi danh sách phát và phát bài hát khi cần.
-     * @param index Chỉ số bài hát cần phát.
-     */
     private fun waitForPlaylistChanged(index: Int) {
         mediaController?.addListener(object : Player.Listener {
             override fun onMediaItemTransition(mediaItem: MediaItem?, reason: Int) {

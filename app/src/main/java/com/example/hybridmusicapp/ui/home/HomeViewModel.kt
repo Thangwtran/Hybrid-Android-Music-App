@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.example.hybridmusicapp.ResultCallback
 import com.example.hybridmusicapp.data.model.album.Album
+import com.example.hybridmusicapp.data.model.album.AlbumSongCrossRef
 import com.example.hybridmusicapp.data.model.song.Song
 import com.example.hybridmusicapp.data.repository.album.AlbumRepository
 import com.example.hybridmusicapp.data.repository.album.AlbumRepositoryImp
@@ -35,6 +36,9 @@ class HomeViewModel(
     val albums: LiveData<List<Album>?>
         get() = _albums
 
+    private val _topReplaySong = MutableLiveData<List<Song>>()
+    val topReplaySong: LiveData<List<Song>> = _topReplaySong
+
     private val _localSongs = MutableLiveData<List<Song>?>()
     val localSongs: LiveData<List<Song>?>
         get() = _localSongs
@@ -48,6 +52,7 @@ class HomeViewModel(
                 _remoteSongLoaded.postValue(true)
             } else if (result is Result.Failure) {
                 // TODO: HomeViewModel -> Handle exception
+                _remoteSongLoaded.postValue(false)
             }
         }
     }
@@ -75,6 +80,20 @@ class HomeViewModel(
         }
     }
 
+    fun getTop15Replay() {
+        viewModelScope.launch(dispatcher) {
+            songRepository.getTop15Replay(object : ResultCallback<Result<List<Song>>> {
+                override fun onResult(result: Result<List<Song>>) {
+                    if (result is Result.Success) {
+                        _topReplaySong.postValue(result.data)
+                    } else if (result is Result.Failure) {
+                        _topReplaySong.postValue(emptyList())
+                    }
+                }
+            })
+        }
+    }
+
     fun reloadData() {
         loadRemoteSongs()
         getTop10MostHeard()
@@ -96,6 +115,37 @@ class HomeViewModel(
                 callback.onResult(result)
             }
         }
+    }
+
+    fun saveAlbumToDB(albums: List<Album>, callback: ResultCallback<Boolean>) {
+        if (albums.isNotEmpty()) {
+            viewModelScope.launch(dispatcher) {
+                val albumArr = albums.toTypedArray()
+                val result = albumRepository.saveAlbums(*albumArr)
+                callback.onResult(result)
+            }
+        }
+    }
+
+    fun saveAlbumSongCrossRef(albums: List<Album>) {
+        if (albums.isNotEmpty()) {
+            viewModelScope.launch(dispatcher) {
+                val crossRefs = createAlbumSongCrossRef(albums)
+                if(crossRefs.isNotEmpty()){
+                    albumRepository.saveAlbumCrossRef(*crossRefs)
+                }
+            }
+        }
+    }
+
+    private fun createAlbumSongCrossRef(albums: List<Album>): Array<AlbumSongCrossRef> {
+        val crossRefs: MutableList<AlbumSongCrossRef> = ArrayList()
+        for (album in albums) {
+            for (songId in album.songs!!) {
+                crossRefs.add(AlbumSongCrossRef(album.id, songId))
+            }
+        }
+        return crossRefs.toTypedArray<AlbumSongCrossRef>()
     }
 
     private fun extractSongs(): List<Song> {

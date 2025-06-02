@@ -4,14 +4,17 @@ import com.example.hybridmusicapp.ResultCallback
 import com.example.hybridmusicapp.data.model.album.Album
 import com.example.hybridmusicapp.data.model.album.AlbumList
 import com.example.hybridmusicapp.data.model.album.AlbumSongCrossRef
+import com.example.hybridmusicapp.data.model.album.AlbumWithSongs
 import com.example.hybridmusicapp.data.source.remote.Result
+import kotlinx.coroutines.flow.Flow
 
 interface AlbumRepository {
     interface Local{
         suspend fun getTop10Albums(): List<Album>
         suspend fun getAlbums():List<Album>
 
-        // TODO: album with song 
+        fun getAlbumWithSongs(albumId: Int): Flow<AlbumWithSongs>
+
         suspend fun saveAlbums(vararg album: Album): Boolean
 
         suspend fun saveAlbumCrossRef(vararg crossRefs: AlbumSongCrossRef)

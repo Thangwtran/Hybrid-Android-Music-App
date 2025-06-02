@@ -16,7 +16,8 @@ data class PlayingSong(
     var mediaItem: MediaItem? = null,
     var nextSongIndex: Int = -1,
     var currentSongIndex: Int = -1,
-    var currentPosition: Long = -1
+    var currentPosition: Long = -1,
+    var isNcsSong: Boolean = false
 ) {
     var song: Song?
         get() = _song

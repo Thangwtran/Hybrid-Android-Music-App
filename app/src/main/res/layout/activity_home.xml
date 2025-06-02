@@ -53,6 +53,8 @@
         android:name="com.example.hybridmusicapp.ui.now_playing.MiniPlayerFragment"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
         android:visibility="gone"
         app:layout_constraintBottom_toTopOf="@+id/bottom_nav"
         app:layout_constraintEnd_toEndOf="parent"

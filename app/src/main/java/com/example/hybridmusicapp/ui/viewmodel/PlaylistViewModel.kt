@@ -21,16 +21,17 @@ class PlaylistViewModel(
     private val repository: PlaylistRepositoryImp
 ) : ViewModel() {
 
-    private val _listPlaylist =
-        MutableLiveData<List<PlaylistWithSongs>>() // lưu danh sách các playlist
+    // playlist
+    private val _listPlaylist = MutableLiveData<List<PlaylistWithSongs>>()
     val playlists: LiveData<List<PlaylistWithSongs>>
         get() = _listPlaylist
 
-    private val _playlistWithSongs =
-        MutableLiveData<PlaylistWithSongs>() // lưu danh sách các bài hát trong playlist
+    // playlist with songs
+    private val _playlistWithSongs = MutableLiveData<PlaylistWithSongs>()
     val playlistWithSong: LiveData<PlaylistWithSongs>
         get() = _playlistWithSongs
 
+    // playlist with ncs songs
     private val _ncsPlaylist = MutableLiveData<List<NCSong>>()
     val ncsPlaylist: LiveData<List<NCSong>>
         get() = _ncsPlaylist
