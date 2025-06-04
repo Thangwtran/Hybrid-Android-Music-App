@@ -40,6 +40,12 @@ data class PlayingSong(
         }
     }
 
+    fun clearSong(){
+        _song = null
+        _ncSong = null
+        mediaItem = null
+    }
+
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

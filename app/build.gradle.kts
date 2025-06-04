@@ -81,7 +81,6 @@ dependencies {
     implementation("io.github.glailton.expandabletextview:expandabletextview:1.0.4")
 
 
-
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)

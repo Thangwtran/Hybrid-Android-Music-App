@@ -43,10 +43,11 @@ class NowPlayingViewModel private constructor(
     val playingSong: LiveData<PlayingSong>
         get() = _playingSongLiveData
 
+
     // Playlist
     private var _playlistName: String = "" // Is ncs after set
     var playlistName: String
-        get() = playlistName
+        get() = _playlistName
         set(playlistName) {
             _playlistName = playlistName
             val playlist = getPlaylist(playlistName) // get default playlist
@@ -57,7 +58,7 @@ class NowPlayingViewModel private constructor(
     private val _playlistMap: MutableMap<String, Playlist?> = HashMap()
 
     // Index
-    private val _indexToPlay = MutableLiveData<Int>()   // is nulling
+    private val _indexToPlay = MutableLiveData<Int>()
     val indexToPlay: LiveData<Int> = _indexToPlay
 
     private val _miniPlayerVisibility = MutableLiveData<Boolean>()
@@ -92,7 +93,7 @@ class NowPlayingViewModel private constructor(
                     currentSongIndex = index
                 }
             }
-            if(_playingSong.playlist!!.ncsSongs.isNotEmpty()) {
+            if (_playingSong.playlist!!.ncsSongs.isNotEmpty()) {
                 val ncSong = _playingSong.playlist!!.ncsSongs[index]
                 _playingSong.apply {
                     this.ncSong = ncSong
@@ -107,6 +108,7 @@ class NowPlayingViewModel private constructor(
     fun setNcsIsPlaying(isPlaying: Boolean) {
         _playingSong.isNcsSong = isPlaying
     }
+
     private fun updatePlayingSong() {
         _playingSongLiveData.value = _playingSong
     }
@@ -123,7 +125,8 @@ class NowPlayingViewModel private constructor(
 
         }
     }
-    fun updateNcsFavouriteStatus( ncs: NCSong) {
+
+    fun updateNcsFavouriteStatus(ncs: NCSong) {
         viewModelScope.launch(Dispatchers.IO) {
 //            ncs.isFavourite = true
             _ncsSongRepository.update(ncs)
@@ -145,9 +148,9 @@ class NowPlayingViewModel private constructor(
     }
 
 
-
     fun setIndexToPlay(index: Int) {  // is called in PlayerBaseFragment
         _indexToPlay.value = index
+
     }
 
     fun loadPrevSessionPlayingSong(songId: String?, playlistName: String?) {
@@ -197,6 +200,18 @@ class NowPlayingViewModel private constructor(
             } else {
                 Log.i("NowPlayingViewModel", "setupNcsPlaylist: playlist is null")
             }
+        }
+    }
+
+    fun setupRecommendSongList(context: Context, songs: List<Song>?, ncsSongs: List<NCSong>?, playlistName: String) {
+        val playlist = getPlaylist(playlistName)
+        if(playlist != null){
+            playlist.updateSongList(songs!!)
+            playlist.updateNcsSongList(ncsSongs!!, context)
+            updatePlaylist(playlist)
+        }else{
+            Log.i("NowPlayingViewModel", "setupRecommendSongList: playlist is null")
+
         }
     }
 

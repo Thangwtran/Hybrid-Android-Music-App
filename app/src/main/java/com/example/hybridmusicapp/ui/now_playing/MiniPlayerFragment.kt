@@ -2,6 +2,7 @@ package com.example.hybridmusicapp.ui.now_playing
 
 import android.animation.Animator
 import android.animation.ObjectAnimator
+import android.content.Intent
 import android.os.Bundle
 import android.text.TextUtils
 import android.util.Log
@@ -143,7 +144,11 @@ class MiniPlayerFragment : PlayerBaseFragment(), View.OnClickListener {
     }
 
     private fun showSongMiniPlayerUI(playingSong: PlayingSong) {
-        Log.i("MiniPlayerFragment", "ncs: ${playingSong.ncSong}, isNcs: ${playingSong.isNcsSong}")
+        Log.i("MiniPlayerFragment", "playingSong: $playingSong")
+        Log.i("MiniPlayerFragment", "ncs: ${playingSong.ncSong}")
+        Log.i("MiniPlayerFragment", "song: ${playingSong.song}")
+        Log.i("MiniPlayerFragment", "isNcs: ${playingSong.isNcsSong}")
+
         with(binding.miniPlayerSongName) {
             isSelected = true
             ellipsize = TextUtils.TruncateAt.MARQUEE
@@ -154,9 +159,11 @@ class MiniPlayerFragment : PlayerBaseFragment(), View.OnClickListener {
             setHorizontallyScrolling(true)
             requestFocus()
         }
+        val mediaPlayer = MediaViewModel
 
-        if(playingSong.isNcsSong){ // ncs is playing
+        if (playingSong.isNcsSong) { // ncs is playing
             if (playingSong.ncSong != null) {
+                Log.i("MiniPlayerFragment", "ncs is play: ${playingSong.ncSong?.ncsName}")
                 binding.miniPlayerSongName.text = playingSong.ncSong?.ncsName
                 binding.miniPlayerSongName.isSelected = true
                 binding.miniPlayerArtist.text = playingSong.ncSong?.artist
@@ -166,11 +173,12 @@ class MiniPlayerFragment : PlayerBaseFragment(), View.OnClickListener {
                     .into(binding.imgMiniPlayerArtwork)
 
                 updateFavouriteStatus(song = null, playingSong.ncSong)
-            }else{
+            } else {
                 Toast.makeText(requireContext(), "ncs song is null", Toast.LENGTH_SHORT).show()
             }
-        }else{ // song is playing
+        } else { // song is playing
             if (playingSong.song != null) {
+                Log.i("MiniPlayerFragment", "song is play: ${playingSong.song?.title}")
                 binding.miniPlayerSongName.text = playingSong.song?.title
                 binding.miniPlayerArtist.text = playingSong.song?.artist
                 Glide.with(requireContext())
@@ -179,7 +187,7 @@ class MiniPlayerFragment : PlayerBaseFragment(), View.OnClickListener {
                     .into(binding.imgMiniPlayerArtwork)
 
                 updateFavouriteStatus(playingSong.song, ncSong = null)
-            }else{
+            } else {
                 Toast.makeText(requireContext(), "song or data is null", Toast.LENGTH_SHORT).show()
             }
         }
@@ -188,9 +196,23 @@ class MiniPlayerFragment : PlayerBaseFragment(), View.OnClickListener {
     }
 
     private fun setupListeners() {
+        binding.root.setOnClickListener{navigateToPlayer()}
         binding.btnMiniPlayerPlayPause.setOnClickListener(this)
         binding.btnMiniPlayerFavourite.setOnClickListener(this)
         binding.btnMiniPlayerNext.setOnClickListener(this)
+    }
+
+    private fun navigateToPlayer() {
+        val isInternetAccess = MusicAppUtils.isNetworkAvailable(requireContext())
+        val isNCSong = nowPlayingViewModel?.playingSong?.value?.isNcsSong
+        if(isInternetAccess || isNCSong != null && isNCSong){
+            nowPlayingViewModel?.setMiniPlayerVisible(false)
+            val intent = Intent(requireContext(), PlayerActivity::class.java)
+            intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP) // avoid duplicate instances of the same activity
+            requireContext().startActivity(intent)
+        }else{
+            showNoInternetDialog()
+        }
     }
 
     override fun onClick(view: View) {
@@ -345,28 +367,9 @@ class MiniPlayerFragment : PlayerBaseFragment(), View.OnClickListener {
     }
 
     private fun setupSkipNext() {
-        nowPlayingViewModel?.indexToPlay?.observe(viewLifecycleOwner) { index ->
-            if (MusicAppUtils.sConfigChanged) {
-                return@observe
-            }
-            if (index != -1 && ((mediaController?.currentMediaItemIndex != index
-                        && mediaController?.mediaItemCount!! > index)
-                        || (mediaController?.currentMediaItemIndex == index
-                        && miniPlayerViewModel.isPlaylistChanged))
-            ) {
-                mediaController?.seekTo(index, 0)
-                mediaController?.prepare()
-                miniPlayerViewModel.isPlaylistChanged = false
-            } else if (mediaController?.mediaItemCount!! <= index) {
-                mediaController?.addListener(object : Player.Listener {
-                    override fun onMediaItemTransition(mediaItem: MediaItem?, reason: Int) {
-                        if (reason == Player.MEDIA_ITEM_TRANSITION_REASON_PLAYLIST_CHANGED) {
-                            mediaController?.seekTo(index, 0)
-                            mediaController?.prepare()
-                            miniPlayerViewModel.isPlaylistChanged = false
-                        }
-                    }
-                })
+        if(mediaController != null){
+            if(mediaController!!.hasNextMediaItem()){
+                mediaController!!.seekToNextMediaItem()
             }
         }
     }
@@ -383,11 +386,11 @@ class MiniPlayerFragment : PlayerBaseFragment(), View.OnClickListener {
                 song.isFavorite = !song.isFavorite
                 nowPlayingViewModel?.updateFavouriteStatus(song)
                 updateFavouriteStatus(song, ncsSong)
-            }else if (ncsSong != null) {
+            } else if (ncsSong != null) {
                 ncsSong.isFavourite = !ncsSong.isFavourite
                 nowPlayingViewModel?.updateNcsFavouriteStatus(ncsSong)
                 updateFavouriteStatus(song, ncsSong)
-            }else{
+            } else {
                 Toast.makeText(requireContext(), "song, ncs is null", Toast.LENGTH_SHORT).show()
             }
 

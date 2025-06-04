@@ -47,7 +47,7 @@ class HomeActivity : AppCompatActivity() {
     private lateinit var networkViewModel: NetworkViewModel
 
 
-//    private val nowPlayingViewModel by viewModels<NowPlayingViewModel> {
+    //    private val nowPlayingViewModel by viewModels<NowPlayingViewModel> {
 //        val application = application as MusicApplication
 //        val searchingRepository = application.searchingRepository
 //        val recentSongRepository = application.recentSongRepository
@@ -127,7 +127,8 @@ class HomeActivity : AppCompatActivity() {
                  * cho giá trị mật độ mặc định (DENSITY_DEFAULT, thường là 160dpi).
                  * Đây là cách tương thích để tính density trên các phiên bản cũ hơn.
                  */
-                MusicAppUtils.DENSITY = 1f * windowMetrics.bounds.width() / DisplayMetrics.DENSITY_DEFAULT
+                MusicAppUtils.DENSITY =
+                    1f * windowMetrics.bounds.width() / DisplayMetrics.DENSITY_DEFAULT
 
             }
         } else {
@@ -188,9 +189,9 @@ class HomeActivity : AppCompatActivity() {
         // now playing - mini player
         nowPlayingViewModel?.isMiniPlayerVisible?.observe(this) {
             Log.d("HomeActivity", "isMiniPlayerVisible: $it")
-            if(it){
+            if (it) {
                 binding.fragmentContainerMiniPlayer.visibility = View.VISIBLE
-            }else{
+            } else {
                 binding.fragmentContainerMiniPlayer.visibility = View.GONE
             }
         }
@@ -200,7 +201,7 @@ class HomeActivity : AppCompatActivity() {
         homeViewModel.remoteSongLoaded.observe(this) { isLoaded ->
             if (isLoaded) {
                 saveSongData()
-            }else{
+            } else {
                 Toast.makeText(this, "Load Song Error", Toast.LENGTH_LONG).show()
             }
         }
@@ -215,6 +216,8 @@ class HomeActivity : AppCompatActivity() {
             )
             playlistViewModel.setNcsPlaylist(ncsSongs = ncsSongList)
         }
+
+        // recommend
 
         // search playlist
         nowPlayingViewModel?.historySearchSongs?.observe(this) { songs ->
@@ -329,6 +332,7 @@ class HomeActivity : AppCompatActivity() {
             resultLauncher.launch(permission)
         }
     }
+
 
     private fun setupBottomNav() {
         val bottomNav = binding.bottomNav

@@ -20,7 +20,7 @@
         app:srcCompat="@drawable/bg_11" />
 
     <com.airbnb.lottie.LottieAnimationView
-        android:id="@+id/animationView"
+        android:id="@+id/audio_visual"
         android:layout_width="@dimen/_128dp"
         android:layout_height="@dimen/_128dp"
         app:layout_constraintBottom_toBottomOf="parent"

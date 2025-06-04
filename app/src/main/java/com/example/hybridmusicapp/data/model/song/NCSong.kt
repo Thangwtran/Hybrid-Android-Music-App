@@ -18,16 +18,16 @@ data class NCSong(
     val artist: String,
 
     @ColumnInfo(name = "ncs_genre")
-    val genre: String,
+    var genre: String = "",
 
     @ColumnInfo(name = "ncs_description")
-    val description: String,
+    val description: String = "",
 
     @ColumnInfo(name = "ncs_image_res")
     val imageRes: Int,
 
     @ColumnInfo(name = "ncs_audio_res")
-    val audioRes: Int,
+    var audioRes: Int = 0,
 
     @ColumnInfo(name = "is_favourite")
     var isFavourite:Boolean = false,

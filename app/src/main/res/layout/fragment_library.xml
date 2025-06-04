@@ -9,8 +9,10 @@
 
     <FrameLayout
         android:id="@+id/frame"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -18,19 +20,15 @@
 
         <TextView
             android:id="@+id/textView4"
-            android:layout_width="150dp"
-            android:layout_height="wrap_content"
-            android:ellipsize="marquee"
+            android:layout_width="match_parent"
             android:fadingEdge="horizontal"
-            android:focusable="true"
-            android:gravity="center_horizontal"
-            android:paddingTop="2dp"
-            android:focusableInTouchMode="true"
-            android:layerType="hardware"
+            android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
+            android:ellipsize="marquee"
             android:marqueeRepeatLimit="marquee_forever"
-            android:maxLines="1"
-            android:scrollHorizontally="true"
             android:singleLine="true"
+            android:textAlignment="center"
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
             android:text="@string/desc_royalty_original"
             android:textColor="@color/grey_light"
             android:textSize="@dimen/_24dp" />

@@ -50,8 +50,6 @@ open class Song(
     @Transient
     var replay: Int = 0,
 
-    @Ignore
-    var isSelected: Boolean = false
 ) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

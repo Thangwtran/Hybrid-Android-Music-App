@@ -31,29 +31,28 @@
         android:id="@+id/item_ab_text_song"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:clickable="true"
-        android:focusable="true"
+        android:layout_marginStart="6dp"
+        android:layout_marginBottom="2dp"
         android:ellipsize="end"
         android:fontFamily="@font/montserrat_semibold"
         android:maxLines="1"
         android:text="@string/song_heroes_dreams_mashup"
-        android:textColor="@drawable/song_state_color"
+        android:textColor="@color/white"
         android:textSize="@dimen/_16sp"
         app:layout_constraintBottom_toTopOf="@+id/guideline7"
-        app:layout_constraintEnd_toStartOf="@+id/item_song_option"
-        app:layout_constraintStart_toEndOf="@+id/cardView3"
-        app:layout_constraintTop_toTopOf="@+id/cardView3" />
+        app:layout_constraintEnd_toStartOf="@+id/audio_visual"
+        app:layout_constraintStart_toEndOf="@+id/cardView3" />
 
     <TextView
         android:id="@+id/item_ab_text_artist"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginTop="2dp"
         android:fontFamily="@font/montserrat"
+        android:maxLines="1"
         android:text="@string/artist_heroes_dreams_mashup"
         android:textColor="@color/grey_light"
         android:textSize="14sp"
-        app:layout_constraintBottom_toBottomOf="@+id/cardView3"
         app:layout_constraintEnd_toEndOf="@+id/item_ab_text_song"
         app:layout_constraintStart_toStartOf="@+id/item_ab_text_song"
         app:layout_constraintTop_toTopOf="@+id/guideline7" />
@@ -65,13 +64,26 @@
         android:orientation="horizontal"
         app:layout_constraintGuide_percent="0.500684" />
 
+    <com.airbnb.lottie.LottieAnimationView
+        android:id="@+id/audio_visual"
+        android:layout_width="@dimen/_56dp"
+        android:layout_height="@dimen/_40dp"
+        android:layout_marginEnd="8dp"
+        app:layout_constraintBottom_toBottomOf="@+id/item_ab_text_song"
+        app:layout_constraintEnd_toStartOf="@+id/item_song_option"
+        app:layout_constraintTop_toTopOf="@+id/item_ab_text_song"
+        app:lottie_autoPlay="true"
+        app:lottie_loop="true"
+        app:lottie_rawRes="@raw/audio_visual" />
+
+
     <ImageButton
         android:id="@+id/item_song_option"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:background="?android:attr/selectableItemBackground"
         android:clickable="true"
         android:focusable="true"
-        android:background="?android:attr/selectableItemBackground"
         app:layout_constraintBottom_toTopOf="@+id/guideline7"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/guideline7"

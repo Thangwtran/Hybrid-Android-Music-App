@@ -25,6 +25,7 @@ import androidx.media3.session.MediaSession
 import androidx.media3.session.MediaSessionService
 import com.example.hybridmusicapp.R
 import com.example.hybridmusicapp.data.model.song.Song
+import com.example.hybridmusicapp.ui.viewmodel.MediaViewModel
 import com.example.hybridmusicapp.ui.viewmodel.NowPlayingViewModel
 import com.example.hybridmusicapp.utils.MusicAppUtils
 
@@ -39,9 +40,6 @@ import com.example.hybridmusicapp.utils.MusicAppUtils
  */
 class PlaybackService : MediaSessionService() {
 
-    /**
-     * MediaSession: Quản lý phiên media, cho phép điều khiển phát lại và tương tác với hệ thống (notification,...)
-     */
     private lateinit var mediaSession: MediaSession
 
     private val nowPlayingViewModel = NowPlayingViewModel.instance
@@ -49,21 +47,11 @@ class PlaybackService : MediaSessionService() {
     private lateinit var listener: Player.Listener
 
 
-    /**
-     * Trả về MediaSession để hệ thống (như Android Auto, Wear OS) hoặc MediaController
-     * có thể tương tác với dịch vụ.
-     * @param controllerInfo Thông tin về controller yêu cầu MediaSession.
-     * @return MediaSession hiện tại, hoặc null nếu không khả dụng.
-     */
+
     override fun onGetSession(controllerInfo: MediaSession.ControllerInfo): MediaSession? {
         return mediaSession;
     }
 
-    /**
-     * Khởi tạo dịch vụ khi được gọi.
-     * Khởi tạo ExoPlayer, MediaSession, thiết lập listener cho player,
-     * và thiết lập listener cho MediaSessionService để xử lý lỗi foreground.
-     */
     @UnstableApi
     override fun onCreate() {
         super.onCreate()
@@ -88,10 +76,7 @@ class PlaybackService : MediaSessionService() {
         }
     }
 
-    /**
-     * Giải phóng tài nguyên khi dịch vụ bị hủy.
-     * Cập nhật PendingIntent, xóa listener, giải phóng player và MediaSession.
-     */
+
     @OptIn(UnstableApi::class)
     override fun onDestroy() {
         val pendingIntent = backStackedActivity
@@ -105,27 +90,24 @@ class PlaybackService : MediaSessionService() {
         super.onDestroy()
     }
 
+    @OptIn(UnstableApi::class)
     private fun setupPlayerListener() {
-        val player = mediaSession.player
+        val player = mediaSession.player as ExoPlayer
+
         listener = object : Player.Listener {
-            /**
-             * Được gọi khi chuyển sang MediaItem mới (bài hát mới).
-             * Cập nhật trạng thái bài hát trong ViewModel và lưu vào cơ sở dữ liệu.
-             * @param mediaItem MediaItem mới, hoặc null nếu không có.
-             * @param reason Lý do chuyển đổi (ví dụ: thay đổi danh sách phát).
-             */
             @OptIn(UnstableApi::class)
             override fun onMediaItemTransition(mediaItem: MediaItem?, reason: Int) {
                 val playlistChanged = reason == Player.TIMELINE_CHANGE_REASON_PLAYLIST_CHANGED
                 val indexToPlay = nowPlayingViewModel?.indexToPlay?.value
-
                 Log.i("PlaybackService", "index: $indexToPlay, $reason") // now playing viewmodel null
-
                 /**
                  * Chỉ cập nhật nếu không phải thay đổi danh sách phát hoặc indexToPlay là 0.
                  * Điều này tránh cập nhật không cần thiết khi danh sách phát thay đổi.
                  */
+
                 if (!playlistChanged || indexToPlay != null && indexToPlay == 0) {
+                    Log.i("PlaybackService", "here")
+                    Log.i("PlaybackService", "${player.currentMediaItemIndex}")
                     nowPlayingViewModel?.setPlayingSongIndex(player.currentMediaItemIndex)
                     saveDataToDB()
                 }
@@ -135,14 +117,18 @@ class PlaybackService : MediaSessionService() {
                 }
             }
 
+            override fun onAudioSessionIdChanged(audioSessionId: Int) {
+                super.onAudioSessionIdChanged(audioSessionId)
+                MediaViewModel.instance.setAudioSession(audioSessionId)
+                Log.i("PlaybackService", "audioSessionId: $audioSessionId")
+            }
+
         }
         player.addListener(listener)
+
     }
 
-    /**
-     * Lưu thông tin bài hát đang phát vào cơ sở dữ liệu (bảng RecentSong)
-     * sau khi phát 5 giây, nếu player vẫn đang phát.
-     */
+
     private fun saveDataToDB() {
         val song = extractSong()
         if(song != null) {
@@ -160,9 +146,7 @@ class PlaybackService : MediaSessionService() {
         }
     }
 
-    /**
-     * Cập nhật số lần phát trên remote và local.
-     */
+
     private fun saveReplayInfoToDB(){
         val song = extractSong()
         if(song != null){
@@ -194,6 +178,7 @@ class PlaybackService : MediaSessionService() {
      * Khởi tạo ExoPlayer và MediaSession.
      * Liên kết player với MediaSession và thiết lập PendingIntent để mở PlayerActivity.
      */
+    @OptIn(UnstableApi::class)
     private fun initSessionAndPlayer() {
         /**
          * Tạo ExoPlayer với cấu hình AudioAttributes mặc định.
@@ -203,7 +188,10 @@ class PlaybackService : MediaSessionService() {
         val player = ExoPlayer.Builder(this)
             .setAudioAttributes(AudioAttributes.DEFAULT, true)
             .build()
+        val audioSessionId = player.audioSessionId
+        MediaViewModel.instance.setAudioSession(audioSessionId)
 
+        Log.i("PlaybackService", "audioSessionInit: $audioSessionId")
         val builder = MediaSession.Builder(this, player)
 
         /**

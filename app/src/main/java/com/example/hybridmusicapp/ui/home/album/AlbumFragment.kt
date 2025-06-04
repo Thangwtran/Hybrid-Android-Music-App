@@ -5,9 +5,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import android.widget.Toast
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
@@ -19,11 +17,10 @@ import com.example.hybridmusicapp.R
 import com.example.hybridmusicapp.data.model.album.Album
 import com.example.hybridmusicapp.data.model.song.Song
 import com.example.hybridmusicapp.databinding.FragmentAlbumBinding
-import com.example.hybridmusicapp.databinding.ItemAlbumDetailBinding
+import com.example.hybridmusicapp.ui.viewmodel.MediaViewModel
 import com.example.hybridmusicapp.ui.viewmodel.NowPlayingViewModel
 import com.example.hybridmusicapp.utils.MusicAppUtils
 import kotlinx.coroutines.launch
-import kotlin.getValue
 
 class AlbumFragment : PlayerBaseFragment() {
     private lateinit var binding: FragmentAlbumBinding
@@ -51,9 +48,11 @@ class AlbumFragment : PlayerBaseFragment() {
     }
 
     private fun setupViews() {
+
+
         songListAdapter = SongListAdapter(
             object : SongListAdapter.OnItemClickListener {
-                override fun onItemClick(song: Song, index: Int, view: TextView) {
+                override fun onItemClick(song: Song, index: Int) {
                     playingSong(song, index)
                 }
 
@@ -99,15 +98,19 @@ class AlbumFragment : PlayerBaseFragment() {
         }
     }
 
-    private fun playingSong(song: Song, index: Int){
+    private fun playingSong(song: Song, index: Int) {
+
         val isInternetAccess = MusicAppUtils.isNetworkAvailable(requireContext())
-        if(isInternetAccess){
+        val audioSessionId = MediaViewModel.instance.audioSession.value
+        Log.i("AlbumFragment", "audioSessionId: $audioSessionId")
+
+        if (isInternetAccess) {
             val playlist = albumViewModel.playlist
             NowPlayingViewModel.instance?.playlistName = playlist.name
             miniPlayerViewModel.setPlayingState(true)
             NowPlayingViewModel.instance?.setNcsIsPlaying(false)
             setupPlayer(song, null, index, playlist.name)
-        }else{
+        } else {
             // TODO: Handle no internet in album
         }
     }

@@ -17,7 +17,9 @@ import com.example.hybridmusicapp.R
 import com.example.hybridmusicapp.ResultCallback
 import com.example.hybridmusicapp.data.model.album.Album
 import com.example.hybridmusicapp.data.model.playing_song.PlayingSong
+import com.example.hybridmusicapp.data.model.playlist.Playlist
 import com.example.hybridmusicapp.data.model.song.NCSong
+import com.example.hybridmusicapp.data.model.song.Song
 import com.example.hybridmusicapp.databinding.FragmentHomeBinding
 import com.example.hybridmusicapp.ui.home.album.CarouselAdapter
 import com.example.hybridmusicapp.ui.home.adapter.RecommendedSong
@@ -28,6 +30,7 @@ import com.example.hybridmusicapp.ui.home.album.AlbumFragment
 import com.example.hybridmusicapp.ui.home.album.AlbumViewModel
 import com.example.hybridmusicapp.ui.home.artist.ArtistViewModel
 import com.example.hybridmusicapp.ui.now_playing.MiniPlayerViewModel
+import com.example.hybridmusicapp.ui.viewmodel.MediaViewModel
 import com.example.hybridmusicapp.ui.viewmodel.NcsViewModel
 import com.example.hybridmusicapp.ui.viewmodel.NowPlayingViewModel
 import com.example.hybridmusicapp.utils.MusicAppUtils
@@ -133,7 +136,52 @@ class HomeFragment : PlayerBaseFragment() {
     }
 
     private fun setUpRecommendedSong() {
-        recommendedSongAdapter = RecommendedSongAdapter()
+        recommendedSongAdapter =
+            RecommendedSongAdapter(object : RecommendedSongAdapter.OnRecommendItemClickListener {
+                override fun onItemClick(
+                    recommendedSong: RecommendedSong,
+                    index: Int
+                ) {
+                    val song = Song(
+                        title = recommendedSong.title,
+                        artist = recommendedSong.artist,
+                        image = recommendedSong.remoteImageRes,
+                        source = recommendedSong.remoteAudioUrl
+                    )
+                    val ncsSong = NCSong(
+                        ncsName = recommendedSong.title,
+                        artist = recommendedSong.artist,
+                        imageRes = recommendedSong.imageRes,
+                        audioRes = recommendedSong.ncsAudioRes
+                    )
+                    val mediaController = MediaViewModel.instance.mediaController.value
+                    val playingSong = PlayingSong()
+                    if(ncsSong.audioRes != 0){
+                        playingSong.ncSong = ncsSong
+                        playingSong.isNcsSong = true
+                        playingSong.setNcsMediaItem(ncsSong,requireContext())
+                        mediaController?.clearMediaItems()
+                        mediaController?.addMediaItem(playingSong.mediaItem!!)
+                        mediaController?.prepare()
+                        mediaController?.play()
+                    }else{
+                        playingSong.song = song
+                        playingSong.isNcsSong = false
+                    }
+                    Log.i("HomeFragment", "playingSong: ${playingSong.song?.title}")
+                    Log.i("HomeFragment", "playingSongNcs: ${playingSong.ncSong?.ncsName}")
+                    NowPlayingViewModel.instance?.setPlayingSong(playingSong)
+                    NowPlayingViewModel.instance?.setCurrentPlaylist(playingSong.playlist)
+//                    NowPlayingViewModel.instance?.setIndexToPlay(index)
+                    NowPlayingViewModel.instance?.setMiniPlayerVisible(true)
+//                    NowPlayingViewModel.instance?.setIndexToPlay(null)
+                    mediaController?.clearMediaItems()
+                    mediaController?.addMediaItem(playingSong.mediaItem!!)
+                    mediaController?.prepare()
+                    mediaController?.play()
+                }
+
+            })
         binding.rvRecommended.adapter = recommendedSongAdapter
 
         val listRecommendedSong = mutableListOf<RecommendedSong>()
@@ -143,20 +191,24 @@ class HomeFragment : PlayerBaseFragment() {
             // remote
             homeViewModel.remoteSongLoaded.observe(viewLifecycleOwner) { isLoaded ->
                 if (isLoaded) {
-                    for (genre in recommendGenre) {
-                        if (genre == "Vietnamese Pop") {
-                            for (song in homeViewModel.remoteSongs) {
-                                listRecommendedSong.add(
-                                    RecommendedSong(
-                                        remoteImageRes = song.image,
-                                        title = song.title,
-                                        remoteAudioUrl = song.source,
-                                        artist = song.artist
+                    val songList = homeViewModel.topReplaySong.value
+                    if(songList != null){
+                        for (genre in recommendGenre) {
+                            if (genre == "Vietnamese Pop") {
+                                for (song in songList) {
+                                    listRecommendedSong.add(
+                                        RecommendedSong(
+                                            remoteImageRes = song.image,
+                                            title = song.title,
+                                            remoteAudioUrl = song.source,
+                                            artist = song.artist
+                                        )
                                     )
-                                )
+                                }
                             }
                         }
-
+                    }else{
+                        Toast.makeText(requireContext(), "No songs found", Toast.LENGTH_SHORT).show()
                     }
                 } else {
                     Toast.makeText(requireContext(), "No songs found", Toast.LENGTH_SHORT)
@@ -200,7 +252,7 @@ class HomeFragment : PlayerBaseFragment() {
                 recommendedSongAdapter.updateRecommendedSongs(listRecommendedSong)
 
             }
-        } else {
+        } else { // recommend genre is empty
             if (MusicAppUtils.isNetworkAvailable(requireContext())) {
                 homeViewModel.topReplaySong.observe(viewLifecycleOwner) { replaySongs ->
                     for (song in replaySongs) {
@@ -215,7 +267,7 @@ class HomeFragment : PlayerBaseFragment() {
                     }
                     recommendedSongAdapter.updateRecommendedSongs(listRecommendedSong)
                 }
-            } else {
+            } else { // no internet
                 ncsViewModel.ncsSongs.observe(viewLifecycleOwner) { ncsSongs ->
                     for (song in ncsSongs.reversed()) {
                         listRecommendedSong.add(
@@ -234,7 +286,7 @@ class HomeFragment : PlayerBaseFragment() {
     }
 
     private fun setupCarousel() {
-        albumViewModel.albums.observe(viewLifecycleOwner) {albums->
+        albumViewModel.albums.observe(viewLifecycleOwner) { albums ->
             if (albums != null) {
                 saveAlbumToDB(albums)
                 carouselAdapter.updateAlbums(albums)
@@ -245,7 +297,7 @@ class HomeFragment : PlayerBaseFragment() {
         }
         carouselAdapter = CarouselAdapter(object : CarouselAdapter.OnAlbumClickListener {
             override fun onClick(album: Album) {
-                Toast.makeText(requireContext(),album.name, Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), album.name, Toast.LENGTH_SHORT).show()
                 albumViewModel.setAlbum(album)
                 replaceFragment(AlbumFragment())
             }
@@ -254,12 +306,16 @@ class HomeFragment : PlayerBaseFragment() {
     }
 
     private fun saveAlbumToDB(albums: List<Album>) {
-        homeViewModel.saveAlbumToDB(albums, object : ResultCallback<Boolean>{
+        homeViewModel.saveAlbumToDB(albums, object : ResultCallback<Boolean> {
             override fun onResult(result: Boolean) {
-                if(result){
+                if (result) {
                     homeViewModel.saveAlbumSongCrossRef(albums)
-                }else{
-                    Toast.makeText(requireContext(), "Save Album Cross Ref Error", Toast.LENGTH_LONG).show()
+                } else {
+                    Toast.makeText(
+                        requireContext(),
+                        "Save Album Cross Ref Error",
+                        Toast.LENGTH_LONG
+                    ).show()
                 }
             }
 
@@ -268,11 +324,11 @@ class HomeFragment : PlayerBaseFragment() {
 
 
     private fun replaceFragment(fragment: Fragment) {
-       parentFragmentManager.beginTransaction()
-           .replace(R.id.fragment_container,fragment)
-           .addToBackStack(fragment.toString())
-           .setReorderingAllowed(true)
-           .commit()
+        parentFragmentManager.beginTransaction()
+            .replace(R.id.fragment_container, fragment)
+            .addToBackStack(fragment.toString())
+            .setReorderingAllowed(true)
+            .commit()
     }
 
 

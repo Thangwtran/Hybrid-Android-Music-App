@@ -8,7 +8,9 @@ import com.bumptech.glide.Glide
 import com.example.hybridmusicapp.R
 import com.example.hybridmusicapp.databinding.ItemRecommendedSongBinding
 
-class RecommendedSongAdapter : RecyclerView.Adapter<RecommendedSongAdapter.ViewHolder>() {
+class RecommendedSongAdapter(
+    private val listener: OnRecommendItemClickListener
+) : RecyclerView.Adapter<RecommendedSongAdapter.ViewHolder>() {
 
     private val recommendedSongs = mutableListOf<RecommendedSong>()
 
@@ -25,14 +27,14 @@ class RecommendedSongAdapter : RecyclerView.Adapter<RecommendedSongAdapter.ViewH
     ): ViewHolder {
         val binding =
             ItemRecommendedSongBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return ViewHolder(binding)
+        return ViewHolder(binding,listener)
     }
 
     override fun onBindViewHolder(
         holder: ViewHolder,
         position: Int
     ) {
-        holder.bind(recommendedSongs[position])
+        holder.bind(recommendedSongs[position],position)
     }
 
     override fun getItemCount(): Int {
@@ -40,10 +42,11 @@ class RecommendedSongAdapter : RecyclerView.Adapter<RecommendedSongAdapter.ViewH
     }
 
     class ViewHolder(
-        private val binding: ItemRecommendedSongBinding
+        private val binding: ItemRecommendedSongBinding,
+        private val listener: OnRecommendItemClickListener
     ) : RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(recommendedSong: RecommendedSong) {
+        fun bind(recommendedSong: RecommendedSong,index: Int) {
             binding.titleRecommendSong.text = recommendedSong.title
             binding.artistRecommendSong.text = recommendedSong.artist
 
@@ -58,6 +61,14 @@ class RecommendedSongAdapter : RecyclerView.Adapter<RecommendedSongAdapter.ViewH
                     .error(R.drawable.cradles)
                     .into(binding.imgRecommedSong)
             }
+
+            binding.root.setOnClickListener {
+                listener.onItemClick(recommendedSong,index)
+            }
         }
+    }
+
+    interface OnRecommendItemClickListener{
+        fun onItemClick(recommendedSong: RecommendedSong,index: Int)
     }
 }
