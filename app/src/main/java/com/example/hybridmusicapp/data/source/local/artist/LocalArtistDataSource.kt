@@ -2,6 +2,8 @@ package com.example.hybridmusicapp.data.source.local.artist
 
 import com.example.hybridmusicapp.data.source.ArtistDataSource
 import com.example.hybridmusicapp.data.model.artist.Artist
+import com.example.hybridmusicapp.data.model.artist.ArtistSongCrossRef
+import com.example.hybridmusicapp.data.model.artist.ArtistWithSongs
 import kotlinx.coroutines.flow.Flow
 
 class LocalArtistDataSource (
@@ -11,8 +13,16 @@ class LocalArtistDataSource (
         return artistDao.artists
     }
 
+    override suspend fun getArtistWithSongs(artistId: Int): ArtistWithSongs {
+        return artistDao.getArtistWithSongs(artistId)
+    }
+
     override suspend fun insertArtist(vararg artist: Artist) {
         artistDao.insertArtist(*artist)
+    }
+
+    override suspend fun insertArtistSongCrossRef(vararg values: ArtistSongCrossRef) {
+        artistDao.insertArtistSongCrossRef(*values)
     }
 
     override suspend fun deleteArtist(artist: Artist) {

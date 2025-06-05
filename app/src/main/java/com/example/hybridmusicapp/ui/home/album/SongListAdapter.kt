@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.hybridmusicapp.R
 import com.example.hybridmusicapp.data.model.song.Song
-import com.example.hybridmusicapp.databinding.ItemAlbumDetailBinding
+import com.example.hybridmusicapp.databinding.ItemSongBinding
 import com.example.hybridmusicapp.ui.viewmodel.PermissionViewModel
 
 class SongListAdapter(
@@ -31,7 +31,7 @@ class SongListAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val binding =
-            ItemAlbumDetailBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+            ItemSongBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return ViewHolder(binding)
     }
 
@@ -42,7 +42,7 @@ class SongListAdapter(
     override fun getItemCount(): Int = songs.size
 
     inner class ViewHolder(
-        private val binding: ItemAlbumDetailBinding
+        private val binding: ItemSongBinding
     ) : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(song: Song, index: Int) {

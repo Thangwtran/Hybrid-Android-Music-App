@@ -81,12 +81,11 @@ class AlbumViewModel(
         }
     }
 
-    fun saveAlbumsToDB(albums: List<Album>, callback: ResultCallback<Boolean>) {
+    fun saveAlbumsToDB(albums: List<Album>) {
         if(albums.isNotEmpty()){
             viewModelScope.launch(Dispatchers.IO) {
                 val albumArr = albums.toTypedArray()
                 val result = albumRepository.saveAlbums(*albumArr)
-                callback.onResult(result)
             }
         }
     }

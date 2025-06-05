@@ -74,7 +74,9 @@ class PlayerActivity : AppCompatActivity(), View.OnClickListener {
     }
 
     private fun setupToolBar() {
-        TODO("Not yet implemented")
+        binding.playerToolbar.setNavigationOnClickListener {
+            onBackPressedDispatcher.onBackPressed()
+        }
     }
 
 

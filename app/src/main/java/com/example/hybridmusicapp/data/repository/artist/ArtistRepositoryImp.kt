@@ -3,6 +3,8 @@ package com.example.hybridmusicapp.data.repository.artist
 import com.example.hybridmusicapp.ResultCallback
 import com.example.hybridmusicapp.data.model.artist.Artist
 import com.example.hybridmusicapp.data.model.artist.ArtistList
+import com.example.hybridmusicapp.data.model.artist.ArtistSongCrossRef
+import com.example.hybridmusicapp.data.model.artist.ArtistWithSongs
 import com.example.hybridmusicapp.data.source.ArtistDataSource
 import com.example.hybridmusicapp.data.source.remote.RemoteArtistDataSource
 import kotlinx.coroutines.flow.Flow
@@ -20,8 +22,16 @@ class ArtistRepositoryImp(
         return localDataSource.getArtists()
     }
 
+    override suspend fun getArtistWithSongs(artistId: Int): ArtistWithSongs {
+        return localDataSource.getArtistWithSongs(artistId)
+    }
+
     override suspend fun insertArtists(vararg artist: Artist) {
         localDataSource.insertArtist(*artist)
+    }
+
+    override suspend fun insertArtistSongCrossRef(vararg crossRef: ArtistSongCrossRef) {
+        localDataSource.insertArtistSongCrossRef(*crossRef)
     }
 
     override suspend fun deleteArtist(artist: Artist) {

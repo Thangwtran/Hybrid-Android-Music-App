@@ -48,14 +48,11 @@ class AlbumFragment : PlayerBaseFragment() {
     }
 
     private fun setupViews() {
-
-
         songListAdapter = SongListAdapter(
             object : SongListAdapter.OnItemClickListener {
                 override fun onItemClick(song: Song, index: Int) {
                     playingSong(song, index)
                 }
-
             },
             object : SongListAdapter.OnMenuItemClick {
                 override fun onMenuItemClick(song: Song) {
@@ -99,11 +96,9 @@ class AlbumFragment : PlayerBaseFragment() {
     }
 
     private fun playingSong(song: Song, index: Int) {
-
         val isInternetAccess = MusicAppUtils.isNetworkAvailable(requireContext())
         val audioSessionId = MediaViewModel.instance.audioSession.value
         Log.i("AlbumFragment", "audioSessionId: $audioSessionId")
-
         if (isInternetAccess) {
             val playlist = albumViewModel.playlist
             NowPlayingViewModel.instance?.playlistName = playlist.name

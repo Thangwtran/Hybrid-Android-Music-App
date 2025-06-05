@@ -4,15 +4,16 @@ import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import com.example.hybridmusicapp.MusicApplication
 import com.example.hybridmusicapp.R
-import com.example.hybridmusicapp.ui.discovery.artist.ArtistViewModel
 import com.example.hybridmusicapp.ui.home.album.AlbumViewModel
 import com.example.hybridmusicapp.ui.home.HomeViewModel
+import com.example.hybridmusicapp.ui.viewmodel.ArtistViewModel
 import com.example.hybridmusicapp.ui.viewmodel.NcsViewModel
 import com.example.hybridmusicapp.utils.NCSUtils
 
@@ -50,6 +51,7 @@ class LoadingActivity : AppCompatActivity() {
         enableEdgeToEdge()
         if(isFirstLaunch()){
             insertNcsSong()
+            insertArtist()
             setFirstLaunchFalse()
         }else{
             Handler(Looper.getMainLooper()).postDelayed({
@@ -59,6 +61,21 @@ class LoadingActivity : AppCompatActivity() {
             }, 2000)
         }
 
+    }
+
+    private fun insertArtist() {
+        // artist
+        artistViewModel.getArtists()
+        homeViewModel.loadRemoteSongs()
+        artistViewModel.remoteArtist.observe(this) { artists ->
+            Log.i("LoadingActivity", "artists: $artists")
+            if (artists != null) {
+                artistViewModel.saveArtistToDB(artists)
+                artistViewModel.saveArtistSongCrossRef(homeViewModel.remoteSongs, artists)
+            } else {
+                Toast.makeText(this, "Load Artist Error", Toast.LENGTH_LONG).show()
+            }
+        }
     }
 
     private fun insertNcsSong() {

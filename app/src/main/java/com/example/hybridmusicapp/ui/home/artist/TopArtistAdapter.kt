@@ -8,13 +8,16 @@ import com.bumptech.glide.Glide
 import com.example.hybridmusicapp.R
 import com.example.hybridmusicapp.data.model.artist.Artist
 import com.example.hybridmusicapp.databinding.ItemArtistBinding
+import com.example.hybridmusicapp.ui.viewmodel.PermissionViewModel
 
-class TopArtistAdapter: RecyclerView.Adapter<TopArtistAdapter.ViewHolder>() {
+class TopArtistAdapter(
+    private val listener: OnItemArtistClickListener
+) : RecyclerView.Adapter<TopArtistAdapter.ViewHolder>() {
 
     private val artists = mutableListOf<Artist>()
 
     @SuppressLint("NotifyDataSetChanged")
-    fun updateArtists(artistList: List<Artist>){
+    fun updateArtists(artistList: List<Artist>) {
         artists.clear();
         artists.addAll(artistList)
         notifyDataSetChanged()
@@ -26,7 +29,7 @@ class TopArtistAdapter: RecyclerView.Adapter<TopArtistAdapter.ViewHolder>() {
     ): ViewHolder {
         val inflater = LayoutInflater.from(parent.context)
         val binding = ItemArtistBinding.inflate(inflater, parent, false)
-        return ViewHolder(binding)
+        return ViewHolder(binding, listener)
     }
 
     override fun onBindViewHolder(
@@ -41,16 +44,29 @@ class TopArtistAdapter: RecyclerView.Adapter<TopArtistAdapter.ViewHolder>() {
     }
 
     class ViewHolder(
-        private val binding: ItemArtistBinding
-    ): RecyclerView.ViewHolder(binding.root){
+        private val binding: ItemArtistBinding,
+        private val listener: OnItemArtistClickListener
+    ) : RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(artist: Artist){
+        fun bind(artist: Artist) {
             binding.textArtist.text = artist.name
             Glide.with(binding.imageArtist)
                 .load(artist.avatar)
                 .error(R.drawable.royalty)
 //                .dontAnimate()
                 .into(binding.imageArtist)
+
+            val isGranted = PermissionViewModel.instance.isPermissionGranted.value
+            if (isGranted == null || !isGranted) {
+                PermissionViewModel.instance.setPermissionAsked(true) // Ask permission
+            }
+            binding.root.setOnClickListener {
+                listener.onItemClick(artist)
+            }
         }
+    }
+
+    interface OnItemArtistClickListener {
+        fun onItemClick(artist: Artist)
     }
 }

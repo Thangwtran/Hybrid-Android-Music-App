@@ -19,7 +19,7 @@ class CarouselAdapter(
 
     private val _albums = mutableListOf<Album>()
 
-    fun updateAlbums(albums: List<Album>){
+    fun updateAlbums(albums: List<Album>) {
         _albums.clear()
         _albums.addAll(albums)
         notifyDataSetChanged()
@@ -31,7 +31,7 @@ class CarouselAdapter(
     ): ViewHolder {
         val inflater = LayoutInflater.from(parent.context)
         val binding = ItemCarouselBinding.inflate(inflater, parent, false)
-        return ViewHolder(binding,listener)
+        return ViewHolder(binding, listener)
     }
 
     override fun onBindViewHolder(
@@ -77,7 +77,7 @@ class CarouselAdapter(
         }
     }
 
-    fun interface OnAlbumClickListener {
+    interface OnAlbumClickListener {
         fun onClick(album: Album)
     }
 }

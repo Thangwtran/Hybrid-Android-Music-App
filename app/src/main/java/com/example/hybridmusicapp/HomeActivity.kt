@@ -20,17 +20,14 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
-import androidx.media3.session.MediaController
 import com.example.hybridmusicapp.databinding.ActivityHomeBinding
 import com.example.hybridmusicapp.ui.discovery.DiscoveryFragment
-import com.example.hybridmusicapp.ui.home.album.AlbumViewModel
-import com.example.hybridmusicapp.ui.home.artist.ArtistViewModel
 import com.example.hybridmusicapp.ui.home.HomeFragment
 import com.example.hybridmusicapp.ui.home.HomeViewModel
+import com.example.hybridmusicapp.ui.home.album.AlbumViewModel
 import com.example.hybridmusicapp.ui.library.LibraryFragment
-import com.example.hybridmusicapp.ui.now_playing.MiniPlayerViewModel
 import com.example.hybridmusicapp.ui.setting.SettingFragment
-import com.example.hybridmusicapp.ui.viewmodel.MediaViewModel
+import com.example.hybridmusicapp.ui.viewmodel.ArtistViewModel
 import com.example.hybridmusicapp.ui.viewmodel.NcsViewModel
 import com.example.hybridmusicapp.ui.viewmodel.NetworkViewModel
 import com.example.hybridmusicapp.ui.viewmodel.NowPlayingViewModel
@@ -46,14 +43,6 @@ class HomeActivity : AppCompatActivity() {
     private lateinit var sharePreferences: SharedPreferences
     private lateinit var networkViewModel: NetworkViewModel
 
-
-    //    private val nowPlayingViewModel by viewModels<NowPlayingViewModel> {
-//        val application = application as MusicApplication
-//        val searchingRepository = application.searchingRepository
-//        val recentSongRepository = application.recentSongRepository
-//        val songRepository = application.songRepository
-//        NowPlayingViewModel.Factory(songRepository, application.ncsRepository ,searchingRepository, recentSongRepository)
-//    }
     private val nowPlayingViewModel = NowPlayingViewModel.instance
     private val albumViewModel by viewModels<AlbumViewModel> {
         val application = application as MusicApplication
@@ -163,28 +152,17 @@ class HomeActivity : AppCompatActivity() {
             }
         }
 
-        // artist
-        artistViewModel.getArtists()
-        artistViewModel.remoteArtists.observe(this) { artists ->
-            if (artists != null) {
-                // TODO: Save artist to DB, save artist cross ref
-            } else {
-                Toast.makeText(this, "Load Artist Error", Toast.LENGTH_LONG).show()
-            }
-        }
-
-        // now playing - playing song
-//        nowPlayingViewModel.playingSong.observe(this) { playingSong ->
-//            if (playingSong != null) {
-////                nowPlayingViewModel.setMiniPlayerVisible(true)
-//                Log.i("HomeActivity", "isMiniPlayerVisible: $playingSong")
-//
-//                binding.fragmentContainerMiniPlayer.visibility = View.VISIBLE
+//        // artist
+//        artistViewModel.getArtists()
+//        artistViewModel.remoteArtist.observe(this) { artists ->
+//            if (artists != null) {
+//                artistViewModel.saveArtistToDB(artists)
+//                artistViewModel.saveArtistSongCrossRef(homeViewModel.remoteSongs, artists)
 //            } else {
-//                Log.d("HomeActivity", "currentPlayingSong is null")
-//                binding.fragmentContainerMiniPlayer.visibility = View.GONE
+//                Toast.makeText(this, "Load Artist Error", Toast.LENGTH_LONG).show()
 //            }
 //        }
+
 
         // now playing - mini player
         nowPlayingViewModel?.isMiniPlayerVisible?.observe(this) {
