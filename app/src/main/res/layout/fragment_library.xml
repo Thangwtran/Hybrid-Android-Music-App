@@ -7,31 +7,87 @@
     android:background="@drawable/bg_11"
     tools:context=".ui.library.LibraryFragment">
 
-    <FrameLayout
-        android:id="@+id/frame"
-        android:layout_width="0dp"
+    <LinearLayout
+        android:id="@+id/linearLayout"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginTop="32dp"
+        android:orientation="horizontal"
+        android:weightSum="4"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
         <TextView
-            android:id="@+id/textView4"
-            android:layout_width="match_parent"
-            android:fadingEdge="horizontal"
+            android:id="@+id/text_title_lib"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@android:color/transparent"
-            android:ellipsize="marquee"
-            android:marqueeRepeatLimit="marquee_forever"
-            android:singleLine="true"
-            android:textAlignment="center"
-            android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
-            android:text="@string/desc_royalty_original"
-            android:textColor="@color/grey_light"
-            android:textSize="@dimen/_24dp" />
-    </FrameLayout>
+            android:layout_gravity="center"
+            android:layout_weight="3"
+            android:fontFamily="@font/montserrat_medium"
+            android:text="Library"
+            android:textColor="@color/white"
+            android:textSize="@dimen/_24dp"
+            android:textStyle="bold" />
+
+        <ImageView
+            android:id="@+id/ic_mic"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginStart="@dimen/_16dp"
+            android:layout_weight="0.5"
+            android:clickable="true"
+            android:focusable="true"
+            android:foreground="?attr/selectableItemBackground"
+            android:src="@drawable/ic_micro"
+            tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck" />
+
+        <ImageView
+            android:id="@+id/ic_search"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="0.5"
+            android:clickable="true"
+            android:focusable="true"
+            android:foreground="?attr/selectableItemBackground"
+            android:src="@drawable/ic_search_white"
+            tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck" />
+
+    </LinearLayout>
+
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/fcv_recent_heard"
+        android:name="com.example.hybridmusicapp.ui.library.recent.RecentHeardFragment"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        tools:layout="@layout/fragment_recent_heard"
+        app:layout_constraintEnd_toEndOf="@+id/linearLayout"
+        app:layout_constraintStart_toStartOf="@+id/linearLayout"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
+
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/fcv_favourite_song"
+        android:name="com.example.hybridmusicapp.ui.library.favourite.FavouriteFragment"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        app:layout_constraintEnd_toEndOf="@+id/linearLayout"
+        app:layout_constraintStart_toStartOf="@+id/linearLayout"
+        app:layout_constraintTop_toBottomOf="@+id/fcv_recent_heard"
+        tools:layout="@layout/fragment_favourite" />
+
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/fcv_playlist"
+        android:name="com.example.hybridmusicapp.ui.library.playlist.PlaylistFragment"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        app:layout_constraintEnd_toEndOf="@+id/fcv_favourite_song"
+        app:layout_constraintStart_toStartOf="@+id/fcv_favourite_song"
+        app:layout_constraintTop_toBottomOf="@+id/fcv_favourite_song"
+        tools:layout="@layout/fragment_playlist" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

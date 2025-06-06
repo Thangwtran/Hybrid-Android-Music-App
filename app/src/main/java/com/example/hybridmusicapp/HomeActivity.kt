@@ -175,14 +175,21 @@ class HomeActivity : AppCompatActivity() {
         }
 
         // home
-        homeViewModel.loadRemoteSongs()
-        homeViewModel.remoteSongLoaded.observe(this) { isLoaded ->
-            if (isLoaded) {
-                saveSongData()
-            } else {
-                Toast.makeText(this, "Load Song Error", Toast.LENGTH_LONG).show()
+        val isNetworkAccess = MusicAppUtils.isNetworkAvailable(this)
+        if(isNetworkAccess){
+            homeViewModel.loadRemoteSongs()
+            homeViewModel.remoteSongLoaded.observe(this) { isLoaded ->
+                if (isLoaded) {
+                    saveSongData()
+                } else {
+                    Toast.makeText(this, "Load Song Error", Toast.LENGTH_LONG).show()
+                }
             }
+        }else{
+            Toast.makeText(this, "No Internet", Toast.LENGTH_LONG).show()
+            // TODO: show dialog 
         }
+       
 
         // ncs playlist
         ncsViewModel.getNCSongs()

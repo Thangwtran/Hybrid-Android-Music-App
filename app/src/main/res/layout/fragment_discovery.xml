@@ -1,21 +1,123 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/bg_11"
-    tools:context=".ui.library.LibraryFragment">
+    android:background="@drawable/bg_11">
 
-    <TextView
-        android:id="@+id/textView4"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:gravity="center"
-        android:text="DIS"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".ui.library.LibraryFragment">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <LinearLayout
+            android:id="@+id/linearLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="32dp"
+            android:orientation="horizontal"
+            android:weightSum="4"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <TextView
+                android:id="@+id/text_title_discovery"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_weight="3"
+                android:fontFamily="@font/montserrat_medium"
+                android:text="Discovery"
+                android:textColor="@color/white"
+                android:textSize="@dimen/_24dp"
+                android:textStyle="bold" />
+
+            <ImageView
+                android:id="@+id/ic_mic"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginStart="@dimen/_16dp"
+                android:layout_weight="0.5"
+                android:clickable="true"
+                android:focusable="true"
+                android:foreground="?attr/selectableItemBackground"
+                android:src="@drawable/ic_micro"
+                tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck" />
+
+            <ImageView
+                android:id="@+id/ic_search"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_weight="0.5"
+                android:clickable="true"
+                android:focusable="true"
+                android:foreground="?attr/selectableItemBackground"
+                android:src="@drawable/ic_search_white"
+                tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck" />
+
+        </LinearLayout>
+
+        <androidx.fragment.app.FragmentContainerView
+            android:id="@+id/fcv_genre"
+            android:name="com.example.hybridmusicapp.ui.discovery.genre.GenreFragment"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_8dp"
+            tools:layout="@layout/fragment_genre"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/linearLayout"
+            app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
+
+        <androidx.fragment.app.FragmentContainerView
+            android:id="@+id/fcv_artist"
+            android:name="com.example.hybridmusicapp.ui.discovery.artist.ArtistFragment"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_8dp"
+            tools:layout="@layout/fragment_artist"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/fcv_genre"
+            app:layout_constraintTop_toBottomOf="@+id/fcv_genre" />
+
+        <androidx.fragment.app.FragmentContainerView
+            android:id="@+id/fcv_most_heard"
+            android:name="com.example.hybridmusicapp.ui.discovery.most_heard.MostHeardFragment"
+            android:layout_width="0dp"
+            tools:layout="@layout/fragment_most_heard"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_8dp"
+            app:layout_constraintEnd_toEndOf="@+id/fcv_artist"
+            app:layout_constraintStart_toStartOf="@+id/fcv_artist"
+            app:layout_constraintTop_toBottomOf="@+id/fcv_artist" />
+
+        <androidx.fragment.app.FragmentContainerView
+            android:id="@+id/fcv_song_for_you"
+            android:name="com.example.hybridmusicapp.ui.discovery.for_you.SongForYouFragment"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            tools:layout="@layout/fragment_song_for_you"
+            android:layout_marginTop="@dimen/_8dp"
+            app:layout_constraintEnd_toEndOf="@+id/fcv_most_heard"
+            app:layout_constraintStart_toStartOf="@+id/fcv_most_heard"
+            app:layout_constraintTop_toBottomOf="@+id/fcv_most_heard" />
+
+        <androidx.fragment.app.FragmentContainerView
+            android:id="@+id/fcv_best_ncs"
+            android:name="com.example.hybridmusicapp.ui.discovery.ncs.BestNcsFragment"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            tools:layout="@layout/fragment_best_ncs"
+            android:layout_marginTop="@dimen/_8dp"
+            app:layout_constraintEnd_toEndOf="@+id/fcv_song_for_you"
+            app:layout_constraintStart_toStartOf="@+id/fcv_song_for_you"
+            app:layout_constraintTop_toBottomOf="@+id/fcv_song_for_you" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.core.widget.NestedScrollView>

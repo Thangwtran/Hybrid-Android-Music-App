@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_11"
+    tools:context=".ui.library.favourite.FavouriteFragment">
+
+
+    <ImageButton
+        android:id="@+id/btn_more_favourite_song2"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_weight="3"
+        android:background="?attr/selectableItemBackground"
+        android:src="@drawable/ic_arrow_forward"
+        app:layout_constraintBottom_toBottomOf="@+id/text_favourite_song2"
+        app:layout_constraintStart_toEndOf="@+id/text_favourite_song2"
+        app:layout_constraintTop_toTopOf="@+id/text_favourite_song2"
+        tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck" />
+
+    <TextView
+        android:id="@+id/text_favourite_song2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/montserrat_medium"
+        android:text="Favourite Songs"
+        android:textColor="@color/white"
+        android:textSize="@dimen/_20dp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_favourite_song"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        app:layout_constraintTop_toBottomOf="@+id/text_favourite_song2"
+        tools:layout_editor_absoluteX="-56dp"
+        tools:listitem="@layout/item_recommended_song" />
+</androidx.constraintlayout.widget.ConstraintLayout>

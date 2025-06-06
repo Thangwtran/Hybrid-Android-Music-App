@@ -118,6 +118,7 @@
     <string name="text_time_place_holder">..:..</string>
     <string name="text_splitter">_ ___ _</string>
     <string name="ok">OK</string>
+    <string name="action_take_care">Interest</string>
 
 
 </resources>

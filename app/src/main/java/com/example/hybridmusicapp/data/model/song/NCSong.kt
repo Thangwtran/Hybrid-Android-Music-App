@@ -2,6 +2,7 @@ package com.example.hybridmusicapp.data.model.song
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
+import androidx.room.Ignore
 import androidx.room.PrimaryKey
 
 
@@ -31,4 +32,7 @@ data class NCSong(
 
     @ColumnInfo(name = "is_favourite")
     var isFavourite:Boolean = false,
+
+    @Ignore
+    var isInterested:Int = 0
 )

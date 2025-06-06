@@ -16,7 +16,7 @@ import com.example.hybridmusicapp.databinding.ActivityPlayerBinding
 import com.example.hybridmusicapp.ui.viewmodel.NowPlayingViewModel
 
 @Suppress("DEPRECATION")
-class PlayerActivity : AppCompatActivity(), View.OnClickListener {
+class PlayerActivity : AppCompatActivity(), View.OnClickListener{
     private lateinit var binding: ActivityPlayerBinding
     private var nowPlayingViewModel: NowPlayingViewModel? = NowPlayingViewModel.instance
     private var mediaController: MediaController? = null
