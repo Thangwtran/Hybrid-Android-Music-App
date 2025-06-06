@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 2,
-    "identityHash": "116db27e5b89efb2206da61e8e206ae3",
+    "identityHash": "c7b5f86aafe5542ff8877f7414115aa2",
     "entities": [
       {
         "tableName": "songs",
@@ -83,7 +83,7 @@
       },
       {
         "tableName": "nc_songs",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`ncs_song_id` INTEGER NOT NULL, `ncs_name` TEXT NOT NULL, `ncs_artist` TEXT NOT NULL, `ncs_genre` TEXT NOT NULL, `ncs_description` TEXT NOT NULL, `ncs_image_res` INTEGER NOT NULL, `ncs_audio_res` INTEGER NOT NULL, `is_favourite` INTEGER NOT NULL, PRIMARY KEY(`ncs_song_id`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`ncs_song_id` INTEGER NOT NULL, `ncs_name` TEXT NOT NULL, `ncs_artist` TEXT NOT NULL, `ncs_genre` TEXT NOT NULL, `ncs_description` TEXT NOT NULL, `ncs_image_res` INTEGER NOT NULL, `ncs_audio_res` INTEGER NOT NULL, `is_favourite` INTEGER NOT NULL, `num_of_interest` INTEGER NOT NULL DEFAULT 0, PRIMARY KEY(`ncs_song_id`))",
         "fields": [
           {
             "fieldPath": "id",
@@ -132,6 +132,13 @@
             "columnName": "is_favourite",
             "affinity": "INTEGER",
             "notNull": true
+          },
+          {
+            "fieldPath": "numOfInterest",
+            "columnName": "num_of_interest",
+            "affinity": "INTEGER",
+            "notNull": true,
+            "defaultValue": "0"
           }
         ],
         "primaryKey": {
@@ -614,7 +621,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '116db27e5b89efb2206da61e8e206ae3')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'c7b5f86aafe5542ff8877f7414115aa2')"
     ]
   }
 }

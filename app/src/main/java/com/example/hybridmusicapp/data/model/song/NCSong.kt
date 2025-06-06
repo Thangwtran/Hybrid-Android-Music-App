@@ -6,7 +6,7 @@ import androidx.room.Ignore
 import androidx.room.PrimaryKey
 
 
-@Entity(tableName = "nc_songs" )
+@Entity(tableName = "nc_songs")
 data class NCSong(
     @PrimaryKey
     @ColumnInfo(name = "ncs_song_id")
@@ -31,8 +31,8 @@ data class NCSong(
     var audioRes: Int = 0,
 
     @ColumnInfo(name = "is_favourite")
-    var isFavourite:Boolean = false,
+    var isFavourite: Boolean = false,
 
-    @Ignore
-    var isInterested:Int = 0
+    @ColumnInfo(name = "num_of_interest", defaultValue = "0")
+    var numOfInterest: Int = 0
 )
