@@ -16,6 +16,7 @@
         app:layout_constraintBottom_toBottomOf="@+id/text_favourite_song2"
         app:layout_constraintStart_toEndOf="@+id/text_favourite_song2"
         app:layout_constraintTop_toTopOf="@+id/text_favourite_song2"
+        app:layout_constraintVertical_bias="0.0"
         tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck" />
 
     <TextView
@@ -33,10 +34,49 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_favourite_song"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
+        android:layout_height="@dimen/_256dp"
+        android:orientation="vertical"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/text_favourite_song2"
-        tools:layout_editor_absoluteX="-56dp"
-        tools:listitem="@layout/item_recommended_song" />
+        tools:listitem="@layout/item_favourite_song" />
+
+    <TextView
+        android:id="@+id/text_favourite_ncs"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:fontFamily="@font/montserrat_medium"
+        android:text="Favourite Songs"
+        android:textColor="@color/white"
+        android:textSize="@dimen/_20dp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/rv_favourite_song" />
+
+
+    <ImageButton
+        android:id="@+id/btn_more_favourite_ncs"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:background="?attr/selectableItemBackground"
+        android:src="@drawable/ic_arrow_forward"
+        app:layout_constraintBottom_toBottomOf="@+id/text_favourite_ncs"
+        app:layout_constraintStart_toEndOf="@+id/text_favourite_ncs"
+        app:layout_constraintTop_toTopOf="@+id/text_favourite_ncs"
+        tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_favourite_ncs"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_256dp"
+        android:orientation="vertical"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/rv_favourite_song"
+        app:layout_constraintTop_toBottomOf="@+id/text_favourite_ncs"
+        tools:listitem="@layout/item_favourite_song" />
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>

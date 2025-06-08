@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.hybridmusicapp.MusicApplication
 import com.example.hybridmusicapp.PlayerBaseFragment
 import com.example.hybridmusicapp.R
+import com.example.hybridmusicapp.data.model.playing_song.PlayingSong
 import com.example.hybridmusicapp.data.model.song.NCSong
 import com.example.hybridmusicapp.data.model.song.Song
 import com.example.hybridmusicapp.databinding.FragmentRecentHeardBinding
@@ -70,9 +71,9 @@ class RecentHeardFragment : PlayerBaseFragment() {
                 song: NCSong,
                 index: Int
             ) {
-                playNcsSong(song,index)
+                playNcsSong(song, index)
+//                playNcsSingle(song,index)
             }
-
         }, object : RecentNcsAdapter.OnMenuItemClick {
             override fun onMenuItemClick(ncs: NCSong) {
                 TODO("Not yet implemented")
@@ -95,9 +96,6 @@ class RecentHeardFragment : PlayerBaseFragment() {
         binding.rvRecentHeardNcs.layoutManager = layoutManager2
         binding.rvRecentHeard.layoutManager = layoutManager
 
-        binding.btnMoreRecentHeard.setOnClickListener {
-            // TODO:  show more
-        }
         binding.textRecentHeard.setOnClickListener {
             // TODO: show more 
         }
@@ -114,12 +112,22 @@ class RecentHeardFragment : PlayerBaseFragment() {
         recentSongViewModel.recentNcsSong.observe(viewLifecycleOwner) {
             recentNCSAdapter.updateSongs(it)
         }
+
+        NowPlayingViewModel.instance?.playingSong?.observe(viewLifecycleOwner) {
+            val isNcs = it.isNcsSong
+            if (isNcs) {
+                recentNCSAdapter.updateCurrentPlayingIndex(0)
+                recentSongAdapter.updateCurrentPlayingIndex(-1)
+            } else {
+                recentNCSAdapter.updateCurrentPlayingIndex(-1)
+                recentSongAdapter.updateCurrentPlayingIndex(0)
+            }
+        }
+
     }
 
     private fun playingSong(song: Song, index: Int) {
         val isInternetAccess = MusicAppUtils.isNetworkAvailable(requireContext())
-        val audioSessionId = MediaViewModel.instance.audioSession.value
-        Log.i("AlbumFragment", "audioSessionId: $audioSessionId")
         if (isInternetAccess) {
             val playlist = MusicAppUtils.DefaultPlaylistName.RECENT.value
             miniPlayerViewModel.setPlayingState(true)
@@ -130,12 +138,13 @@ class RecentHeardFragment : PlayerBaseFragment() {
         }
     }
 
+
     private fun playNcsSong(
         ncSong: NCSong,
         songIndex: Int
     ) {
         miniPlayerViewModel.setPlayingState(true)
-        val playlistName = MusicAppUtils.DefaultPlaylistName.NCS_SONG.value
+        val playlistName = MusicAppUtils.DefaultPlaylistName.RECENT_NCS.value
         NowPlayingViewModel.instance?.setNcsIsPlaying(true)
         setupPlayer(song = null, ncSong, songIndex, playlistName)
     }

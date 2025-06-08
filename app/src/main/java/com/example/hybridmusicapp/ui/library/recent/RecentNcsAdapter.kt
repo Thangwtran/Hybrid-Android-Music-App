@@ -10,18 +10,15 @@ import com.bumptech.glide.Glide
 import com.example.hybridmusicapp.R
 import com.example.hybridmusicapp.data.model.song.NCSong
 import com.example.hybridmusicapp.databinding.ItemRecentNcsBinding
-import com.example.hybridmusicapp.databinding.ItemSongBinding
-import com.example.hybridmusicapp.ui.viewmodel.MediaViewModel
 import com.example.hybridmusicapp.ui.viewmodel.PermissionViewModel
 
-class RecentNcsAdapter(
+open class RecentNcsAdapter(
     private val listener: RecentNcsAdapter.OnItemClickListener,
     private val menuListener: RecentNcsAdapter.OnMenuItemClick
 ): RecyclerView.Adapter<RecentNcsAdapter.ViewHolder>() {
 
     private val songs: MutableList<NCSong> = mutableListOf()
-    private var currentPlayingIndex =
-        MediaViewModel.instance.mediaController.value?.currentMediaItemIndex
+    private var currentPlayingIndex = -1
 
 
     @SuppressLint("NotifyDataSetChanged")

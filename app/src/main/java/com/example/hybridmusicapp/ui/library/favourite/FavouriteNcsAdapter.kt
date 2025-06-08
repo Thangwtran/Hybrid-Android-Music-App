@@ -1,4 +1,4 @@
-package com.example.hybridmusicapp.ui.home.album
+package com.example.hybridmusicapp.ui.library.favourite
 
 import android.annotation.SuppressLint
 import android.util.Log
@@ -8,23 +8,21 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.hybridmusicapp.R
-import com.example.hybridmusicapp.data.model.song.Song
-import com.example.hybridmusicapp.databinding.ItemSongBinding
-import com.example.hybridmusicapp.ui.viewmodel.MediaViewModel
-import com.example.hybridmusicapp.ui.viewmodel.NowPlayingViewModel
+import com.example.hybridmusicapp.data.model.song.NCSong
+import com.example.hybridmusicapp.databinding.ItemFavouriteSongBinding
 import com.example.hybridmusicapp.ui.viewmodel.PermissionViewModel
 
-open class SongListAdapter(
+class FavouriteNcsAdapter(
     private val listener: OnItemClickListener,
     private val menuListener: OnMenuItemClick
-) : RecyclerView.Adapter<SongListAdapter.ViewHolder>() {
+) : RecyclerView.Adapter<FavouriteNcsAdapter.ViewHolder>() {
 
-    private val songs: MutableList<Song> = mutableListOf()
+    private val songs: MutableList<NCSong> = mutableListOf()
     private var currentPlayingIndex = -1
 
 
     @SuppressLint("NotifyDataSetChanged")
-    fun updateSongs(songList: List<Song>?) {
+    fun updateSongs(songList: List<NCSong>?) {
         if (songList != null) {
             songs.clear()
             songs.addAll(songList)
@@ -40,7 +38,7 @@ open class SongListAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val binding =
-            ItemSongBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+            ItemFavouriteSongBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return ViewHolder(binding)
     }
 
@@ -51,26 +49,24 @@ open class SongListAdapter(
     override fun getItemCount(): Int = songs.size
 
     inner class ViewHolder(
-        private val binding: ItemSongBinding
+        private val binding: ItemFavouriteSongBinding
     ) : RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(song: Song, index: Int, currentPlayingIndex: Int) {
-            binding.itemAbTextSong.text = song.title
+        fun bind(song: NCSong, index: Int, currentPlayingIndex: Int) {
+            binding.itemAbTextSong.text = song.ncsName
             binding.itemAbTextArtist.text = song.artist
             Log.i("SongListAdapter", "current: $currentPlayingIndex")
 
             Glide.with(binding.itemAbImageSong)
-                .load(song.image)
+                .load(song.imageRes)
                 .error(R.drawable.ic_no_song)
                 .into(binding.itemAbImageSong)
 
             if (index == currentPlayingIndex) {
                 binding.audioVisual.visibility = View.VISIBLE
-                binding.imgPause.visibility = View.INVISIBLE
                 binding.itemAbTextSong.setTextColor(binding.root.context.getColor(R.color.blue_violet))
             } else {
                 binding.audioVisual.visibility = View.INVISIBLE
-                binding.imgPause.visibility = View.VISIBLE
                 binding.itemAbTextSong.setTextColor(binding.root.context.getColor(R.color.white))
             }
 
@@ -89,11 +85,10 @@ open class SongListAdapter(
     }
 
     interface OnItemClickListener {
-        fun onItemClick(song: Song, index: Int)
+        fun onItemClick(song: NCSong, index: Int)
     }
 
     interface OnMenuItemClick {
-        fun onMenuItemClick(song: Song)
+        fun onMenuItemClick(ncs: NCSong)
     }
 }
-

@@ -23,7 +23,7 @@ class LibraryFragment : Fragment() {
     private val favouriteSongViewModel by activityViewModels<FavouriteSongViewModel>()
     private val libraryViewModel by activityViewModels<LibraryViewModel>() {
         val application = requireActivity().application as MusicApplication
-        LibraryViewModel.Factory(application.songRepository, application.recentSongRepository)
+        LibraryViewModel.Factory(application.songRepository,application.ncsRepository, application.recentSongRepository)
     }
 
 
@@ -57,6 +57,15 @@ class LibraryFragment : Fragment() {
             favouriteSongViewModel.setFavouriteSongs(favouriteSongs)
         }
 
+        libraryViewModel.favouriteNcsSongs.observe(viewLifecycleOwner) { favouriteNcsSongs ->
+            nowPlayingViewModel?.setupNcsPlaylist(
+                requireContext(),
+                favouriteNcsSongs,
+                MusicAppUtils.DefaultPlaylistName.FAVORITE_NCS.value
+            )
+            favouriteSongViewModel.setFavouriteNcs(favouriteNcsSongs)
+        }
+
         // recent songs
         libraryViewModel.recentSongs.observe(viewLifecycleOwner) { recentSongs ->
             if (recentSongs.isNotEmpty()) {
@@ -74,8 +83,13 @@ class LibraryFragment : Fragment() {
             }
             recentSongViewModel.setRecentSong(recentSongs)
         }
-        libraryViewModel.recentNcsSongs.observe (viewLifecycleOwner){
+        libraryViewModel.recentNcsSongs.observe(viewLifecycleOwner) {
             recentSongViewModel.setRecentNcs(it)
+            nowPlayingViewModel?.setupNcsPlaylist(
+                requireContext(),
+                it,
+                MusicAppUtils.DefaultPlaylistName.RECENT_NCS.value
+            )
         }
     }
 

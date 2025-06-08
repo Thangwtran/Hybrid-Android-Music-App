@@ -6,16 +6,16 @@
     android:layout_height="match_parent"
     tools:context=".ui.library.recent.RecentHeardFragment">
 
-    <ImageButton
-        android:id="@+id/btn_more_recent_heard"
-        android:layout_width="wrap_content"
-        android:layout_height="0dp"
-        android:background="?attr/selectableItemBackground"
-        android:src="@drawable/ic_arrow_forward"
-        app:layout_constraintBottom_toBottomOf="@+id/text_recent_heard"
-        app:layout_constraintStart_toEndOf="@+id/text_recent_heard"
-        app:layout_constraintTop_toTopOf="@+id/text_recent_heard"
-        tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck" />
+<!--    <ImageButton-->
+<!--        android:id="@+id/btn_more_recent_heard"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="0dp"-->
+<!--        android:background="?attr/selectableItemBackground"-->
+<!--        android:src="@drawable/ic_arrow_forward"-->
+<!--        app:layout_constraintBottom_toBottomOf="@+id/text_recent_heard"-->
+<!--        app:layout_constraintStart_toEndOf="@+id/text_recent_heard"-->
+<!--        app:layout_constraintTop_toTopOf="@+id/text_recent_heard"-->
+<!--        tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck" />-->
 
     <TextView
         android:id="@+id/text_recent_heard"
@@ -41,6 +41,7 @@
         app:layout_constraintTop_toBottomOf="@+id/text_recent_heard"
         tools:listitem="@layout/item_song" />
 
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_recent_heard_ncs"
         android:layout_width="match_parent"
@@ -48,9 +49,23 @@
         android:orientation="horizontal"
         app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/rv_recent_heard"
+        app:layout_constraintTop_toBottomOf="@+id/text_recent_heard_ncs"
         tools:listitem="@layout/item_song" />
+
+    <TextView
+        android:id="@+id/text_recent_heard_ncs"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:fontFamily="@font/montserrat_medium"
+        android:text="Recent NCS Track"
+        android:textColor="@color/white"
+        android:textSize="@dimen/_20dp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="@+id/text_recent_heard"
+        app:layout_constraintTop_toBottomOf="@+id/rv_recent_heard" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

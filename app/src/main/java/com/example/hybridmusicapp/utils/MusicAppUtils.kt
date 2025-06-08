@@ -26,6 +26,10 @@ object MusicAppUtils {
         MOST_HEARD("most_heard"),  // 5
         CUSTOM("custom"),  // 6
         FOR_YOU("for_you"), // 7
-        NCS_SONG("ncs") ,// 8
+        NCS_SONG("ncs"),// 8
+        RECENT_NCS("recent_ncs"),  // 9
+        FAVORITE_NCS("favorite_ncs"),  // 10
+
+
     }
 }
