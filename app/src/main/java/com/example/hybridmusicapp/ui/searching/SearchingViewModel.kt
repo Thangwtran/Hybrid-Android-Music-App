@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.asLiveData
 import com.example.hybridmusicapp.ResultCallback
 import com.example.hybridmusicapp.data.model.artist.Artist
 import com.example.hybridmusicapp.data.model.history.HistorySearchedKey
@@ -21,7 +22,14 @@ class SearchingViewModel(
     private val nowPlayingViewModel = NowPlayingViewModel.instance!!
     val currentSearchKey: String? = null
 
+
     // get set
+    val historySearchedKeys: LiveData<List<HistorySearchedKey>>
+        get() = searchRepo.historySearchedKeys.asLiveData()
+
+    val historySearchedSongs: LiveData<List<Song>>
+        get() = searchRepo.historySearchedSongs.asLiveData()
+
     val songs: LiveData<List<Song>>
         get() = _songs
 
@@ -49,6 +57,8 @@ class SearchingViewModel(
     fun setKeys(keys: List<HistorySearchedKey>) {
         _keys.postValue(keys)
     }
+
+
 
     // function
     fun search(key: String, callBack: ResultCallback<List<Song>>) {}

@@ -47,17 +47,21 @@ class RecommendedSongAdapter(
     ) : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(recommendedSong: RecommendedSong,index: Int) {
-            binding.titleRecommendSong.text = recommendedSong.title
-            binding.artistRecommendSong.text = recommendedSong.artist
-
-            if (recommendedSong.remoteImageRes.isEmpty()) {
+            val song = recommendedSong.song
+            val ncsSong = recommendedSong.ncsSong
+            if(song != null){
+                binding.titleRecommendSong.text = song.title
+                binding.artistRecommendSong.text = song.artist
                 Glide.with(binding.root)
-                    .load(recommendedSong.imageRes)
+                    .load(song.image)
                     .error(R.drawable.cradles)
                     .into(binding.imgRecommedSong)
-            } else {
+
+            }else{
+                binding.titleRecommendSong.text = ncsSong?.ncsName
+                binding.artistRecommendSong.text = ncsSong?.artist
                 Glide.with(binding.root)
-                    .load(recommendedSong.remoteImageRes)
+                    .load(ncsSong?.imageRes)
                     .error(R.drawable.cradles)
                     .into(binding.imgRecommedSong)
             }

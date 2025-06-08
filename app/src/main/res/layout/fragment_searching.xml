@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_14"
+    tools:context=".ui.searching.SearchingFragment">
+
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar_search"
+        style="@style/ToolbarStyle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:minHeight="?attr/actionBarSize"
+        app:navigationIcon="@drawable/ic_arrow_back_white"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.appcompat.widget.SearchView
+            android:id="@+id/search_view_home"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:focusable="true"
+            android:focusedByDefault="true"
+            android:queryHint="Song,artist..."
+            android:searchHintIcon="@drawable/ic_search_white"
+            android:theme="@style/SearchViewStyle" />
+    </androidx.appcompat.widget.Toolbar>
+
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/fcv_history_search"
+        android:name="com.example.hybridmusicapp.ui.searching.HistorySearchedKeyFragment"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        tools:layout="@layout/fragment_history_searched_key"
+        app:layout_constraintStart_toStartOf="@+id/toolbar_search"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar_search" />
+
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/fcv_recent_search"
+        android:name="com.example.hybridmusicapp.ui.searching.RecentSearchedFragment"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/toolbar_search"
+        app:layout_constraintTop_toBottomOf="@+id/fcv_history_search"
+        tools:layout="@layout/fragment_recent_searched" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

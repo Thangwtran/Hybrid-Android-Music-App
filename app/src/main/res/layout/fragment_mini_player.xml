@@ -5,7 +5,7 @@
     android:id="@+id/mini_player_container"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/bg_12"
+    android:background="@drawable/bg_15"
     android:clickable="true"
     android:focusable="false"
     android:foreground="?attr/selectableItemBackground"

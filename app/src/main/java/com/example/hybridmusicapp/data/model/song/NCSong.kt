@@ -7,25 +7,25 @@ import androidx.room.PrimaryKey
 
 
 @Entity(tableName = "nc_songs")
-data class NCSong(
+open class NCSong(
     @PrimaryKey
     @ColumnInfo(name = "ncs_song_id")
-    val id: Int = 0,
+    var id: Int = 0,
 
     @ColumnInfo(name = "ncs_name")
-    val ncsName: String,
+    var ncsName: String="",
 
     @ColumnInfo(name = "ncs_artist")
-    val artist: String,
+    var artist: String="",
 
     @ColumnInfo(name = "ncs_genre")
     var genre: String = "",
 
     @ColumnInfo(name = "ncs_description")
-    val description: String = "",
+    var description: String = "",
 
     @ColumnInfo(name = "ncs_image_res")
-    val imageRes: Int,
+    var imageRes: Int = -1,
 
     @ColumnInfo(name = "ncs_audio_res")
     var audioRes: Int = 0,

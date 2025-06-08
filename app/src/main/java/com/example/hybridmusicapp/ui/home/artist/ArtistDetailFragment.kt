@@ -92,6 +92,9 @@ class ArtistDetailFragment : PlayerBaseFragment() {
                         .show()
                 }
             }
+            NowPlayingViewModel.instance?.indexToPlay?.observe(viewLifecycleOwner){
+                songListAdapter.updateCurrentPlayingIndex(it)
+            }
         }
     }
 

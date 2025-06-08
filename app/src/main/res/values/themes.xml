@@ -11,4 +11,30 @@
         <item name="android:backgroundTint">@color/SlateBlue</item>
     </style>
 
+    <style name="ToolbarStyle" parent="Widget.Material3.Toolbar">
+        <item name="titleTextColor">@color/white</item>
+        <item name="android:editTextColor">@color/white</item>
+        <item name="android:textColorHint">@color/white</item>
+        <item name="android:iconTint">@color/white</item>
+        <item name="android:searchIcon">@drawable/ic_search_white</item>
+        <item name="android:closeIcon">@drawable/ic_close_white</item>
+        <item name="android:searchViewStyle">@style/SearchViewStyle</item>
+        <item name="android:colorControlNormal">@color/white</item>
+<!--        <item name="navigationIcon">@drawable/ic_arrow_back_white</item>-->
+    </style>
+
+    <style name="SearchViewStyle" parent="Widget.AppCompat.SearchView">
+        <item name="android:textColorPrimary">@color/white</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textColorHint">@color/white</item>
+        <item name="android:editTextColor">@color/white</item>
+        <item name="android:tint">@color/white</item>
+        <item name="android:searchIcon">@drawable/ic_search_white</item>
+        <item name="android:closeIcon">@drawable/ic_close_white</item>
+    </style>
+
+    <style name="SearchKeyTheme">
+        <item name="android:background">@color/purple_50</item>
+    </style>
+
 </resources>

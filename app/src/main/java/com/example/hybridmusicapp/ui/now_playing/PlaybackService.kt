@@ -24,6 +24,7 @@ import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.session.MediaSession
 import androidx.media3.session.MediaSessionService
 import com.example.hybridmusicapp.R
+import com.example.hybridmusicapp.data.model.song.NCSong
 import com.example.hybridmusicapp.data.model.song.Song
 import com.example.hybridmusicapp.ui.viewmodel.MediaViewModel
 import com.example.hybridmusicapp.ui.viewmodel.NowPlayingViewModel
@@ -131,6 +132,7 @@ class PlaybackService : MediaSessionService() {
 
     private fun saveDataToDB() {
         val song = extractSong()
+        val ncs = extractNcs()
         if(song != null) {
             val handler = Looper.myLooper()?.let {
                 Handler(it)
@@ -138,14 +140,32 @@ class PlaybackService : MediaSessionService() {
             handler?.postDelayed({
                 val player = mediaSession.player
                 if(player.isPlaying){
-//                    nowPlayingViewModel?.insertRecentSongToDB(song)
+                    nowPlayingViewModel?.insertRecentSongToDB(song)
 //                    saveReplayInfoToDB()
                 }
-            },5000)
-
+            },2000)
+        }
+        if(ncs != null) {
+            val handler = Looper.myLooper()?.let {
+                Handler(it)
+            }
+            handler?.postDelayed({
+                val player = mediaSession.player
+                if(player.isPlaying){
+                    nowPlayingViewModel?.insertRecentNcsToDB(ncs)
+//                    saveReplayInfoToDB()
+                }
+            },2000)
         }
     }
 
+    private fun extractNcs(): NCSong? {
+        return nowPlayingViewModel?.playingSong?.value?.ncSong
+    }
+
+    private fun extractSong(): Song? {
+        return nowPlayingViewModel?.playingSong?.value?.song
+    }
 
     private fun saveReplayInfoToDB(){
         val song = extractSong()
@@ -170,9 +190,7 @@ class PlaybackService : MediaSessionService() {
         }
     }
 
-    private fun extractSong(): Song? {
-        return nowPlayingViewModel?.playingSong?.value?.song
-    }
+
 
     /**
      * Khởi tạo ExoPlayer và MediaSession.

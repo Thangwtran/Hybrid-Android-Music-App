@@ -93,6 +93,9 @@ class AlbumFragment : PlayerBaseFragment() {
                 }
             }
         }
+        NowPlayingViewModel.instance?.indexToPlay?.observe(viewLifecycleOwner){
+            songListAdapter.updateCurrentPlayingIndex(it)
+        }
     }
 
     private fun playingSong(song: Song, index: Int) {

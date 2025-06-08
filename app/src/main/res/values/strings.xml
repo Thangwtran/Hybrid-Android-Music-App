@@ -119,6 +119,9 @@
     <string name="text_splitter">_ ___ _</string>
     <string name="ok">OK</string>
     <string name="action_take_care">Interest</string>
+    <string name="title_recent_search">Recent Search</string>
+    <string name="action_clear">Clear all</string>
+    <string name="key_history">History Search</string>
 
 
 </resources>

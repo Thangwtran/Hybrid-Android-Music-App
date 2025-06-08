@@ -14,6 +14,7 @@ import com.example.hybridmusicapp.data.model.history.HistorySearchedKey
 import com.example.hybridmusicapp.data.model.history.HistorySearchedSong
 import com.example.hybridmusicapp.data.model.playlist.Playlist
 import com.example.hybridmusicapp.data.model.playlist.PlaylistSongCrossRef
+import com.example.hybridmusicapp.data.model.recent.RecentNcs
 import com.example.hybridmusicapp.data.model.recent.RecentSong
 import com.example.hybridmusicapp.data.model.song.NCSong
 import com.example.hybridmusicapp.data.model.song.Song
@@ -36,6 +37,7 @@ import com.example.hybridmusicapp.data.source.local.song.SongDao
         Playlist::class,
         PlaylistSongCrossRef::class,
         RecentSong::class,
+        RecentNcs::class,
         HistorySearchedKey::class,
         HistorySearchedSong::class
     ],

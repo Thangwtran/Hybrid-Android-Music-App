@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 2,
-    "identityHash": "c7b5f86aafe5542ff8877f7414115aa2",
+    "identityHash": "172b27e08021a2652a62a71f04df60f2",
     "entities": [
       {
         "tableName": "songs",
@@ -493,6 +493,81 @@
         "foreignKeys": []
       },
       {
+        "tableName": "recent_ncs",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`play_at` INTEGER NOT NULL, `ncs_song_id` INTEGER NOT NULL, `ncs_name` TEXT NOT NULL, `ncs_artist` TEXT NOT NULL, `ncs_genre` TEXT NOT NULL, `ncs_description` TEXT NOT NULL, `ncs_image_res` INTEGER NOT NULL, `ncs_audio_res` INTEGER NOT NULL, `is_favourite` INTEGER NOT NULL, `num_of_interest` INTEGER NOT NULL DEFAULT 0, PRIMARY KEY(`ncs_song_id`))",
+        "fields": [
+          {
+            "fieldPath": "playAt",
+            "columnName": "play_at",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "id",
+            "columnName": "ncs_song_id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "ncsName",
+            "columnName": "ncs_name",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "artist",
+            "columnName": "ncs_artist",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "genre",
+            "columnName": "ncs_genre",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "description",
+            "columnName": "ncs_description",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "imageRes",
+            "columnName": "ncs_image_res",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "audioRes",
+            "columnName": "ncs_audio_res",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "isFavourite",
+            "columnName": "is_favourite",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "numOfInterest",
+            "columnName": "num_of_interest",
+            "affinity": "INTEGER",
+            "notNull": true,
+            "defaultValue": "0"
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "ncs_song_id"
+          ]
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
         "tableName": "history_searched_keys",
         "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `key` TEXT NOT NULL, `created_at` INTEGER NOT NULL)",
         "fields": [
@@ -621,7 +696,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'c7b5f86aafe5542ff8877f7414115aa2')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '172b27e08021a2652a62a71f04df60f2')"
     ]
   }
 }

@@ -8,8 +8,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.lifecycleScope
 import com.example.hybridmusicapp.HomeActivity
 import com.example.hybridmusicapp.MusicApplication
 import com.example.hybridmusicapp.PlayerBaseFragment
@@ -18,7 +16,6 @@ import com.example.hybridmusicapp.ResultCallback
 import com.example.hybridmusicapp.data.model.album.Album
 import com.example.hybridmusicapp.data.model.artist.Artist
 import com.example.hybridmusicapp.data.model.playing_song.PlayingSong
-import com.example.hybridmusicapp.data.model.playlist.Playlist
 import com.example.hybridmusicapp.data.model.song.NCSong
 import com.example.hybridmusicapp.data.model.song.Song
 import com.example.hybridmusicapp.databinding.FragmentHomeBinding
@@ -31,13 +28,11 @@ import com.example.hybridmusicapp.ui.home.album.AlbumFragment
 import com.example.hybridmusicapp.ui.home.album.AlbumViewModel
 import com.example.hybridmusicapp.ui.home.artist.ArtistDetailFragment
 import com.example.hybridmusicapp.ui.viewmodel.ArtistViewModel
-import com.example.hybridmusicapp.ui.now_playing.MiniPlayerViewModel
+import com.example.hybridmusicapp.ui.searching.SearchingFragment
 import com.example.hybridmusicapp.ui.viewmodel.MediaViewModel
 import com.example.hybridmusicapp.ui.viewmodel.NcsViewModel
 import com.example.hybridmusicapp.ui.viewmodel.NowPlayingViewModel
 import com.example.hybridmusicapp.utils.MusicAppUtils
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import kotlin.getValue
 
 class HomeFragment : PlayerBaseFragment() {
@@ -61,11 +56,6 @@ class HomeFragment : PlayerBaseFragment() {
         val ncsRepository = application.ncsRepository
         NcsViewModel.Factory(ncsRepository)
     }
-//    private val miniPlayerViewModel by activityViewModels<MiniPlayerViewModel> {
-//        val application = requireActivity().application as MusicApplication
-//        val songRepository = application.songRepository
-//        MiniPlayerViewModel.Factory(songRepository)
-//    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -90,6 +80,13 @@ class HomeFragment : PlayerBaseFragment() {
         setUpRecommendedSong()
         setupTopArtist()
         setupTrendingNcsTrack()
+        setupToolbar()
+    }
+
+    private fun setupToolbar() {
+        binding.icSearch.setOnClickListener {
+            replaceFragment(SearchingFragment())
+        }
     }
 
     private fun setupTrendingNcsTrack() {
@@ -152,32 +149,37 @@ class HomeFragment : PlayerBaseFragment() {
                     recommendedSong: RecommendedSong,
                     index: Int
                 ) {
-                    val song = Song(
-                        title = recommendedSong.title,
-                        artist = recommendedSong.artist,
-                        image = recommendedSong.remoteImageRes,
-                        source = recommendedSong.remoteAudioUrl
-                    )
-                    val ncsSong = NCSong(
-                        ncsName = recommendedSong.title,
-                        artist = recommendedSong.artist,
-                        imageRes = recommendedSong.imageRes,
-                        audioRes = recommendedSong.ncsAudioRes
-                    )
+                    val song = recommendedSong.song
+                    val ncsSong = recommendedSong.ncsSong
+
                     val mediaController = MediaViewModel.instance.mediaController.value
                     val playingSong = PlayingSong()
-                    if(ncsSong.audioRes != 0){
+//                    if (ncsSong?.audioRes != 0) {
+//                        playingSong.ncSong = ncsSong
+//                        playingSong.isNcsSong = true
+//                        playingSong.setNcsMediaItem(ncsSong, requireContext())
+//                        mediaController?.clearMediaItems()
+//                        mediaController?.addMediaItem(playingSong.mediaItem!!)
+//                        mediaController?.prepare()
+//                        mediaController?.play()
+//                    } else {
+//                        playingSong.song = song
+//                        playingSong.isNcsSong = false
+//                    }
+                    if(ncsSong != null){
                         playingSong.ncSong = ncsSong
                         playingSong.isNcsSong = true
-                        playingSong.setNcsMediaItem(ncsSong,requireContext())
+                        playingSong.setNcsMediaItem(ncsSong, requireContext())
                         mediaController?.clearMediaItems()
                         mediaController?.addMediaItem(playingSong.mediaItem!!)
                         mediaController?.prepare()
                         mediaController?.play()
                     }else{
-                        playingSong.song = song
+//                        playingSong.song = song
                         playingSong.isNcsSong = false
                     }
+                    playingSong.song = song
+
                     Log.i("HomeFragment", "playingSong: ${playingSong.song?.title}")
                     Log.i("HomeFragment", "playingSongNcs: ${playingSong.ncSong?.ncsName}")
                     NowPlayingViewModel.instance?.setPlayingSong(playingSong)
@@ -202,23 +204,19 @@ class HomeFragment : PlayerBaseFragment() {
             homeViewModel.remoteSongLoaded.observe(viewLifecycleOwner) { isLoaded ->
                 if (isLoaded) {
                     val songList = homeViewModel.topReplaySong.value
-                    if(songList != null){
+                    if (songList != null) {
                         for (genre in recommendGenre) {
                             if (genre == "Vietnamese Pop") {
                                 for (song in songList) {
                                     listRecommendedSong.add(
-                                        RecommendedSong(
-                                            remoteImageRes = song.image,
-                                            title = song.title,
-                                            remoteAudioUrl = song.source,
-                                            artist = song.artist
-                                        )
+                                        RecommendedSong(song, null)
                                     )
                                 }
                             }
                         }
-                    }else{
-                        Toast.makeText(requireContext(), "No songs found", Toast.LENGTH_SHORT).show()
+                    } else {
+                        Toast.makeText(requireContext(), "No songs found", Toast.LENGTH_SHORT)
+                            .show()
                     }
                 } else {
                     Toast.makeText(requireContext(), "No songs found", Toast.LENGTH_SHORT)
@@ -234,23 +232,13 @@ class HomeFragment : PlayerBaseFragment() {
                             if (ncsGenre.size > 1) {
                                 if (genre == ncsGenre[0].trim() || genre == ncsGenre[1].trim()) {
                                     listRecommendedSong.add(
-                                        RecommendedSong(
-                                            imageRes = song.imageRes,
-                                            title = song.ncsName,
-                                            ncsAudioRes = song.audioRes,
-                                            artist = song.artist
-                                        )
+                                        RecommendedSong(song = null, ncsSong = song)
                                     )
                                 }
                             } else {
                                 if (genre == ncsGenre[0].trim()) {
                                     listRecommendedSong.add(
-                                        RecommendedSong(
-                                            imageRes = song.imageRes,
-                                            title = song.ncsName,
-                                            ncsAudioRes = song.audioRes,
-                                            artist = song.artist
-                                        )
+                                        RecommendedSong(song = null, ncsSong = song)
                                     )
                                 }
                             }
@@ -267,12 +255,7 @@ class HomeFragment : PlayerBaseFragment() {
                 homeViewModel.topReplaySong.observe(viewLifecycleOwner) { replaySongs ->
                     for (song in replaySongs) {
                         listRecommendedSong.add(
-                            RecommendedSong(
-                                remoteImageRes = song.image,
-                                title = song.title,
-                                remoteAudioUrl = song.source,
-                                artist = song.artist
-                            )
+                            RecommendedSong(song = song, ncsSong = null)
                         )
                     }
                     recommendedSongAdapter.updateRecommendedSongs(listRecommendedSong)
@@ -281,12 +264,7 @@ class HomeFragment : PlayerBaseFragment() {
                 ncsViewModel.ncsSongs.observe(viewLifecycleOwner) { ncsSongs ->
                     for (song in ncsSongs.reversed()) {
                         listRecommendedSong.add(
-                            RecommendedSong(
-                                imageRes = song.imageRes,
-                                title = song.ncsName,
-                                ncsAudioRes = song.audioRes,
-                                artist = song.artist
-                            )
+                            RecommendedSong(song = null, ncsSong = song)
                         )
                     }
                     recommendedSongAdapter.updateRecommendedSongs(listRecommendedSong)

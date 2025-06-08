@@ -26,6 +26,7 @@ import com.example.hybridmusicapp.data.model.playlist.Playlist
 import com.example.hybridmusicapp.data.model.song.NCSong
 import com.example.hybridmusicapp.data.model.song.Song
 import com.example.hybridmusicapp.databinding.FragmentMiniPlayerBinding
+import com.example.hybridmusicapp.ui.home.artist.ArtistDetailFragment
 import com.example.hybridmusicapp.ui.viewmodel.MediaViewModel
 import com.example.hybridmusicapp.ui.viewmodel.NcsViewModel
 import com.example.hybridmusicapp.ui.viewmodel.NowPlayingViewModel
@@ -228,6 +229,7 @@ class MiniPlayerFragment : PlayerBaseFragment(), View.OnClickListener {
             setupFavourite()
         } else if (view == binding.btnMiniPlayerNext) { // next
             setupSkipNext()
+
         }
     }
 
@@ -372,6 +374,7 @@ class MiniPlayerFragment : PlayerBaseFragment(), View.OnClickListener {
                 mediaController!!.seekToNextMediaItem()
             }
         }
+        NowPlayingViewModel.instance?.setIndexToPlay(mediaController!!.currentMediaItemIndex)
     }
 
     private fun setupFavourite() { // favourite click

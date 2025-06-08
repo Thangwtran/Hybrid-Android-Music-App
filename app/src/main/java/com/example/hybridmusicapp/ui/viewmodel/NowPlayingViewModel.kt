@@ -12,6 +12,8 @@ import androidx.lifecycle.viewModelScope
 import com.example.hybridmusicapp.data.model.playing_song.PlayingSong
 import com.example.hybridmusicapp.data.model.playlist.Playlist
 import com.example.hybridmusicapp.data.model.playlist.PlaylistWithSongs
+import com.example.hybridmusicapp.data.model.recent.RecentNcs
+import com.example.hybridmusicapp.data.model.recent.RecentSong
 import com.example.hybridmusicapp.data.model.song.NCSong
 import com.example.hybridmusicapp.data.model.song.Song
 import com.example.hybridmusicapp.data.repository.recent_song.RecentSongRepositoryImp
@@ -21,6 +23,7 @@ import com.example.hybridmusicapp.data.repository.song.SongRepositoryImp
 import com.example.hybridmusicapp.utils.MusicAppUtils.DefaultPlaylistName
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import java.util.Date
 import kotlin.concurrent.Volatile
 
 class NowPlayingViewModel private constructor(
@@ -203,13 +206,18 @@ class NowPlayingViewModel private constructor(
         }
     }
 
-    fun setupRecommendSongList(context: Context, songs: List<Song>?, ncsSongs: List<NCSong>?, playlistName: String) {
+    fun setupRecommendSongList(
+        context: Context,
+        songs: List<Song>?,
+        ncsSongs: List<NCSong>?,
+        playlistName: String
+    ) {
         val playlist = getPlaylist(playlistName)
-        if(playlist != null){
+        if (playlist != null) {
             playlist.updateSongList(songs!!)
             playlist.updateNcsSongList(ncsSongs!!, context)
             updatePlaylist(playlist)
-        }else{
+        } else {
             Log.i("NowPlayingViewModel", "setupRecommendSongList: playlist is null")
 
         }
@@ -249,6 +257,25 @@ class NowPlayingViewModel private constructor(
     fun setMiniPlayerVisible(state: Boolean) {
         _miniPlayerVisibility.value = state
     }
+
+    /**
+     * recent songs
+     */
+
+    fun insertRecentSongToDB(song: Song) {
+        viewModelScope.launch(Dispatchers.IO) {
+            val recentSong = RecentSong.Builder(song).playAt(Date()).build()
+            _recentSongRepository.insertAllRecentSong(recentSong)
+        }
+    }
+
+    fun insertRecentNcsToDB(song: NCSong) {
+        viewModelScope.launch(Dispatchers.IO) {
+            val recentSong = RecentNcs.Builder(song).playAt(Date()).build()
+            _recentSongRepository.insertAllRecentNcsSong(recentSong)
+        }
+    }
+
 
     class Factory(
         private val _songRepository: SongRepositoryImp,
