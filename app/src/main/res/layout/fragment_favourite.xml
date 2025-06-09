@@ -13,14 +13,14 @@
         android:layout_height="0dp"
         android:background="?attr/selectableItemBackground"
         android:src="@drawable/ic_arrow_forward"
-        app:layout_constraintBottom_toBottomOf="@+id/text_favourite_song2"
-        app:layout_constraintStart_toEndOf="@+id/text_favourite_song2"
-        app:layout_constraintTop_toTopOf="@+id/text_favourite_song2"
+        app:layout_constraintBottom_toBottomOf="@+id/text_favourite_song"
+        app:layout_constraintStart_toEndOf="@+id/text_favourite_song"
+        app:layout_constraintTop_toTopOf="@+id/text_favourite_song"
         app:layout_constraintVertical_bias="0.0"
         tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck" />
 
     <TextView
-        android:id="@+id/text_favourite_song2"
+        android:id="@+id/text_favourite_song"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:fontFamily="@font/montserrat_medium"
@@ -36,10 +36,12 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/_256dp"
         android:orientation="vertical"
+        android:visibility="invisible"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/text_favourite_song2"
+        app:layout_constraintTop_toBottomOf="@+id/text_favourite_song"
         tools:listitem="@layout/item_favourite_song" />
 
     <TextView
@@ -48,7 +50,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:fontFamily="@font/montserrat_medium"
-        android:text="Favourite Songs"
+        android:text="Favourite NCS"
         android:textColor="@color/white"
         android:textSize="@dimen/_20dp"
         android:textStyle="bold"
@@ -72,11 +74,32 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/_256dp"
         android:orientation="vertical"
+        android:visibility="invisible"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@+id/rv_favourite_song"
         app:layout_constraintTop_toBottomOf="@+id/text_favourite_ncs"
         tools:listitem="@layout/item_favourite_song" />
+
+    <ImageView
+        android:id="@+id/img_no_song"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/_150dp"
+        android:src="@drawable/ic_no_song"
+        app:layout_constraintBottom_toBottomOf="@+id/rv_favourite_song"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/text_favourite_song" />
+
+    <ImageView
+        android:id="@+id/img_no_ncs"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/_150dp"
+        android:src="@drawable/ic_no_song"
+        app:layout_constraintBottom_toBottomOf="@+id/rv_favourite_ncs"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/text_favourite_ncs" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
