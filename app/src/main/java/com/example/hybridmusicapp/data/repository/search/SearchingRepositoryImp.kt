@@ -5,8 +5,9 @@ import com.example.hybridmusicapp.data.model.history.HistorySearchedSong
 import com.example.hybridmusicapp.data.model.song.Song
 import com.example.hybridmusicapp.data.source.SearchingDataSource
 import kotlinx.coroutines.flow.Flow
+import javax.inject.Inject
 
-class SearchingRepositoryImp(
+class SearchingRepositoryImp @Inject constructor(
     private val searchingDataSource: SearchingDataSource
 ): SearchRepository{
 

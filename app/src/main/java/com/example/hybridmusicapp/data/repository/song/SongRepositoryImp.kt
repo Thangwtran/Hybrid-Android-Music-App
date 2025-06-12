@@ -7,11 +7,13 @@ import com.example.hybridmusicapp.data.source.SongDataSource
 import com.example.hybridmusicapp.data.source.remote.RemoteSongDataSource
 import kotlinx.coroutines.flow.Flow
 import com.example.hybridmusicapp.data.source.remote.Result
+import javax.inject.Inject
 
-class SongRepositoryImp(
-    private val localDataSource: SongDataSource.Local
-) : SongRepository.Local, SongRepository.Remote {
+class SongRepositoryImp @Inject constructor(
+    private val localDataSource: SongDataSource.Local,
     private val remoteDataSource: SongDataSource.Remote = RemoteSongDataSource()
+) : SongRepository.Local, SongRepository.Remote {
+//   @Inject private val remoteDataSource: SongDataSource.Remote = RemoteSongDataSource()
 
     // LOCAL
     override suspend fun getSongList(): List<Song> {

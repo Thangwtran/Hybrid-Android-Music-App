@@ -14,12 +14,15 @@ import com.example.hybridmusicapp.data.repository.album.AlbumRepositoryImp
 import com.example.hybridmusicapp.data.repository.song.SongRepository
 import com.example.hybridmusicapp.data.repository.song.SongRepositoryImp
 import com.example.hybridmusicapp.data.source.remote.Result
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 import kotlin.collections.MutableList
 
-class HomeViewModel(
+@HiltViewModel
+class HomeViewModel @Inject constructor(
     private val albumRepository: AlbumRepositoryImp,
     private val songRepository: SongRepositoryImp,
 ) : ViewModel() {
@@ -163,7 +166,7 @@ class HomeViewModel(
         return result
     }
 
-    class Factory(
+    class Factory @Inject constructor(
         private val songRepository: SongRepositoryImp,
         private val albumRepository: AlbumRepositoryImp
     ) : ViewModelProvider.Factory {

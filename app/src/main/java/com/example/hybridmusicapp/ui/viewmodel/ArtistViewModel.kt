@@ -15,12 +15,15 @@ import com.example.hybridmusicapp.data.model.playlist.Playlist
 import com.example.hybridmusicapp.data.model.song.Song
 import com.example.hybridmusicapp.data.repository.artist.ArtistRepositoryImp
 import com.example.hybridmusicapp.data.source.remote.Result
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.util.Locale
+import javax.inject.Inject
 
-class ArtistViewModel(
+@HiltViewModel
+class ArtistViewModel @Inject constructor(
     private val artistRepository: ArtistRepositoryImp
 ) : ViewModel() {
     private var dispatcher: CoroutineDispatcher = Dispatchers.IO
@@ -174,7 +177,7 @@ class ArtistViewModel(
         }
     }
 
-    class Factory(
+    class Factory @Inject constructor(
         private val artistRepository: ArtistRepositoryImp
     ) : ViewModelProvider.Factory {
         override fun <T : ViewModel> create(modelClass: Class<T>): T {

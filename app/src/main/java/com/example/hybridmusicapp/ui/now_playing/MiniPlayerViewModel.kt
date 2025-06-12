@@ -5,8 +5,11 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.example.hybridmusicapp.data.model.song.Song
 import com.example.hybridmusicapp.data.repository.song.SongRepositoryImp
+import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 
-class MiniPlayerViewModel(
+@HiltViewModel
+class MiniPlayerViewModel @Inject constructor(
     private val songRepository: SongRepositoryImp
 ): PlayerViewModel() {
     private val _isPlaying = MutableLiveData<Boolean>()
@@ -22,7 +25,7 @@ class MiniPlayerViewModel(
     }
 
 
-    class Factory(
+    class Factory @Inject constructor(
         private val songRepository: SongRepositoryImp
     ): ViewModelProvider.Factory{
         override fun <T : ViewModel> create(modelClass: Class<T>): T {

@@ -41,10 +41,10 @@ import com.example.hybridmusicapp.data.source.local.song.SongDao
         HistorySearchedKey::class,
         HistorySearchedSong::class
     ],
-    version = 2,
-    autoMigrations = [
-        AutoMigration(from = 1, to = 2)
-    ],
+    version = 3,
+//    autoMigrations = [
+//        AutoMigration(from = 2, to =4)
+//    ],
     exportSchema = true
 )
 @TypeConverters(value = [DateConverter::class]) // convert Date to Long
@@ -57,27 +57,27 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun artistDao(): ArtistDao
     abstract fun ncSongDao(): NCSongDao
 
-    /**
-     * AppDatabase is a singleton
-     */
-    companion object {
-        @Volatile
-        private var _instance: AppDatabase? = null
-
-        fun getInstance(context: Context): AppDatabase {
-            if (_instance == null) {
-                synchronized(AppDatabase::class.java) {
-                    if (_instance == null) {
-                        _instance = databaseBuilder(
-                            context.applicationContext,
-                            AppDatabase::class.java,
-                            "music.db"
-                        ).fallbackToDestructiveMigration() // Delete all data when upgrade version
-                            .build()
-                    }
-                }
-            }
-            return _instance!!
-        }
-    }
+//    /**
+//     * AppDatabase is a singleton
+//     */
+//    companion object {
+//        @Volatile
+//        private var _instance: AppDatabase? = null
+//
+//        fun getInstance(context: Context): AppDatabase {
+//            if (_instance == null) {
+//                synchronized(AppDatabase::class.java) {
+//                    if (_instance == null) {
+//                        _instance = databaseBuilder(
+//                            context.applicationContext,
+//                            AppDatabase::class.java,
+//                            "music.db"
+//                        ).fallbackToDestructiveMigration() // Delete all data when upgrade version
+//                            .build()
+//                    }
+//                }
+//            }
+//            return _instance!!
+//        }
+//    }
 }

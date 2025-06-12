@@ -5,8 +5,9 @@ import com.example.hybridmusicapp.data.model.history.HistorySearchedKey
 import com.example.hybridmusicapp.data.model.history.HistorySearchedSong
 import com.example.hybridmusicapp.data.model.song.Song
 import kotlinx.coroutines.flow.Flow
+import javax.inject.Inject
 
-class LocalSearchDataSource(
+class LocalSearchDataSource @Inject constructor(
     private val searchingDao: SearchingDao
 ): SearchingDataSource {
     override fun getAllHistorySearchKeys(): Flow<List<HistorySearchedKey>> {

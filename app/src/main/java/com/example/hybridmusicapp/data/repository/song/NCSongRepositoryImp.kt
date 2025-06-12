@@ -4,8 +4,9 @@ import com.example.hybridmusicapp.data.model.song.NCSong
 import com.example.hybridmusicapp.data.source.NCSongDataSource
 import com.example.hybridmusicapp.data.source.local.ncsong.LocalNCSongDataSource
 import kotlinx.coroutines.flow.Flow
+import javax.inject.Inject
 
-class NCSongRepositoryImp(
+class NCSongRepositoryImp @Inject constructor(
     private val localDataSource: LocalNCSongDataSource
 ) : NCSongDataSource {
     override suspend fun getNCSongs(): List<NCSong> {

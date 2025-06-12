@@ -28,10 +28,11 @@ import kotlin.text.toInt
 class RecentHeardFragment : PlayerBaseFragment() {
     private lateinit var binding: FragmentRecentHeardBinding
     private val recentSongViewModel by activityViewModels<RecentSongViewModel>()
-    private val searchingViewModel by activityViewModels<SearchingViewModel>() {
-        val application = requireActivity().application as MusicApplication
-        SearchingViewModel.Factory(application.searchingRepository)
-    }
+//    private val searchingViewModel by activityViewModels<SearchingViewModel>() {
+//        val application = requireActivity().application as MusicApplication
+//        SearchingViewModel.Factory(application.searchingRepository)
+//    }
+    private val searchingViewModel by activityViewModels<SearchingViewModel>()
     private lateinit var recentSongAdapter: RecentSongsAdapter
     private lateinit var recentNCSAdapter: RecentNcsAdapter
 

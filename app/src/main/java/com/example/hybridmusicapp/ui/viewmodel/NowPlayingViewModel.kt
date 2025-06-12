@@ -21,12 +21,16 @@ import com.example.hybridmusicapp.data.repository.search.SearchingRepositoryImp
 import com.example.hybridmusicapp.data.repository.song.NCSongRepositoryImp
 import com.example.hybridmusicapp.data.repository.song.SongRepositoryImp
 import com.example.hybridmusicapp.utils.MusicAppUtils.DefaultPlaylistName
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.util.Date
+import javax.inject.Inject
+import javax.inject.Singleton
 import kotlin.concurrent.Volatile
 
-class NowPlayingViewModel private constructor(
+@HiltViewModel
+class NowPlayingViewModel @Inject constructor( // private
     songRepository: SongRepositoryImp,
     ncsSongRepository: NCSongRepositoryImp,
     searchRepository: SearchingRepositoryImp,
@@ -122,10 +126,8 @@ class NowPlayingViewModel private constructor(
 
     fun updateFavouriteStatus(song: Song) {
         viewModelScope.launch(Dispatchers.IO) {
-            song.isFavorite = true
+//            song.isFavorite = true
             _songRepository.update(song)
-
-
         }
     }
 
@@ -277,31 +279,31 @@ class NowPlayingViewModel private constructor(
     }
 
 
-    class Factory(
-        private val _songRepository: SongRepositoryImp,
-        private val _ncsSongRepository: NCSongRepositoryImp,
-        private val _searchingRepository: SearchingRepositoryImp,
-        private val _recentSongRepository: RecentSongRepositoryImp
-    ) : ViewModelProvider.Factory {
-        @Suppress("UNCHECKED_CAST")
-        override fun <T : ViewModel> create(modelClass: Class<T>): T {
-            if (modelClass.isAssignableFrom(NowPlayingViewModel::class.java)) {
-                return NowPlayingViewModel(
-                    _songRepository,
-                    _ncsSongRepository,
-                    _searchingRepository,
-                    _recentSongRepository
-                ) as T
-            }
-            throw IllegalArgumentException("Unknown ViewModel class")
-        }
-    }
+//    class Factory @Inject constructor(
+//        private val _songRepository: SongRepositoryImp,
+//        private val _ncsSongRepository: NCSongRepositoryImp,
+//        private val _searchingRepository: SearchingRepositoryImp,
+//        private val _recentSongRepository: RecentSongRepositoryImp
+//    ) : ViewModelProvider.Factory {
+//        @Suppress("UNCHECKED_CAST")
+//        override fun <T : ViewModel> create(modelClass: Class<T>): T {
+//            if (modelClass.isAssignableFrom(NowPlayingViewModel::class.java)) {
+//                return NowPlayingViewModel(
+//                    _songRepository,
+//                    _ncsSongRepository,
+//                    _searchingRepository,
+//                    _recentSongRepository
+//                ) as T
+//            }
+//            throw IllegalArgumentException("Unknown ViewModel class")
+//        }
+//    }
 
     companion object {
         @Volatile
         var instance: NowPlayingViewModel? = null
 
-        fun getInstance(
+        fun getInstance (
             songRepository: SongRepositoryImp,
             ncsSongRepository: NCSongRepositoryImp,
             searchRepository: SearchingRepositoryImp,
@@ -317,5 +319,12 @@ class NowPlayingViewModel private constructor(
                     .also { instance = it } // set instance = new instance
             }
         }
+
+//        fun getInstance (): NowPlayingViewModel {
+//            return instance ?: synchronized(NowPlayingViewModel::class.java) // { // sync block
+//                instance ?:
+//                    .also { instance = it } // set instance = new instance
+//            }
+//        }
     }
 }

@@ -13,17 +13,23 @@ import com.example.hybridmusicapp.ui.now_playing.MiniPlayerViewModel
 import com.example.hybridmusicapp.ui.viewmodel.NetworkViewModel
 import com.example.hybridmusicapp.ui.viewmodel.NowPlayingViewModel
 import com.example.hybridmusicapp.ui.viewmodel.PermissionViewModel
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 open class PlayerBaseFragment : Fragment() {
-    protected val homeViewModel by activityViewModels<HomeViewModel>() {
-        val application = requireActivity().application as MusicApplication
-        HomeViewModel.Factory(application.songRepository, application.albumRepository)
-    }
-    protected val miniPlayerViewModel by activityViewModels<MiniPlayerViewModel> {
-        val application = requireActivity().application as MusicApplication
-        val songRepository = application.songRepository
-        MiniPlayerViewModel.Factory(songRepository)
-    }
+//    protected val homeViewModel by activityViewModels<HomeViewModel>() {
+//        val application = requireActivity().application as MusicApplication
+//        HomeViewModel.Factory(application.songRepository, application.albumRepository)
+//    }
+    protected val homeViewModel by activityViewModels<HomeViewModel>()
+
+//    protected val miniPlayerViewModel by activityViewModels<MiniPlayerViewModel> {
+//        val application = requireActivity().application as MusicApplication
+//        val songRepository = application.songRepository
+//        MiniPlayerViewModel.Factory(songRepository)
+//    }
+
+    protected val miniPlayerViewModel by activityViewModels<MiniPlayerViewModel>()
 
     protected lateinit var networkViewModel: NetworkViewModel
 

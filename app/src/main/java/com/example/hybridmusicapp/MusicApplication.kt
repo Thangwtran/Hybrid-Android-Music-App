@@ -2,6 +2,7 @@ package com.example.hybridmusicapp
 
 import android.app.Application
 import android.content.ComponentName
+import androidx.lifecycle.ViewModelProvider
 import androidx.media3.session.MediaController
 import androidx.media3.session.SessionToken
 import com.example.hybridmusicapp.data.repository.album.AlbumRepositoryImp
@@ -21,16 +22,28 @@ import com.google.firebase.Firebase
 import com.google.firebase.firestore.FirebaseFirestoreSettings
 import com.google.firebase.firestore.PersistentCacheSettings
 import com.google.firebase.firestore.firestore
+import dagger.hilt.android.HiltAndroidApp
 import java.util.concurrent.ExecutionException
+import javax.inject.Inject
 
+@HiltAndroidApp
 class MusicApplication : Application() {
+    @Inject
     lateinit var searchingRepository: SearchingRepositoryImp
+    @Inject
     lateinit var songRepository: SongRepositoryImp
+    @Inject
     lateinit var albumRepository: AlbumRepositoryImp
+    @Inject
     lateinit var artistRepository: ArtistRepositoryImp
+    @Inject
     lateinit var playlistRepository: PlaylistRepositoryImp
+    @Inject
     lateinit var recentSongRepository: RecentSongRepositoryImp
+    @Inject
     lateinit var ncsRepository: NCSongRepositoryImp
+
+    @Inject lateinit var nowPlayingViewModel: NowPlayingViewModel
 
     /**
      * - ListenableFuture là một interface trong thư viện Guava (hoặc Android's ListenableFuture),
@@ -52,14 +65,14 @@ class MusicApplication : Application() {
             .setLocalCacheSettings(persistenceCacheSettings)
             .build()
         Firebase.firestore.firestoreSettings = settings
-        setupViewModelComponents()
-        NowPlayingViewModel.getInstance(
-            songRepository,
-            ncsRepository,
-            searchingRepository,
-            recentSongRepository
-        )
-        NowPlayingViewModel.instance
+        // setupViewModelComponents()
+//        NowPlayingViewModel.getInstance(
+//            songRepository,
+//            ncsRepository,
+//            searchingRepository,
+//            recentSongRepository
+//        )
+        NowPlayingViewModel.instance = nowPlayingViewModel
         createMediaPlayer()
     }
 
@@ -102,32 +115,32 @@ class MusicApplication : Application() {
 
     private fun setupViewModelComponents() {
         // song
-        val localSongDataSource = InjectionUtils.provideLocalDataSource(applicationContext)
-        songRepository = InjectionUtils.provideSongRepository(localSongDataSource)
-
-        // recent song
-        val recentSongDataSource = InjectionUtils.provideRecentSongDataSource(applicationContext)
-        recentSongRepository = InjectionUtils.provideRecentSongRepository(recentSongDataSource)
-
-        // album
-        val localAlbumDataSource = InjectionUtils.provideAlbumLocalDataSource(applicationContext)
-        albumRepository = InjectionUtils.provideAlbumRepository(localAlbumDataSource)
-
-        // playlist
-        val localPlaylistDataSource = InjectionUtils.providePlaylistLocalDataSource(applicationContext)
-        playlistRepository = InjectionUtils.providePlaylistRepository(localPlaylistDataSource)
-
-        // artist
-        val localArtistDataSource = InjectionUtils.provideArtistLocalDataSource(applicationContext)
-        artistRepository = InjectionUtils.provideArtistRepository(localArtistDataSource)
-
-        // searching
-        val searchingDataSource = InjectionUtils.provideSearchingDataSource(applicationContext)
-        searchingRepository = InjectionUtils.provideSearchingRepository(searchingDataSource)
-
-        // ncs
-        val localNCSongDataSource = InjectionUtils.provideNCSongLocalDataSource(applicationContext)
-        ncsRepository = InjectionUtils.provideNCSongRepository(localNCSongDataSource)
+//        val localSongDataSource = InjectionUtils.provideLocalDataSource(applicationContext)
+//        songRepository = InjectionUtils.provideSongRepository(localSongDataSource)
+//
+//        // recent song
+//        val recentSongDataSource = InjectionUtils.provideRecentSongDataSource(applicationContext)
+//        recentSongRepository = InjectionUtils.provideRecentSongRepository(recentSongDataSource)
+//
+//        // album
+//        val localAlbumDataSource = InjectionUtils.provideAlbumLocalDataSource(applicationContext)
+//        albumRepository = InjectionUtils.provideAlbumRepository(localAlbumDataSource)
+//
+//        // playlist
+//        val localPlaylistDataSource = InjectionUtils.providePlaylistLocalDataSource(applicationContext)
+//        playlistRepository = InjectionUtils.providePlaylistRepository(localPlaylistDataSource)
+//
+//        // artist
+//        val localArtistDataSource = InjectionUtils.provideArtistLocalDataSource(applicationContext)
+//        artistRepository = InjectionUtils.provideArtistRepository(localArtistDataSource)
+//
+//        // searching
+//        val searchingDataSource = InjectionUtils.provideSearchingDataSource(applicationContext)
+//        searchingRepository = InjectionUtils.provideSearchingRepository(searchingDataSource)
+//
+//        // ncs
+//        val localNCSongDataSource = InjectionUtils.provideNCSongLocalDataSource(applicationContext)
+//        ncsRepository = InjectionUtils.provideNCSongRepository(localNCSongDataSource)
 
 
     }

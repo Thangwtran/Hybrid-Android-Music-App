@@ -4,9 +4,7 @@ package com.example.hybridmusicapp.ui.viewmodel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.session.MediaController
-import androidx.media3.session.MediaSession
 
 class MediaViewModel private constructor(): ViewModel() {
 

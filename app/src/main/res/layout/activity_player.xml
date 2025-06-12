@@ -63,7 +63,7 @@
         android:textColor="@color/white"
         app:layout_constraintEnd_toEndOf="@+id/tv_player_album"
         app:layout_constraintStart_toStartOf="@+id/tv_player_album"
-        app:layout_constraintTop_toBottomOf="@+id/player_toolbar" />
+        app:layout_constraintTop_toBottomOf="@+id/tv_player_desc" />
 
     <androidx.cardview.widget.CardView
         android:id="@+id/cardView4"
@@ -95,62 +95,76 @@
         android:orientation="horizontal"
         app:layout_constraintGuide_percent="0.65" />
 
-    <LinearLayout
-        android:id="@+id/linearLayout4"
+    <TextView
+        android:id="@+id/tv_player_song_name"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
         android:layout_marginTop="16dp"
-        android:layout_marginEnd="8dp"
-        android:orientation="vertical"
-        app:layout_constraintEnd_toStartOf="@+id/img_player_artwork_circle"
+        android:ellipsize="marquee"
+        android:fontFamily="@font/montserrat_semibold"
+        android:marqueeRepeatLimit="marquee_forever"
+        android:maxLength="20"
+        android:maxLines="1"
+        android:singleLine="true"
+        android:text="TextView"
+        android:textColor="@color/white"
+        android:textSize="@dimen/_20sp"
+        app:layout_constraintEnd_toStartOf="@+id/guideline12"
         app:layout_constraintStart_toStartOf="@+id/cardView4"
-        app:layout_constraintTop_toTopOf="@+id/guideline8">
+        app:layout_constraintTop_toTopOf="@+id/guideline8" />
 
-        <TextView
-            android:id="@+id/tv_player_song_name"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/_8dp"
-            android:fontFamily="@font/montserrat_semibold"
-            android:text="TextView"
-            android:textColor="@color/white"
-            android:textSize="@dimen/_24dp" />
-
-        <TextView
-            android:id="@+id/tv_player_artist"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:fontFamily="@font/montserrat_medium"
-            android:text="TextView"
-            android:textColor="@color/grey_light"
-            android:textSize="@dimen/_16sp" />
-    </LinearLayout>
+    <TextView
+        android:id="@+id/tv_player_artist"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/montserrat_medium"
+        android:text="TextView"
+        android:textColor="@color/grey_light"
+        android:textSize="@dimen/_16sp"
+        app:layout_constraintEnd_toEndOf="@+id/tv_player_song_name"
+        app:layout_constraintStart_toStartOf="@+id/tv_player_song_name"
+        app:layout_constraintTop_toBottomOf="@+id/tv_player_song_name" />
 
     <ImageView
         android:id="@+id/img_player_artwork_circle"
         android:layout_width="@dimen/_48dp"
-        android:layout_height="@dimen/_48dp"
-        app:layout_constraintBottom_toBottomOf="@+id/linearLayout4"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="@+id/tv_player_artist"
         app:layout_constraintEnd_toEndOf="@+id/cardView4"
-        app:layout_constraintTop_toTopOf="@+id/linearLayout4"
+        app:layout_constraintTop_toTopOf="@+id/tv_player_song_name"
         app:srcCompat="@drawable/delta" />
 
     <SeekBar
         android:id="@+id/seek_bar_player"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/_16dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="8dp"
         android:min="0"
         android:progressTint="?attr/colorPrimary"
         android:thumbOffset="0dp"
-        app:layout_constraintEnd_toEndOf="@+id/img_player_artwork_circle"
-        app:layout_constraintStart_toStartOf="@+id/linearLayout4"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout4" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_player_artist" />
+
+    <ImageButton
+        android:id="@+id/ic_favourite"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_gravity="center"
+        android:layout_marginEnd="16dp"
+        android:background="?attr/selectableItemBackground"
+        app:layout_constraintBottom_toBottomOf="@+id/tv_player_song_name"
+        app:layout_constraintEnd_toStartOf="@+id/img_player_artwork_circle"
+        app:layout_constraintTop_toTopOf="@+id/tv_player_song_name"
+        app:srcCompat="@drawable/ic_favorite_on" />
 
     <TextView
         android:id="@+id/tv_player_current_duration"
-        android:layout_width="16dp"
-        android:layout_height="14dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/_16dp"
         android:background="@android:color/transparent"
         android:text="@string/text_time_place_holder"
@@ -160,8 +174,8 @@
 
     <TextView
         android:id="@+id/tv_total_duration"
-        android:layout_width="16dp"
-        android:layout_height="14dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginEnd="16dp"
         android:background="@android:color/transparent"
         android:text="@string/text_time_place_holder"
@@ -170,7 +184,7 @@
         app:layout_constraintTop_toTopOf="@+id/tv_player_current_duration" />
 
     <ImageButton
-        android:id="@+id/btn_previous"
+        android:id="@+id/btn_player_previous"
         android:layout_width="@dimen/_48dp"
         android:layout_height="@dimen/_48dp"
         android:layout_marginStart="8dp"
@@ -186,7 +200,7 @@
         android:id="@+id/btn_play_pause"
         android:layout_width="@dimen/_64dp"
         android:layout_height="@dimen/_64dp"
-        android:layout_marginTop="@dimen/_16dp"
+        android:layout_marginTop="24dp"
         android:background="?attr/selectableItemBackground"
         android:scaleType="centerCrop"
         app:layout_constraintEnd_toStartOf="@+id/guideline9"
@@ -198,11 +212,12 @@
         android:id="@+id/btn_player_shuffle"
         android:layout_width="@dimen/_32dp"
         android:layout_height="@dimen/_32dp"
+        android:layout_marginStart="8dp"
         android:background="?attr/selectableItemBackground"
         android:scaleType="centerCrop"
-        app:layout_constraintBottom_toBottomOf="@+id/btn_previous"
+        app:layout_constraintBottom_toBottomOf="@+id/btn_player_previous"
         app:layout_constraintStart_toStartOf="@+id/seek_bar_player"
-        app:layout_constraintTop_toTopOf="@+id/btn_previous"
+        app:layout_constraintTop_toTopOf="@+id/btn_player_previous"
         app:srcCompat="@drawable/ic_shuffle_off" />
 
     <ImageButton
@@ -222,6 +237,7 @@
         android:id="@+id/btn_player_repeat"
         android:layout_width="@dimen/_32dp"
         android:layout_height="@dimen/_32dp"
+        android:layout_marginEnd="8dp"
         android:background="?attr/selectableItemBackground"
         android:scaleType="centerCrop"
         app:layout_constraintBottom_toBottomOf="@+id/btn_player_next"
@@ -234,11 +250,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.5" />
+        app:layout_constraintGuide_percent="0.50121653" />
 
     <TextView
         android:id="@+id/tv_player_desc"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:background="@android:color/transparent"
         android:ellipsize="marquee"
@@ -250,10 +266,16 @@
         android:textAlignment="center"
         android:textColor="@color/grey_light"
         android:textSize="@dimen/_14sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@+id/img_player_artwork_circle"
-        app:layout_constraintStart_toStartOf="@+id/linearLayout4"
-        app:layout_constraintTop_toBottomOf="@+id/btn_play_pause" />
+        app:layout_constraintEnd_toEndOf="@+id/cardView4"
+        app:layout_constraintStart_toStartOf="@+id/cardView4"
+        app:layout_constraintTop_toBottomOf="@+id/player_toolbar" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline12"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.68" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

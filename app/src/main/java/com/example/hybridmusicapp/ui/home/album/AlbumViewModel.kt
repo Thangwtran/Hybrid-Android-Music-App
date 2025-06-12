@@ -11,13 +11,16 @@ import com.example.hybridmusicapp.data.model.album.AlbumWithSongs
 import com.example.hybridmusicapp.data.model.playlist.Playlist
 import com.example.hybridmusicapp.data.repository.album.AlbumRepositoryImp
 import com.example.hybridmusicapp.data.source.remote.Result
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class AlbumViewModel(
+@HiltViewModel
+class AlbumViewModel @Inject constructor(
     private val albumRepository: AlbumRepositoryImp
 ) : ViewModel() {
     private val _albums = MutableLiveData<List<Album>?>()
@@ -129,7 +132,7 @@ class AlbumViewModel(
 
 
 
-    class Factory(
+    class Factory @Inject constructor(
         private val albumRepository: AlbumRepositoryImp
     ) : ViewModelProvider.Factory {
         override fun <T : ViewModel> create(modelClass: Class<T>): T {

@@ -26,10 +26,11 @@ class AlbumFragment : PlayerBaseFragment() {
     private lateinit var binding: FragmentAlbumBinding
     private lateinit var songListAdapter: SongListAdapter
 
-    private val albumViewModel by activityViewModels<AlbumViewModel> {
-        val application = requireActivity().application as MusicApplication
-        AlbumViewModel.Factory(application.albumRepository)
-    }
+//    private val albumViewModel by activityViewModels<AlbumViewModel> {
+//        val application = requireActivity().application as MusicApplication
+//        AlbumViewModel.Factory(application.albumRepository)
+//    }
+    private val albumViewModel by activityViewModels<AlbumViewModel>()
 
     override fun onCreateView(
         inflater: LayoutInflater,

@@ -5,8 +5,9 @@ import com.example.hybridmusicapp.data.model.artist.Artist
 import com.example.hybridmusicapp.data.model.artist.ArtistSongCrossRef
 import com.example.hybridmusicapp.data.model.artist.ArtistWithSongs
 import kotlinx.coroutines.flow.Flow
+import javax.inject.Inject
 
-class LocalArtistDataSource (
+class LocalArtistDataSource @Inject constructor(
     private val artistDao: ArtistDao
 ): ArtistDataSource.Local{
     override fun getArtists(): Flow<List<Artist>> {

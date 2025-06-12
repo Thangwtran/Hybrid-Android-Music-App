@@ -33,8 +33,10 @@ import com.example.hybridmusicapp.ui.viewmodel.MediaViewModel
 import com.example.hybridmusicapp.ui.viewmodel.NcsViewModel
 import com.example.hybridmusicapp.ui.viewmodel.NowPlayingViewModel
 import com.example.hybridmusicapp.utils.MusicAppUtils
+import dagger.hilt.android.AndroidEntryPoint
 import kotlin.getValue
 
+@AndroidEntryPoint
 class HomeFragment : PlayerBaseFragment() {
     private lateinit var binding: FragmentHomeBinding
     private lateinit var carouselAdapter: CarouselAdapter
@@ -42,20 +44,27 @@ class HomeFragment : PlayerBaseFragment() {
     private lateinit var topArtistAdapter: TopArtistAdapter
     private lateinit var trendingNcsTrackAdapter: TrendingNcsTrackAdapter
 
-    private val albumViewModel by activityViewModels<AlbumViewModel> {
-        val application = requireActivity().application as MusicApplication
-        AlbumViewModel.Factory(application.albumRepository)
-    }
-    private val artistViewModel by activityViewModels<ArtistViewModel> {
-        val application = requireActivity().application as MusicApplication
-        val artistRepository = application.artistRepository
-        ArtistViewModel.Factory(artistRepository)
-    }
-    private val ncsViewModel by activityViewModels<NcsViewModel> {
-        val application = requireActivity().application as MusicApplication
-        val ncsRepository = application.ncsRepository
-        NcsViewModel.Factory(ncsRepository)
-    }
+//    private val albumViewModel by activityViewModels<AlbumViewModel> {
+//        val application = requireActivity().application as MusicApplication
+//        AlbumViewModel.Factory(application.albumRepository)
+//    }
+
+    private val albumViewModel by activityViewModels<AlbumViewModel>()
+
+//    private val artistViewModel by activityViewModels<ArtistViewModel> {
+//        val application = requireActivity().application as MusicApplication
+//        val artistRepository = application.artistRepository
+//        ArtistViewModel.Factory(artistRepository)
+//    }
+
+    private val artistViewModel by activityViewModels<ArtistViewModel>()
+
+//    private val ncsViewModel by activityViewModels<NcsViewModel> {
+//        val application = requireActivity().application as MusicApplication
+//        val ncsRepository = application.ncsRepository
+//        NcsViewModel.Factory(ncsRepository)
+//    }
+    private val ncsViewModel by activityViewModels<NcsViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

@@ -11,8 +11,11 @@ import com.example.hybridmusicapp.data.model.history.HistorySearchedKey
 import com.example.hybridmusicapp.data.model.song.Song
 import com.example.hybridmusicapp.data.repository.search.SearchingRepositoryImp
 import com.example.hybridmusicapp.ui.viewmodel.NowPlayingViewModel
+import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 
-class SearchingViewModel(
+@HiltViewModel
+class SearchingViewModel @Inject constructor(
     private val searchRepo: SearchingRepositoryImp
 ) : ViewModel() {
     private val _songs = MutableLiveData<List<Song>>()
@@ -73,7 +76,7 @@ class SearchingViewModel(
 
     fun clearHistoryKeys() {}
 
-    internal class Factory(
+    internal class Factory @Inject constructor(
         private val searchRepo: SearchingRepositoryImp
     ) : ViewModelProvider.Factory {
         override fun <T : ViewModel> create(modelClass: Class<T>): T {

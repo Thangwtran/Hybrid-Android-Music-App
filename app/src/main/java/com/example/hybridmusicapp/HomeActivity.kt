@@ -35,8 +35,11 @@ import com.example.hybridmusicapp.ui.viewmodel.PermissionViewModel
 import com.example.hybridmusicapp.ui.viewmodel.PlaylistViewModel
 import com.example.hybridmusicapp.utils.MusicAppUtils
 import com.google.android.material.snackbar.Snackbar
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @Suppress("DEPRECATION")
+@AndroidEntryPoint
 class HomeActivity : AppCompatActivity() {
     private val tag = "HomeActivity"
     private lateinit var binding: ActivityHomeBinding
@@ -44,31 +47,46 @@ class HomeActivity : AppCompatActivity() {
     private lateinit var networkViewModel: NetworkViewModel
 
     private val nowPlayingViewModel = NowPlayingViewModel.instance
-    private val albumViewModel by viewModels<AlbumViewModel> {
-        val application = application as MusicApplication
-        AlbumViewModel.Factory(application.albumRepository)
-    }
-    private val homeViewModel by viewModels<HomeViewModel> {
-        val application = application as MusicApplication
-        val songRepository = application.songRepository
-        val albumRepository = application.albumRepository
-        HomeViewModel.Factory(songRepository, albumRepository)
-    }
-    private val ncsViewModel by viewModels<NcsViewModel> {
-        val application = application as MusicApplication
-        val ncsRepository = application.ncsRepository
-        NcsViewModel.Factory(ncsRepository)
-    }
-    private val artistViewModel by viewModels<ArtistViewModel> {
-        val application = application as MusicApplication
-        val artistRepository = application.artistRepository
-        ArtistViewModel.Factory(artistRepository)
-    }
-    private val playlistViewModel by viewModels<PlaylistViewModel> {
-        val application = application as MusicApplication
-        val playlistRepository = application.playlistRepository
-        PlaylistViewModel.Factory(playlistRepository)
-    }
+//    private val nowPlayingViewModel = ( application as MusicApplication).nowPlayingViewModel
+//    @Inject lateinit var nowPlayingViewModel: NowPlayingViewModel
+
+//    private val albumViewModel by viewModels<AlbumViewModel> {
+//        val application = application as MusicApplication
+//        AlbumViewModel.Factory(application.albumRepository)
+//    }
+    private val albumViewModel by viewModels<AlbumViewModel>()
+
+//    private val homeViewModel by viewModels<HomeViewModel> {
+//        val application = application as MusicApplication
+//        val songRepository = application.songRepository
+//        val albumRepository = application.albumRepository
+//        HomeViewModel.Factory(songRepository, albumRepository)
+//    }
+    private val homeViewModel by viewModels<HomeViewModel>()
+
+//    private val ncsViewModel by viewModels<NcsViewModel> {
+//        val application = application as MusicApplication
+//        val ncsRepository = application.ncsRepository
+//        NcsViewModel.Factory(ncsRepository)
+//    }
+
+    private val ncsViewModel by viewModels<NcsViewModel>()
+
+//    private val artistViewModel by viewModels<ArtistViewModel> {
+//        val application = application as MusicApplication
+//        val artistRepository = application.artistRepository
+//        ArtistViewModel.Factory(artistRepository)
+//    }
+
+    private val artistViewModel by viewModels<ArtistViewModel>()
+
+//    private val playlistViewModel by viewModels<PlaylistViewModel> {
+//        val application = application as MusicApplication
+//        val playlistRepository = application.playlistRepository
+//        PlaylistViewModel.Factory(playlistRepository)
+//    }
+
+    private val playlistViewModel by viewModels<PlaylistViewModel>()
 
 
     private val resultLauncher =
@@ -179,8 +197,9 @@ class HomeActivity : AppCompatActivity() {
         if(isNetworkAccess){
             homeViewModel.loadRemoteSongs()
             homeViewModel.remoteSongLoaded.observe(this) { isLoaded ->
-                if (isLoaded) {
-                    saveSongData()
+                if (isLoaded && isFirstSaveSong()) {
+                  //  saveSongData()
+                    setFirstSaveSong() // false
                 } else {
                     Toast.makeText(this, "Load Song Error", Toast.LENGTH_LONG).show()
                 }
@@ -189,7 +208,7 @@ class HomeActivity : AppCompatActivity() {
             Toast.makeText(this, "No Internet", Toast.LENGTH_LONG).show()
             // TODO: show dialog 
         }
-       
+
 
         // ncs playlist
         ncsViewModel.getNCSongs()
@@ -353,6 +372,16 @@ class HomeActivity : AppCompatActivity() {
             .replace(R.id.fragment_container, fragment)
             .setReorderingAllowed(true)
             .commit()
+    }
+
+    private fun isFirstSaveSong(): Boolean {
+        val prefs = getSharedPreferences("app_prefs", MODE_PRIVATE)
+        return prefs.getBoolean("isFirstSaveSong", true)
+    }
+
+    private fun setFirstSaveSong() {
+        val prefs = getSharedPreferences("app_prefs", MODE_PRIVATE)
+        prefs.edit().putBoolean("isFirstSaveSong", false).apply()
     }
 
     companion object {

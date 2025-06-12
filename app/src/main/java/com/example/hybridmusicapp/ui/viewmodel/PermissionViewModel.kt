@@ -3,8 +3,11 @@ package com.example.hybridmusicapp.ui.viewmodel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 
-class PermissionViewModel private constructor() : ViewModel() {
+@HiltViewModel
+class PermissionViewModel @Inject constructor() : ViewModel() {
     private val _permissionAsked = MutableLiveData<Boolean>()
     val permissionAsked: LiveData<Boolean> = _permissionAsked
 

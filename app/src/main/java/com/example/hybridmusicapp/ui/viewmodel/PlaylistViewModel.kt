@@ -13,11 +13,14 @@ import com.example.hybridmusicapp.data.model.playlist.PlaylistWithSongs
 import com.example.hybridmusicapp.data.model.song.NCSong
 import com.example.hybridmusicapp.data.model.song.Song
 import com.example.hybridmusicapp.data.repository.playlist.PlaylistRepositoryImp
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class PlaylistViewModel(
+@HiltViewModel
+class PlaylistViewModel @Inject constructor(
     private val repository: PlaylistRepositoryImp
 ) : ViewModel() {
 
@@ -105,7 +108,7 @@ class PlaylistViewModel(
         _playlistWithSongs.postValue(playlistWithSongs)
     }
 
-    class Factory(
+    class Factory @Inject constructor(
         private val playlistRepositoryImp: PlaylistRepositoryImp
     ) : ViewModelProvider.Factory {
         override fun <T : ViewModel> create(modelClass: Class<T>): T {

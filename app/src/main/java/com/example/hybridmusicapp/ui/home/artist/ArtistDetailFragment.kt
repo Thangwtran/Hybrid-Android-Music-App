@@ -34,10 +34,11 @@ class ArtistDetailFragment : PlayerBaseFragment() {
     private lateinit var binding: FragmentArtistDetailBinding
     private lateinit var songListAdapter: SongListAdapter
 
-    private val artistViewModel by activityViewModels<ArtistViewModel> {
-        val application = requireActivity().application as MusicApplication
-        ArtistViewModel.Factory(application.artistRepository)
-    }
+//    private val artistViewModel by activityViewModels<ArtistViewModel> {
+//        val application = requireActivity().application as MusicApplication
+//        ArtistViewModel.Factory(application.artistRepository)
+//    }
+    private val artistViewModel by activityViewModels<ArtistViewModel>()
 
     override fun onCreateView(
         inflater: LayoutInflater,

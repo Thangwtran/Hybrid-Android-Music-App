@@ -3,8 +3,9 @@ package com.example.hybridmusicapp.data.source.local.song
 import com.example.hybridmusicapp.data.source.SongDataSource
 import com.example.hybridmusicapp.data.model.song.Song
 import kotlinx.coroutines.flow.Flow
+import javax.inject.Inject
 
-class LocalSongDataSource(
+class LocalSongDataSource @Inject constructor(
     private val songDao: SongDao
 ): SongDataSource.Local {
     override suspend fun getLocalSongs(): List<Song> {

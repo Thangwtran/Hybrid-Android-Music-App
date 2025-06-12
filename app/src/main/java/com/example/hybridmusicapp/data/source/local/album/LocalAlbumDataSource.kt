@@ -5,8 +5,9 @@ import com.example.hybridmusicapp.data.model.album.Album
 import com.example.hybridmusicapp.data.model.album.AlbumSongCrossRef
 import com.example.hybridmusicapp.data.model.album.AlbumWithSongs
 import kotlinx.coroutines.flow.Flow
+import javax.inject.Inject
 
-class LocalAlbumDataSource(
+class LocalAlbumDataSource @Inject constructor(
     private val albumDao: AlbumDao
 ) : AlbumDataSource.Local {
     // TOP 10

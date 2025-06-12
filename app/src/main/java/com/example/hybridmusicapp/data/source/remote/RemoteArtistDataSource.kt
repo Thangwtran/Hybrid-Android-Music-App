@@ -14,8 +14,9 @@ import com.google.firebase.firestore.QuerySnapshot
 import com.google.firebase.firestore.firestore
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import javax.inject.Inject
 
-class RemoteArtistDataSource : ArtistDataSource.Remote {
+class RemoteArtistDataSource @Inject constructor() : ArtistDataSource.Remote {
     private val firestore = FirebaseFirestore.getInstance();
 
     override suspend fun loadRemoteArtists(): Result<ArtistList> {

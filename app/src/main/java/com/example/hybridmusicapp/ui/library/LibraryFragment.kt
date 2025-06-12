@@ -15,16 +15,15 @@ import com.example.hybridmusicapp.ui.searching.SearchingFragment
 import com.example.hybridmusicapp.ui.viewmodel.NowPlayingViewModel
 import com.example.hybridmusicapp.utils.MusicAppUtils
 
-
 class LibraryFragment : Fragment() {
     private lateinit var binding: FragmentLibraryBinding
     private val nowPlayingViewModel = NowPlayingViewModel.instance
     private val recentSongViewModel by activityViewModels<RecentSongViewModel>()
     private val favouriteSongViewModel by activityViewModels<FavouriteSongViewModel>()
-    private val libraryViewModel by activityViewModels<LibraryViewModel>() {
-        val application = requireActivity().application as MusicApplication
-        LibraryViewModel.Factory(application.songRepository,application.ncsRepository, application.recentSongRepository)
-    }
+    private val libraryViewModel by activityViewModels<LibraryViewModel>() //{
+//        val application = requireActivity().application as MusicApplication
+//        LibraryViewModel.Factory(application.songRepository,application.ncsRepository, application.recentSongRepository)
+//    }
 
 
     override fun onCreateView(

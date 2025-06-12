@@ -7,8 +7,9 @@ import com.example.hybridmusicapp.data.model.song.Song
 import com.example.hybridmusicapp.data.source.RecentDataSource
 import com.example.hybridmusicapp.data.source.local.recent_song.RecentSongDataSource
 import kotlinx.coroutines.flow.Flow
+import javax.inject.Inject
 
-class RecentSongRepositoryImp(
+class RecentSongRepositoryImp @Inject constructor(
     private val recentSongDataSource: RecentDataSource,
 ): RecentSongRepository {
     override val recentSongs: Flow<List<Song>>

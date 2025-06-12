@@ -6,10 +6,13 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.example.hybridmusicapp.data.model.song.NCSong
 import com.example.hybridmusicapp.data.repository.song.NCSongRepositoryImp
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class NcsViewModel(
+@HiltViewModel
+class NcsViewModel @Inject constructor(
     private val ncsRepository: NCSongRepositoryImp
 ) : ViewModel() {
 
@@ -40,15 +43,15 @@ class NcsViewModel(
     }
 
 
-    class Factory(
-        private val ncsRepository: NCSongRepositoryImp
-    ) : ViewModelProvider.Factory {
-        override fun <T : ViewModel> create(modelClass: Class<T>): T {
-            if (modelClass.isAssignableFrom(NcsViewModel::class.java)) {
-                return NcsViewModel(ncsRepository) as T
-            } else {
-                throw IllegalArgumentException("Unknown ViewModel class")
-            }
-        }
-    }
+//    class Factory @Inject constructor(
+//        private val ncsRepository: NCSongRepositoryImp
+//    ) : ViewModelProvider.Factory {
+//        override fun <T : ViewModel> create(modelClass: Class<T>): T {
+//            if (modelClass.isAssignableFrom(NcsViewModel::class.java)) {
+//                return NcsViewModel(ncsRepository) as T
+//            } else {
+//                throw IllegalArgumentException("Unknown ViewModel class")
+//            }
+//        }
+//    }
 }

@@ -33,7 +33,10 @@ import com.example.hybridmusicapp.ui.viewmodel.NowPlayingViewModel
 import com.example.hybridmusicapp.ui.viewmodel.PlaylistViewModel
 import com.example.hybridmusicapp.utils.MusicAppUtils
 import com.example.hybridmusicapp.utils.MusicAppUtils.DefaultPlaylistName
+import dagger.hilt.android.AndroidEntryPoint
 
+
+@AndroidEntryPoint
 class MiniPlayerFragment : PlayerBaseFragment(), View.OnClickListener {
     private lateinit var binding: FragmentMiniPlayerBinding
 
@@ -57,17 +60,19 @@ class MiniPlayerFragment : PlayerBaseFragment(), View.OnClickListener {
 //        MiniPlayerViewModel.Factory(songRepository)
 //    }
 
-    private val playlistViewModel by activityViewModels<PlaylistViewModel> {
-        val application = requireActivity().application as MusicApplication
-        PlaylistViewModel.Factory(application.playlistRepository)
-    }
+//    private val playlistViewModel by activityViewModels<PlaylistViewModel> {
+//        val application = requireActivity().application as MusicApplication
+//        PlaylistViewModel.Factory(application.playlistRepository)
+//    }
+    private val playlistViewModel by activityViewModels<PlaylistViewModel>()
 
-    private val ncsViewModel by activityViewModels<NcsViewModel> {
-        val application = requireActivity().application as MusicApplication
-        val ncsRepository = application.ncsRepository
-        NcsViewModel.Factory(ncsRepository)
-    }
+//    private val ncsViewModel by activityViewModels<NcsViewModel> {
+//        val application = requireActivity().application as MusicApplication
+//        val ncsRepository = application.ncsRepository
+//        NcsViewModel.Factory(ncsRepository)
+//    }
 
+    private val ncsViewModel by activityViewModels<NcsViewModel>()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -98,6 +103,7 @@ class MiniPlayerFragment : PlayerBaseFragment(), View.OnClickListener {
 
     private fun observeData() {
         nowPlayingViewModel = NowPlayingViewModel.instance
+        Log.i("MiniPlayerFragment", "check nowPlayingViewModel: $nowPlayingViewModel")
 
         // ncs playlist
         ncsViewModel.getNCSongs()
@@ -173,7 +179,7 @@ class MiniPlayerFragment : PlayerBaseFragment(), View.OnClickListener {
                     .error(R.drawable.itunes)
                     .into(binding.imgMiniPlayerArtwork)
 
-                updateFavouriteStatus(song = null, playingSong.ncSong)
+//                updateFavouriteStatus(song = null, playingSong.ncSong)
             } else {
                 Toast.makeText(requireContext(), "ncs song is null", Toast.LENGTH_SHORT).show()
             }
@@ -187,17 +193,19 @@ class MiniPlayerFragment : PlayerBaseFragment(), View.OnClickListener {
                     .error(R.drawable.itunes)
                     .into(binding.imgMiniPlayerArtwork)
 
-                updateFavouriteStatus(playingSong.song, ncSong = null)
+//                updateFavouriteStatus(playingSong.song, ncSong = null)
             } else {
                 Toast.makeText(requireContext(), "song or data is null", Toast.LENGTH_SHORT).show()
             }
         }
 
+        updateFavouriteStatus(playingSong.song, playingSong.ncSong, playingSong.isNcsSong)
+
 
     }
 
     private fun setupListeners() {
-        binding.root.setOnClickListener{navigateToPlayer()}
+        binding.root.setOnClickListener { navigateToPlayer() }
         binding.btnMiniPlayerPlayPause.setOnClickListener(this)
         binding.btnMiniPlayerFavourite.setOnClickListener(this)
         binding.btnMiniPlayerNext.setOnClickListener(this)
@@ -206,12 +214,12 @@ class MiniPlayerFragment : PlayerBaseFragment(), View.OnClickListener {
     private fun navigateToPlayer() {
         val isInternetAccess = MusicAppUtils.isNetworkAvailable(requireContext())
         val isNCSong = nowPlayingViewModel?.playingSong?.value?.isNcsSong
-        if(isInternetAccess || isNCSong != null && isNCSong){
+        if (isInternetAccess || isNCSong != null && isNCSong) {
             nowPlayingViewModel?.setMiniPlayerVisible(false)
             val intent = Intent(requireContext(), PlayerActivity::class.java)
             intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP) // avoid duplicate instances of the same activity
             requireContext().startActivity(intent)
-        }else{
+        } else {
             showNoInternetDialog()
         }
     }
@@ -233,21 +241,33 @@ class MiniPlayerFragment : PlayerBaseFragment(), View.OnClickListener {
         }
     }
 
-    private fun updateFavouriteStatus(song: Song?, ncSong: NCSong?) {
-        if (ncSong == null) {
-            if (song!!.isFavorite) {
-                binding.btnMiniPlayerFavourite.setImageResource(androidx.media3.session.R.drawable.media3_icon_heart_filled)
+    private fun updateFavouriteStatus(song: Song?, ncSong: NCSong?, isNcs: Boolean) {
+//        if (ncSong == null) {
+//            if (song!!.isFavorite) {
+//                binding.btnMiniPlayerFavourite.setImageResource(androidx.media3.session.R.drawable.media3_icon_heart_filled)
+//            } else {
+//                binding.btnMiniPlayerFavourite.setImageResource(androidx.media3.session.R.drawable.media3_icon_heart_unfilled)
+//            }
+//        } else if (song == null) {
+//            if (ncSong!!.isFavourite) {
+//                binding.btnMiniPlayerFavourite.setImageResource(androidx.media3.session.R.drawable.media3_icon_heart_filled)
+//            } else {
+//                binding.btnMiniPlayerFavourite.setImageResource(androidx.media3.session.R.drawable.media3_icon_heart_unfilled)
+//            }
+//        }
+        if (isNcs) {
+            if (ncSong?.isFavourite == true) {
+                binding.btnMiniPlayerFavourite.setImageResource(R.drawable.ic_favorite_on)
             } else {
-                binding.btnMiniPlayerFavourite.setImageResource(androidx.media3.session.R.drawable.media3_icon_heart_unfilled)
+                binding.btnMiniPlayerFavourite.setImageResource(R.drawable.ic_favorite_off)
             }
-        } else if (song == null) {
-            if (ncSong!!.isFavourite) {
-                binding.btnMiniPlayerFavourite.setImageResource(androidx.media3.session.R.drawable.media3_icon_heart_filled)
-            } else {
-                binding.btnMiniPlayerFavourite.setImageResource(androidx.media3.session.R.drawable.media3_icon_heart_unfilled)
+        } else {
+            if (song?.isFavorite == true) {
+                binding.btnMiniPlayerFavourite.setImageResource(R.drawable.ic_favorite_on)
+            } else { // null, false
+                binding.btnMiniPlayerFavourite.setImageResource(R.drawable.ic_favorite_off)
             }
         }
-
     }
 
     private fun setupMediaController() {
@@ -369,8 +389,8 @@ class MiniPlayerFragment : PlayerBaseFragment(), View.OnClickListener {
     }
 
     private fun setupSkipNext() {
-        if(mediaController != null){
-            if(mediaController!!.hasNextMediaItem()){
+        if (mediaController != null) {
+            if (mediaController!!.hasNextMediaItem()) {
                 mediaController!!.seekToNextMediaItem()
             }
         }
@@ -379,23 +399,37 @@ class MiniPlayerFragment : PlayerBaseFragment(), View.OnClickListener {
 
     private fun setupFavourite() { // favourite click
         val playingSong = nowPlayingViewModel?.playingSong?.value
-        Log.i("MiniPlayerFragment", "setupFavourite: $playingSong")
+        Log.i("MiniPlayerFragment", "playing: $playingSong")
         if (playingSong != null) {
             val song = playingSong.song
             val ncsSong = playingSong.ncSong
-            Log.i("MiniPlayerFragment", "setupFavourite: $ncsSong")
+            Log.i("MiniPlayerFragment", "ncs: $ncsSong")
+            Log.i("MiniPlayerFragment", "isPlaying: ${playingSong.isNcsSong}")
 
-            if (song != null) {
-                song.isFavorite = !song.isFavorite
-                nowPlayingViewModel?.updateFavouriteStatus(song)
-                updateFavouriteStatus(song, ncsSong)
-            } else if (ncsSong != null) {
-                ncsSong.isFavourite = !ncsSong.isFavourite
-                nowPlayingViewModel?.updateNcsFavouriteStatus(ncsSong)
-                updateFavouriteStatus(song, ncsSong)
+            if (playingSong.isNcsSong) {
+                ncsSong?.isFavourite = !ncsSong.isFavourite
+                nowPlayingViewModel?.updateNcsFavouriteStatus(ncsSong ?: NCSong())
+                updateFavouriteStatus(song, ncsSong, playingSong.isNcsSong)
             } else {
-                Toast.makeText(requireContext(), "song, ncs is null", Toast.LENGTH_SHORT).show()
+                song?.isFavorite = !song.isFavorite
+                Log.i("MiniPlayerFragment", "isFavourite: ${song?.isFavorite} ")
+                Log.i("MiniPlayerFragment", "song: $song ")
+                nowPlayingViewModel?.updateFavouriteStatus(song ?: Song())
+                updateFavouriteStatus(song, ncsSong, playingSong.isNcsSong)
+
             }
+
+//            if (song != null) {
+//                song.isFavorite = !song.isFavorite
+//                nowPlayingViewModel?.updateFavouriteStatus(song)
+//                updateFavouriteStatus(song, ncsSong, playingSong.isNcsSong)
+//            } else if (ncsSong != null) {
+//                ncsSong.isFavourite = !ncsSong.isFavourite
+//                nowPlayingViewModel?.updateNcsFavouriteStatus(ncsSong)
+//                updateFavouriteStatus(song, ncsSong, playingSong.isNcsSong)
+//            } else {
+//                Toast.makeText(requireContext(), "song, ncs is null", Toast.LENGTH_SHORT).show()
+//            }
 
         }
     }

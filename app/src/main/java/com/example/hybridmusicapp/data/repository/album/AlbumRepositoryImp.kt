@@ -10,8 +10,9 @@ import com.example.hybridmusicapp.data.source.remote.RemoteAlbumDataSource
 import com.example.hybridmusicapp.data.source.remote.Result
 import kotlinx.coroutines.flow.Flow
 import okhttp3.Callback
+import javax.inject.Inject
 
-class AlbumRepositoryImp(
+class AlbumRepositoryImp @Inject constructor(
     private val localAlbumDataSource: AlbumDataSource.Local,
 ): AlbumRepository.Local, AlbumRepository.Remote {
     private val remoteAlbumDataSource: AlbumDataSource.Remote = RemoteAlbumDataSource()

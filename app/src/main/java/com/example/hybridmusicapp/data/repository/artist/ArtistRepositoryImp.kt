@@ -9,13 +9,15 @@ import com.example.hybridmusicapp.data.source.ArtistDataSource
 import com.example.hybridmusicapp.data.source.remote.RemoteArtistDataSource
 import kotlinx.coroutines.flow.Flow
 import com.example.hybridmusicapp.data.source.remote.Result
+import javax.inject.Inject
 
 
-class ArtistRepositoryImp(
+class ArtistRepositoryImp @Inject constructor(
     private val localDataSource: ArtistDataSource.Local,
+    private val remoteDataSource: ArtistDataSource.Remote = RemoteArtistDataSource()
 ) : ArtistRepository.Local, ArtistRepository.Remote {
 
-    private val remoteDataSource: ArtistDataSource.Remote = RemoteArtistDataSource()
+//   @Inject private val remoteDataSource: ArtistDataSource.Remote = RemoteArtistDataSource()
 
     // LOCAL
     override fun getLocalArtists(): Flow<List<Artist>> {

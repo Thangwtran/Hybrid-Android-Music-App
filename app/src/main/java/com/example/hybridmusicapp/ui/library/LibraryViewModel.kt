@@ -9,8 +9,11 @@ import com.example.hybridmusicapp.data.model.song.Song
 import com.example.hybridmusicapp.data.repository.recent_song.RecentSongRepositoryImp
 import com.example.hybridmusicapp.data.repository.song.NCSongRepositoryImp
 import com.example.hybridmusicapp.data.repository.song.SongRepositoryImp
+import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 
-class LibraryViewModel(
+@HiltViewModel
+class LibraryViewModel @Inject constructor(
     private val songRepository: SongRepositoryImp,
     private val ncsSongRepository: NCSongRepositoryImp,
     private val recentSongRepository: RecentSongRepositoryImp
@@ -28,17 +31,17 @@ class LibraryViewModel(
     val recentNcsSongs: LiveData<List<NCSong>>
         get() = recentSongRepository.recentNcsSongs.asLiveData()
 
-    class Factory(
-        private val songRepository: SongRepositoryImp,
-        private val ncsSongRepository: NCSongRepositoryImp,
-        private val recentSongRepository: RecentSongRepositoryImp
-    ) : ViewModelProvider.Factory {
-        override fun <T : ViewModel> create(modelClass: Class<T>): T {
-            if (modelClass.isAssignableFrom(LibraryViewModel::class.java)) {
-                return LibraryViewModel(songRepository,ncsSongRepository, recentSongRepository) as T
-            } else {
-                throw IllegalArgumentException("Unknown ViewModel class")
-            }
-        }
-    }
+//    class Factory(
+//        private val songRepository: SongRepositoryImp,
+//        private val ncsSongRepository: NCSongRepositoryImp,
+//        private val recentSongRepository: RecentSongRepositoryImp
+//    ) : ViewModelProvider.Factory {
+//        override fun <T : ViewModel> create(modelClass: Class<T>): T {
+//            if (modelClass.isAssignableFrom(LibraryViewModel::class.java)) {
+//                return LibraryViewModel(songRepository,ncsSongRepository, recentSongRepository) as T
+//            } else {
+//                throw IllegalArgumentException("Unknown ViewModel class")
+//            }
+//        }
+//    }
 }

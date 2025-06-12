@@ -122,6 +122,9 @@
     <string name="title_recent_search">Recent Search</string>
     <string name="action_clear">Clear all</string>
     <string name="key_history">History Search</string>
-
+    <string name="title_no_internet">No internet or network connection</string>
+    <string name="message_no_internet">Please connect to mobile network or wifi and try again! This application cannot work without a network connection.</string>
+    <string name="title_server_error">Server connection error</string>
+    <string name="message_server_error">Something went wrong and the server was not responding. Please try again later.</string>
 
 </resources>

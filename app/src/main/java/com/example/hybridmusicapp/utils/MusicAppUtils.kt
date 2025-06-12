@@ -17,6 +17,11 @@ object MusicAppUtils {
                 || networkCapabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR)))
     }
 
+    @JvmStatic
+    fun getCurrentPlayTime(duration: Long, angle: Float): Long {
+        return (duration * angle / 360).toLong()
+    }
+
     enum class DefaultPlaylistName(val value: String) {
         DEFAULT("default"),  // 0
         FAVORITE("favorite"),  // 1

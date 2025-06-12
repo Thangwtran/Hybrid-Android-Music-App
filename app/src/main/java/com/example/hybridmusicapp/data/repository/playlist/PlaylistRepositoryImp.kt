@@ -5,8 +5,9 @@ import com.example.hybridmusicapp.data.model.playlist.PlaylistSongCrossRef
 import com.example.hybridmusicapp.data.model.playlist.PlaylistWithSongs
 import com.example.hybridmusicapp.data.source.PlaylistDataSource
 import kotlinx.coroutines.flow.Flow
+import javax.inject.Inject
 
-class PlaylistRepositoryImp(
+class PlaylistRepositoryImp @Inject constructor(
     private val dataSource: PlaylistDataSource
 ) : PlaylistRepository {
     override fun getAllPlaylists(): Flow<List<Playlist>> {

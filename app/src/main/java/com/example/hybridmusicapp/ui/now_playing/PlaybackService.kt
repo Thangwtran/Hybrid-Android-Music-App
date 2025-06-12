@@ -29,6 +29,8 @@ import com.example.hybridmusicapp.data.model.song.Song
 import com.example.hybridmusicapp.ui.viewmodel.MediaViewModel
 import com.example.hybridmusicapp.ui.viewmodel.NowPlayingViewModel
 import com.example.hybridmusicapp.utils.MusicAppUtils
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 
 /**
@@ -39,11 +41,16 @@ import com.example.hybridmusicapp.utils.MusicAppUtils
  *
  *  Foreground service: đảm bảo phát lại tiếp tục ngay cả khi ứng dụng không ở foreground.
  */
+@AndroidEntryPoint
 class PlaybackService : MediaSessionService() {
 
     private lateinit var mediaSession: MediaSession
 
     private val nowPlayingViewModel = NowPlayingViewModel.instance
+
+//    @Inject
+//    lateinit var nowPlayingViewModel: NowPlayingViewModel
+
 
     private lateinit var listener: Player.Listener
 
